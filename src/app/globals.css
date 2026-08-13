@@ -1,0 +1,232 @@
+@import "tailwindcss";
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+@theme {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-roboto);
+  --color-brand-primary: #5c3ffa;
+  --color-brand-secondary: #fe6a1b;
+  --color-brand-dark: #0f172a;
+  --color-brand-muted: #475569;
+  --background-image-gradient-brand: linear-gradient(156deg, rgba(92,63,250,1) 0%, rgba(203,59,149,1) 48%, rgba(254,106,27,1) 100%);
+}
+
+
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-roboto), Arial, Helvetica, sans-serif;
+}
+
+/* Custom sleek scrollbars globally */
+::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1; /* slate-300 */
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8; /* slate-400 */
+}
+
+/* For Firefox */
+html, .custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e1 transparent;
+}
+
+/* Global container configuration override */
+.container {
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 1152px !important; /* max-w-6xl */
+}
+
+@keyframes loadingBar {
+  0% {
+    transform: translateX(-100%);
+    width: 30%;
+  }
+  50% {
+    width: 60%;
+  }
+  100% {
+    transform: translateX(400%);
+    width: 100%;
+  }
+}
+
+@utility animate-loading-bar {
+  animation: loadingBar 2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+@utility route-loading-active {
+  position: relative !important;
+  pointer-events: none !important;
+  opacity: 0.75 !important;
+  cursor: wait !important;
+}
+
+@utility route-btn-spinner {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  margin-left: 8px;
+  vertical-align: middle;
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+  flex-shrink: 0;
+}
+
+@utility route-btn-icon-hidden {
+  display: none !important;
+}
+
+@media (min-width: 1536px) {
+  .container {
+    max-width: 1280px !important; /* 2xl:max-w-7xl */
+  }
+}
+
+/* Gentle drifting animation for hero icons */
+@keyframes float-gentle {
+  0%, 100% {
+    transform: translate3d(0, 0, 0) rotate(0deg);
+  }
+  33% {
+    transform: translate3d(3px, -7px, 0) rotate(1deg);
+  }
+  66% {
+    transform: translate3d(-3px, 4px, 0) rotate(-1deg);
+  }
+}
+
+/* Generic responsive typography design tokens in Tailwind v4 */
+@utility heading-hero {
+  @apply text-3xl md:text-6xl 2xl:text-7xl font-extrabold tracking-tight text-brand-dark leading-tight;
+}
+
+@utility heading-section {
+  @apply text-2xl md:text-4xl 2xl:text-5xl font-bold text-brand-dark tracking-tight leading-tight;
+}
+@utility heading-section2 {
+  @apply text-xl md:text-2xl 2xl:text-3xl font-bold text-brand-dark tracking-tight leading-tight;
+}
+
+@utility heading-card {
+  @apply text-base md:text-lg 2xl:text-xl font-bold text-brand-dark leading-snug;
+}
+
+@utility body-large {
+  @apply text-base lg:text-lg 2xl:text-xl text-brand-muted leading-relaxed;
+}
+
+@utility body-medium {
+  @apply text-sm md:text-base 2xl:text-lg text-brand-muted leading-relaxed;
+}
+
+@utility body-small {
+  @apply text-xs md:text-sm 2xl:text-base text-brand-muted leading-relaxed;
+}
+
+@utility body-extrasmall {
+  @apply text-xs 2xl:text-sm text-brand-muted leading-relaxed;
+}
+
+@utility badge-brand {
+  @apply inline-flex items-center justify-center bg-brand-primary/10 text-brand-primary px-4 py-1.5 rounded-full text-xs md:text-sm font-medium tracking-wide;
+}
+
+@utility bg-brand-gradient {
+  @apply bg-gradient-brand;
+}
+
+@utility text-brand-gradient {
+  @apply bg-gradient-brand bg-clip-text text-transparent;
+}
+
+/* Logo Carousel & Marquee Animations */
+@keyframes scroll-logos {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes scroll-pills {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes scroll-marquee {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-scroll {
+  display: flex;
+  width: max-content;
+  flex-shrink: 0;
+  animation: scroll-logos 25s linear infinite;
+}
+
+.animate-scroll:hover {
+  animation-play-state: paused;
+}
+
+.animate-scroll-pills {
+  display: flex;
+  width: max-content;
+  flex-shrink: 0;
+  animation: scroll-pills 15s linear infinite;
+}
+
+.animate-scroll-dark {
+  display: flex;
+  width: max-content;
+  flex-shrink: 0;
+  animation: scroll-logos 30s linear infinite;
+}
+
+.animate-scroll-dark:hover {
+  animation-play-state: paused;
+}
+
+.animate-scroll-marquee {
+  display: flex;
+  width: max-content;
+  flex-shrink: 0;
+  animation: scroll-marquee 30s linear infinite;
+}
+
+/* Force hide system cursor for all children inside interactive canvas sections */
+.custom-cursor-area, .custom-cursor-area * {
+  cursor: none !important;
+}
