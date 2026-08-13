@@ -1,4 +1,4 @@
-import DOMPurify from "isomorphic-dompurify";
+import DOMPurify from "@/lib/dompurify";
 import TruncatedContent from "@/components/ui/TruncatedContent";
 
 interface Props {
