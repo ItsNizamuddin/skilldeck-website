@@ -2,7 +2,7 @@ import CourseAccordionSection from '@/components/category/courses/overview/Cours
 import CourseRelatedLinks from '@/components/category/courses/overview/CourseRelatedLinks';
 import { Breadcrumb } from '@/components/ui/Breadcrumb';
 import parse, { Element, HTMLReactParserOptions, Text } from 'html-react-parser';
-import DOMPurify from "isomorphic-dompurify";
+import DOMPurify from "@/lib/dompurify";
 import { Calendar, Clock, Eye } from 'lucide-react';
 import Image from 'next/image';
 import React from 'react';

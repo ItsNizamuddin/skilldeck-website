@@ -4,7 +4,7 @@ import { Award, BookOpen, Building2, Check, Crown, HardDrive, Infinity, MapPin, 
 import { BillingInterval, computePlanAmount, formatOveragePrice, formatPrice, GroupedDisplayFeatures } from './utils';
 // import { IPlan } from '@saas-platform/interface-lib';
 import { PricingPlan } from '@/lib/plans';
-import DOMPurify from "isomorphic-dompurify";
+import DOMPurify from "@/lib/dompurify";
 import { GroupedFeatures } from './types';
 
 type Props = {

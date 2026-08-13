@@ -239,9 +239,6 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({
                                 >
                                     <span className="relative inline-block">
                                         {link.name}
-                                        {isCompanies && isCompaniesLoading && (
-                                            <span className="absolute -bottom-1 left-0 h-[2.5px] bg-gradient-to-r from-blue-600 via-purple-600 to-blue-600 rounded-full w-full" />
-                                        )}
                                     </span>
                                 </Link>
                             );

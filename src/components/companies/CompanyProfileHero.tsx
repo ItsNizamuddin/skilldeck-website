@@ -1,5 +1,5 @@
 import { Breadcrumb } from "@/components/ui/Breadcrumb";
-import DOMPurify from "isomorphic-dompurify";
+import DOMPurify from "@/lib/dompurify";
 import { BadgeCheck, CalendarDays, MapPin, Star, Users } from "lucide-react";
 import Image from "next/image";
 import CompanyContactButton from "./CompanyContactButton";
