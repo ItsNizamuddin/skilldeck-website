@@ -1,0 +1,148 @@
+'use client';
+
+import { MailIcon, PhoneCall, Sparkles, X } from 'lucide-react';
+import Image from 'next/image';
+import { useEffect } from 'react';
+import img from '../../../public/heroSection/woman_laptop.png';
+import InteractiveDotBackground from '../ui/InteractiveDotBackground';
+import GenericForm from './GenericForm';
+import { useLeadModal } from './LeadModalContext';
+
+const LeadModal = () => {
+    const { isOpen, closeModal, modalConfig } = useLeadModal();
+
+    // Close form on Escape key
+    useEffect(() => {
+        const handleEsc = (e: KeyboardEvent) => {
+            if (e.key === 'Escape') closeModal();
+        };
+        if (isOpen) window.addEventListener('keydown', handleEsc);
+        return () => window.removeEventListener('keydown', handleEsc);
+    }, [isOpen, closeModal]);
+
+    // Prevent scrolling when modal is open
+    useEffect(() => {
+        if (isOpen) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = 'unset';
+        }
+        return () => {
+            document.body.style.overflow = 'unset';
+        };
+    }, [isOpen]);
+
+    if (!isOpen) return null;
+
+    // Determine the form type: defaults to 'enquiry', uses 'corporate' if specified
+    const formType = modalConfig.source === 'corporate' ? 'corporate' : 'enquiry';
+
+    return (
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4">
+            {/* Backdrop */}
+            <div
+                className="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity"
+                onClick={closeModal}
+            />
+
+            {/* Modal Card */}
+            <div className="relative w-full max-w-md md:max-w-xl lg:max-w-4xl z-10 animate-fade-in-up bg-white rounded-2xl shadow-2xl overflow-hidden flex flex-col items-center lg:flex-row max-h-[95vh] md:max-h-[100vh] lg:max-h-[90vh]">
+                {/* Cancel button */}
+                <button
+                    onClick={closeModal}
+                    className="absolute top-3 right-3 border border-gray-200 rounded-full p-1.5 cursor-pointer text-gray-500 hover:text-red-500 hover:border-red-500 transition-colors z-20 bg-white shadow-sm"
+                    aria-label="Close modal"
+                >
+                    <X className="w-4 h-4" />
+                </button>
+
+                {/* Left Visual Panel - Desktop Only */}
+                <div className="hidden lg:block relative w-[38%] self-stretch bg-gradient-to-br from-brand-dark to-slate-900 text-white overflow-hidden p-8 md:flex flex-col justify-between">
+                    {/* Interactive Dot Grid Background */}
+                    <InteractiveDotBackground dotColor="rgba(255, 255, 255, 0.12)" radius={1.2} gap={16} />
+
+                    {/* Decorative Elements */}
+                    <div className="absolute top-0 left-1/4 w-72 h-72 bg-blue-600/15 rounded-full blur-3xl pointer-events-none" />
+                    <div className="absolute bottom-0 right-1/4 w-60 h-60 bg-violet-600/15 rounded-full blur-3xl pointer-events-none" />
+
+                    {/* Content Section */}
+                    <div className="relative z-10 flex-1 flex flex-col justify-between h-full pb-32">
+                        <div className="space-y-4">
+                            {/* Badge */}
+                            <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md rounded-full px-4 py-2 shadow-sm w-fit">
+                                <Sparkles className="w-4 h-4 text-brand-primary animate-pulse" />
+                                <span className="text-xs font-bold tracking-wide text-white">Get in Touch</span>
+                            </div>
+
+                            {/* Heading */}
+                            <div className="space-y-2">
+                                <h3 className="text-3xl font-bold">Let&apos;s Connect</h3>
+                                <p className="text-sm text-white/70 leading-relaxed">
+                                    Fill out the form and our team will respond within 24 hours.
+                                </p>
+                            </div>
+
+                            {/* Contact Items */}
+                            <div className="space-y-4">
+                                <a
+                                    href="tel:+919036707847"
+                                    className="flex items-center gap-4"
+                                >
+                                    <div className="w-10 h-10 bg-white/10 backdrop-blur-sm rounded-xl flex items-center justify-center group-hover:bg-white/20 transition-colors flex-shrink-0">
+                                        <PhoneCall className="w-5 h-5 text-brand-primary" />
+                                    </div>
+                                    <div className="min-w-0">
+                                        <p className="text-xs text-white/50 mb-0.5">Phone</p>
+                                        <p className="text-sm font-semibold">+91 9036707847</p>
+                                    </div>
+                                </a>
+                                <a
+                                    href="mailto:hello@skilldeck.net"
+                                    className="flex items-center gap-4"
+                                >
+                                    <div className="w-10 h-10 bg-white/10 backdrop-blur-sm rounded-xl flex items-center justify-center group-hover:bg-white/20 transition-colors flex-shrink-0">
+                                        <MailIcon className="w-5 h-5 text-brand-primary" />
+                                    </div>
+                                    <div className="min-w-0">
+                                        <p className="text-xs text-white/50 mb-0.5">Email</p>
+                                        <p className="text-sm font-semibold break-all">hello@skilldeck.net</p>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Bottom Image */}
+                    <div className="absolute bottom-0 left-0 right-0 flex justify-center z-10 translate-y-[20%] pointer-events-none">
+                        <Image src={img} alt="Illustration" className="w-[68%] h-auto opacity-100 object-contain drop-shadow-2xl" priority />
+                    </div>
+                </div>
+
+                {/* Right Form Section */}
+                <div className="p-6 space-y-4 relative flex-1 bg-white overflow-y-auto flex flex-col w-full max-h-[85vh] lg:max-h-[90vh]">
+                    <div className="text-center">
+                        <h2 className="text-xl lg:text-2xl font-bold text-gray-900">
+                            {formType === 'corporate' ? (
+                                <>Scale Your <span className="bg-[linear-gradient(125deg,rgba(92,63,250,1)_0%,rgba(203,59,149,1)_48%,rgba(254,106,27,1)_100%)] bg-clip-text text-transparent">Training Business</span></>
+                            ) : (
+                                <>We&apos;d Love to <span className="bg-[linear-gradient(125deg,rgba(92,63,250,1)_0%,rgba(203,59,149,1)_48%,rgba(254,106,27,1)_100%)] bg-clip-text text-transparent">Hear From You</span></>
+                            )}
+                        </h2>
+                        <p className="text-gray-500 text-xs md:text-sm mt-2">
+                            Complete the form below and we&apos;ll get back to you shortly.
+                        </p>
+                    </div>
+                    <GenericForm
+                        formtype={formType}
+                        onClose={closeModal}
+                        courseSlug={modalConfig.courseSlug}
+                        selectedCourse={modalConfig.defaultValues?.subject || modalConfig.defaultValues?.selectedCourse}
+                        formId={modalConfig.formId ? String(modalConfig.formId) : "modal-lead-form"}
+                    />
+                </div>
+            </div>
+        </div>
+    );
+};
+
+export default LeadModal;

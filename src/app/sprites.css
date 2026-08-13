@@ -1,0 +1,95 @@
+.bg-agilespark {
+    width: 170px;
+    height: 50px;
+    background: url('/companyLogos/comp_logo_sprites.png') -222px -93px;
+}
+
+.bg-bt {
+    width: 138px;
+    height: 48px;
+    background: url('/companyLogos/comp_logo_sprites.png') -10px -236px;
+}
+
+.bg-il {
+    width: 138px;
+    height: 48px;
+    background: url('/companyLogos/comp_logo_sprites.png') -168px -236px;
+}
+
+.bg-kh {
+    width: 138px;
+    height: 48px;
+    background: url('/companyLogos/comp_logo_sprites.png') -10px -304px;
+}
+
+.bg-eg {
+    width: 200px;
+    height: 63px;
+    background: url('/companyLogos/comp_logo_sprites.png') -10px -10px;
+}
+
+.bg-lnt {
+    width: 138px;
+    height: 48px;
+    background: url('/companyLogos/comp_logo_sprites.png') -168px -304px;
+}
+
+.bg-skilldeck {
+    width: 154px;
+    height: 29px;
+    background: url('/companyLogos/comp_logo_sprites.png') -193px -440px;
+}
+
+.bg-pal {
+    width: 138px;
+    height: 48px;
+    background: url('/companyLogos/comp_logo_sprites.png') -10px -372px;
+}
+
+.bg-sa {
+    width: 138px;
+    height: 48px;
+    background: url('/companyLogos/comp_logo_sprites.png') -168px -372px;
+}
+
+.bg-sax {
+    width: 132px;
+    height: 36px;
+    background: url('/companyLogos/comp_logo_sprites.png') -460px -146px;
+}
+
+.bg-sd {
+    width: 163px;
+    height: 29px;
+    background: url('/companyLogos/comp_logo_sprites.png') -10px -440px;
+}
+
+.bg-skilluped {
+    width: 170px;
+    height: 53px;
+    background: url('/companyLogos/comp_logo_sprites.png') -10px -163px;
+}
+
+.bg-sta {
+    width: 138px;
+    height: 48px;
+    background: url('/companyLogos/comp_logo_sprites.png') -460px -10px;
+}
+
+.bg-vf {
+    width: 138px;
+    height: 48px;
+    background: url('/companyLogos/comp_logo_sprites.png') -460px -78px;
+}
+
+.bg-vlsifirst {
+    width: 210px;
+    height: 52px;
+    background: url('/companyLogos/comp_logo_sprites.png') -230px -10px;
+}
+
+.bg-vlsiguru {
+    width: 192px;
+    height: 50px;
+    background: url('/companyLogos/comp_logo_sprites.png') -10px -93px;
+}
