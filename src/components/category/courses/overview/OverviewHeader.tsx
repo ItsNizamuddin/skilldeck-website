@@ -41,7 +41,7 @@ export const OverviewHeader = ({ title = "", description = "", stats = [] }: { t
     return (
         <div className="space-y-2 lg:space-y-4 ">
             <SectionTag text="Overview" />
-            <h2 className="text-2xl md:text-3xl 2xl:text-4xl font-bold heading-Color tracking-tight leading-tight">{title}</h2>
+            <h2 className="text-2xl md:text-3xl font-bold heading-Color tracking-tight leading-tight">{title}</h2>
             <TruncatedContent maxLines={5} content={description} className="text-gray-600" />
 
             <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 lg:mt-8">

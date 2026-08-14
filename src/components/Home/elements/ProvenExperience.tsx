@@ -51,7 +51,7 @@ const ProvenExperience = () => {
                             </span>
                         </h2>
 
-                        <p className="body-medium max-w-lg">
+                        <p className="body-small max-w-lg">
                             Skilldeck is the result of several years of hands-on experience working with
                             leading training brands, including:
                         </p>

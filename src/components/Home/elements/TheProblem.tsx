@@ -56,7 +56,7 @@ const TheProblem = () => {
                     </div>
 
                     {/* Main Title */}
-                    <h2 className="heading-section mb-4">
+                    <h2 className="heading-section mb-2">
                         The Problem with the{" "}
                         <span className="bg-gradient-to-r from-[#e91cff] to-[#43baff] bg-clip-text text-transparent">
                             Training Industry
@@ -65,7 +65,7 @@ const TheProblem = () => {
                     </h2>
 
                     {/* Subtitle */}
-                    <p className="body-large max-w-2xl mx-auto">
+                    <p className="body-medium max-w-2xl mx-auto">
                         The training industry is massive—but brutally competitive.
                     </p>
                 </div>
@@ -102,11 +102,11 @@ const TheProblem = () => {
                                     className="group bg-white rounded-xl p-4 shadow-sm border border-slate-100 hover:shadow-lg hover:border-slate-200 transition-all duration-300 hover:-translate-y-1"
                                 >
                                     <div className="flex items-start gap-4">
-                                        <div className={`flex-shrink-0 w-10 h-10 rounded-xl bg-gradient-to-br ${card.color} flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300`}>
+                                        <div className={`flex-shrink-0 w-9 h-9 rounded-xl bg-gradient-to-br ${card.color} flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300`}>
                                             <card.icon className="w-5 h-5 text-white" />
                                         </div>
                                         <div className="flex-1">
-                                            <h3 className="heading-card mb-1">
+                                            <h3 className="body-medium font-semibold text-slate-900">
                                                 {card.title}
                                             </h3>
                                             <p className="body-small">
@@ -120,11 +120,11 @@ const TheProblem = () => {
                             {/* Middle Row - 1 wide card spanning 2 columns */}
                             <div className="sm:col-span-2 group bg-white rounded-xl p-4 shadow-sm border border-slate-100 hover:shadow-lg hover:border-slate-200 transition-all duration-300 hover:-translate-y-1">
                                 <div className="flex items-start gap-4">
-                                    <div className={`flex-shrink-0 w-10 h-10 rounded-xl bg-gradient-to-br ${problemCards[2].color} flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300`}>
+                                    <div className={`flex-shrink-0 w-9 h-9 rounded-xl bg-gradient-to-br ${problemCards[2].color} flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300`}>
                                         <FileSpreadsheet className="w-5 h-5 text-white" />
                                     </div>
                                     <div className="flex-1">
-                                        <h3 className="heading-card mb-1">
+                                        <h3 className="body-medium font-semibold text-slate-900">
                                             {problemCards[2].title}
                                         </h3>
                                         <p className="body-small">
@@ -141,11 +141,11 @@ const TheProblem = () => {
                                     className={`group bg-white rounded-xl p-4 shadow-sm border border-slate-100 hover:shadow-lg hover:border-slate-200 transition-all duration-300 hover:-translate-y-1 ${index === 2 ? "sm:col-span-2" : ""}`}
                                 >
                                     <div className="flex items-start gap-4">
-                                        <div className={`flex-shrink-0 w-10 h-10 rounded-xl bg-gradient-to-br ${card.color} flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300`}>
+                                        <div className={`flex-shrink-0 w-9 h-9 rounded-xl bg-gradient-to-br ${card.color} flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300`}>
                                             <card.icon className="w-5 h-5 text-white" />
                                         </div>
                                         <div className="flex-1">
-                                            <h3 className="heading-card mb-1">
+                                            <h3 className="body-medium font-semibold text-slate-900">
                                                 {card.title}
                                             </h3>
                                             <p className="body-small">

@@ -387,12 +387,12 @@ export default function CourseCheckoutCard({
                     ) : (
                         <>
                             <div className="flex items-baseline gap-2 flex-wrap">
-                                <span className="heading-section2" suppressHydrationWarning>
+                                <span className="text-xl font-semibold text-[#0F172A]" suppressHydrationWarning>
                                     {activeScheduleInfo.formattedPrice}
                                 </span>
                                 {activeScheduleInfo.hasDiscount && (
                                     <>
-                                        <span className="body-small text-slate-600 line-through font-medium" suppressHydrationWarning>
+                                        <span className="text-sm text-slate-600 line-through font-medium" suppressHydrationWarning>
                                             {activeScheduleInfo.formattedCompared}
                                         </span>
                                         <span className="bg-green-50 text-green-600 text-xs font-bold px-2 py-0.5 rounded-md border border-green-100">

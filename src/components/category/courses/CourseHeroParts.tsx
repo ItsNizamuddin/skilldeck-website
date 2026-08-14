@@ -135,7 +135,7 @@ export function AttrPill({
     iconClassName?: string;
 }) {
     return (
-        <div className="flex items-center gap-3 md:gap-4  px-2 md:px-4 py-2 rounded-xl border border-gray-200 bg-white text-[#1F2937] shadow-sm min-w-[80px] md:min-w-[110px]">
+        <div className="flex items-center gap-3 md:gap-4  px-2 md:px-4 py-2 rounded-md border border-gray-200 bg-white text-[#1F2937] shadow-sm min-w-[80px] md:min-w-[110px]">
             <div className={`flex-shrink-0 p-1.5 md:p-2 rounded-md ${iconClassName}`}>{icon}</div>
             <div>
                 <div className="text-xs md:text-[13px] font-semibold capitalize leading-tight">{label}</div>

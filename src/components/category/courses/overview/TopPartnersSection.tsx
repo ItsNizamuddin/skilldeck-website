@@ -185,7 +185,7 @@ export default function TopPartnersSection({ courseSlug }: TopPartnersSectionPro
                     <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[9px] font-black tracking-wider uppercase bg-purple-50 border border-purple-100 text-[#5544CC]">
                         Training Partners
                     </span>
-                    <h2 className="text-2xl md:text-3xl font-extrabold text-slate-800 tracking-tight">
+                    <h2 className="text-xl md:text-2xl font-extrabold text-slate-800 tracking-tight">
                         Top Training Companies <span className="bg-[linear-gradient(125deg,rgba(92,63,250,1)_0%,rgba(203,59,149,1)_48%,rgba(254,106,27,1)_100%)] bg-clip-text text-transparent">Worldwide</span>
                     </h2>
                     <p className="text-sm text-slate-500 max-w-2xl font-medium">

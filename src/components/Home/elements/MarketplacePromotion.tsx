@@ -87,12 +87,9 @@ const MarketplaceBiddingVisual = () => {
 
 const MarketplacePromotion = () => {
     return (
-        <div className="mt-20 group relative overflow-hidden bg-gradient-to-br from-indigo-50/50 via-white to-blue-50/50 rounded-2xl p-5 md:p-8 border border-indigo-100 shadow-xl">
-            <div className="absolute top-0 right-0 w-96 h-96 bg-brand-primary/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
-            <div className="absolute bottom-0 left-0 w-80 h-80 bg-purple-500/5 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2" />
-
+        <div className="mt-20 group relative overflow-hidden">
             <div className="relative z-10 grid lg:grid-cols-2 gap-12 items-center">
-                <div className="space-y-6">
+                <div className="space-y-4">
                     <div className="badge-brand gap-2 border border-blue-100 shadow-sm">
                         <span className="flex h-2 w-2 rounded-full bg-brand-primary animate-pulse" />
                         Marketplace Now Live
@@ -105,7 +102,7 @@ const MarketplacePromotion = () => {
                         </span>
                     </h2>
 
-                    <p className="body-medium">
+                    <p className="body-small">
                         Join our thriving ecosystem where training providers compete and learners discover.
                         Prominently list your course schedules and leverage our smart bidding engine to
                         reach the top of the search results.
@@ -116,24 +113,17 @@ const MarketplacePromotion = () => {
                             <div className="h-8 w-8 md:h-10 md:w-10 rounded-xl bg-white flex items-center justify-center border border-slate-100 shadow-sm">
                                 <TrendingUp className="w-5 h-5 text-brand-primary" />
                             </div>
-                            <span className="body-small font-semibold text-brand-dark">Bid for Top Placement</span>
+                            <span className="body-extrasmall font-semibold text-brand-dark">Bid for Top Placement</span>
                         </div>
                         <div className="flex items-center gap-2 md:gap-3 text-brand-muted">
                             <div className="h-8 w-8 md:h-10 md:w-10 rounded-xl bg-white flex items-center justify-center border border-slate-100 shadow-sm">
                                 <Target className="w-5 h-5 text-brand-secondary" />
                             </div>
-                            <span className="body-small font-semibold text-brand-dark">Direct CRM Lead Sync</span>
+                            <span className="body-extrasmall font-semibold text-brand-dark">Direct CRM Lead Sync</span>
                         </div>
                     </div>
 
                     <div className="flex justify-start md:justify-center lg:justify-start items-start gap-4 pt-0 lg:pt-4">
-                        <Link
-                            href="/services/marketplace"
-                            className="inline-flex items-center justify-center px-4 md:px-8 py-2 body-small font-semibold text-white transition-all duration-200 bg-[linear-gradient(125deg,rgba(92,63,250,1)_0%,rgba(203,59,149,1)_48%,rgba(254,106,27,1)_100%)] rounded-lg hover:shadow-lg hover:shadow-blue-500/30 hover:-translate-y-1"
-                        >
-                            Explore Marketplace
-                            <ArrowRight className="w-5 h-5 ml-2" />
-                        </Link>
                         <Link
                             href="/register"
                             className="inline-flex items-center justify-center px-4 md:px-8 py-2 body-small font-semibold text-brand-muted transition-all duration-200 bg-white border border-slate-200 rounded-lg hover:bg-slate-50 hover:border-slate-300 shadow-sm"
