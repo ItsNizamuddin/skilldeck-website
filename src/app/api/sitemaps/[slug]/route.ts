@@ -35,19 +35,15 @@ export async function GET(request: NextRequest, context: any): Promise<Response>
             });
         };
 
-        const now = new Date().toISOString();
-
         // 2. Build URLs: category page + course pages
-        const urls: { loc: string; lastmod: string; changefreq: string; priority: string }[] = [
+        const urls: { loc: string; changefreq: string; priority: string }[] = [
             {
                 loc: escapeXml(`${baseUrl}/${categorySlug}`),
-                lastmod: now,
                 changefreq: 'weekly',
                 priority: '0.9',
             },
             ...courses.map((course: any) => ({
                 loc: escapeXml(`${baseUrl}/${categorySlug}/${course.course_slug}`),
-                lastmod: now,
                 changefreq: 'weekly',
                 priority: '0.8',
             }))
@@ -63,7 +59,6 @@ export async function GET(request: NextRequest, context: any): Promise<Response>
                     const locations: any[] = locData.data || [];
                     return locations.map((loc: any) => ({
                         loc: escapeXml(`${baseUrl}/${categorySlug}/${loc.location_slug}`),
-                        lastmod: now,
                         changefreq: 'weekly',
                         priority: '0.7',
                     }));
@@ -83,7 +78,6 @@ export async function GET(request: NextRequest, context: any): Promise<Response>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 ${urls.map(url => `  <url>
     <loc>${url.loc}</loc>
-    <lastmod>${url.lastmod}</lastmod>
     <changefreq>${url.changefreq}</changefreq>
     <priority>${url.priority}</priority>
   </url>`).join('\n')}

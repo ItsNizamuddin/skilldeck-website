@@ -4,7 +4,6 @@ import { Grid, List } from 'lucide-react';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import PlansComparison from './elements/PlansComparison';
 import PlansComparisonTable from './elements/PlansComparisonTable';
-// import { IPlan } from '@saas-platform/interface-lib';
 import MarketPlaceCta from '@/components/Home/elements/MarketPlaceCta';
 import { useIpLocation } from '@/hooks/useIpLocation';
 import { PricingPlan } from '@/lib/plans';

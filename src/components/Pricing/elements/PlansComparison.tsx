@@ -1,7 +1,6 @@
 import React, { useMemo } from 'react';
 import PricingCard from './PricingCard';
 import { BillingInterval, groupDisplayFeatures, groupFeatures } from './utils';
-// import { IPlan } from '@saas-platform/interface-lib';
 import { PricingPlan } from '@/lib/plans';
 
 type Props = {

@@ -11,7 +11,7 @@ export const fetchCountries = async (search?: string) => {
         const endpoint = `${SERVER_URL}/api/v1/admin/locations/countries?field=name,iso2,id,timezones${searchParam}`;
 
         const response = await fetch(endpoint, {
-            next: { revalidate: 60 } // Cache for 1 hour
+            next: { revalidate: 86400 } // Cache for 24 hours
         });
 
         if (!response.ok) {
@@ -37,7 +37,7 @@ export const fetchStates = async (countryId: string, search?: string) => {
         const endpoint = `${SERVER_URL}/api/v1/admin/locations/states?field=name,id,iso2&country_id=${countryId}${searchParam}`;
 
         const response = await fetch(endpoint, {
-            next: { revalidate: 60 }
+            next: { revalidate: 86400 }
         });
 
         if (!response.ok) return [];
@@ -60,7 +60,7 @@ export const fetchCities = async (stateId: string, search?: string) => {
         const endpoint = `${SERVER_URL}/api/v1/admin/locations/cities?field=name,id&state_id=${stateId}${searchParam}`;
 
         const response = await fetch(endpoint, {
-            next: { revalidate: 60 }
+            next: { revalidate: 86400 }
         });
 
         if (!response.ok) return [];

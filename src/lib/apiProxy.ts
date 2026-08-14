@@ -88,7 +88,7 @@ export async function fetchFromBackend(endpoint: string, options?: FetchOptions)
           headers,
           body: body ? JSON.stringify(body) : undefined,
           cache,
-          next: next || (isGET ? { revalidate: 60 } : undefined),
+          next: next || (isGET ? { revalidate: 3600 } : undefined),
           signal: controller.signal,
         });
         clearTimeout(timeoutId);

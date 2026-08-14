@@ -31,7 +31,7 @@ const faqs = [
     },
 ];
 
-export const revalidate = 0; // Disable caching to fetch live plans
+export const revalidate = 3600; // Cache on CDN for 1 hour; client-side hook dynamically resolves currency
 
 export default async function PricingPage() {
     // Fetch default USD plans on server for the initial SSR skeleton.

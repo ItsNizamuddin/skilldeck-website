@@ -3,7 +3,6 @@
 import { BillingInterval } from './utils';
 import PlansComparisonTableMobile from './PlansComparisonTableMobile';
 import PlansComparisonTableDesktop from './PlansComparisonTableDesktop';
-// import { IPlan } from '@saas-platform/interface-lib';
 import { PricingPlan } from '@/lib/plans';
 
 type Props = {

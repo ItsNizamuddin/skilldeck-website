@@ -26,12 +26,14 @@ export async function GET(): Promise<Response> {
         const blogs: any[] = Array.isArray(data) ? data : (data.data || []);
         const body = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://sitemaps.org/schemas/sitemap/0.9">
-${blogs.map((blog: any) => `  <url>
-    <loc>${escapeXml(`${baseUrl}/blog/${blog.slug}`)}</loc>
-    <lastmod>${blog.updatedAt || new Date().toISOString()}</lastmod>
+${blogs.map((blog: any) => {
+    const lastmod = blog.updatedAt || blog.createdAt;
+    return `  <url>
+    <loc>${escapeXml(`${baseUrl}/blog/${blog.slug}`)}</loc>${lastmod ? `\n    <lastmod>${lastmod}</lastmod>` : ''}
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
-  </url>`).join('\n')}
+  </url>`;
+}).join('\n')}
 </urlset>`;
 
         return new Response(body, {

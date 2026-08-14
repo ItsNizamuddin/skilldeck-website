@@ -47,7 +47,7 @@ export async function generateStaticParams() {
     }
 }
 
-export const revalidate = 60;
+export const revalidate = 3600;
 
 async function getCourse(slug: string, location?: string, pageUrl?: string) {
     if (slug?.includes('.') || (location && location.includes('.'))) {
@@ -56,7 +56,7 @@ async function getCourse(slug: string, location?: string, pageUrl?: string) {
     try {
         const apiPath = location ? `/courses/${slug}/${location}` : `/courses/${slug}`;
         const response = await fetchFromBackend(apiPath, {
-            next: { revalidate: 60 }
+            next: { revalidate: 3600, tags: ['courses'] }
         });
 
         if (!response.ok) {

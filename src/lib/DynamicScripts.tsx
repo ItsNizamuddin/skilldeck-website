@@ -35,7 +35,7 @@ export default async function DynamicScripts() {
     let activeScripts: ScriptItem[] = [];
 
     try {
-        const response = await fetchFromBackend("/scripts", { next: { tags: ['scripts'], revalidate: 60 } });
+        const response = await fetchFromBackend("/scripts", { next: { tags: ['scripts'], revalidate: 3600 } });
 
         if (response.ok) {
             const data: ScriptsResponse = await response.json();
@@ -69,7 +69,7 @@ export default async function DynamicScripts() {
                 <>
                     <Script
                         id="gtm-script"
-                        strategy="afterInteractive"
+                        strategy="lazyOnload"
                         dangerouslySetInnerHTML={{
                             __html: `
                                 (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':

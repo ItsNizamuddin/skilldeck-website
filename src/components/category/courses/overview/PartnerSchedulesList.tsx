@@ -102,7 +102,7 @@ export default function PartnerSchedulesList({
                             <button
                                 key={partner.id}
                                 onClick={() => setActiveCompanyId(partner.id)}
-                                className={`relative w-[260px] md:w-[280px] lg:w-full text-left p-2 pt-5 rounded-2xl border transition-all duration-200 flex items-center gap-3 cursor-pointer flex-shrink-0 snap-start ${isActive
+                                className={`relative w-[260px] md:w-[280px] lg:w-full text-left p-2 pt-5 rounded-2xl border transition-colors duration-150 flex items-center gap-3 cursor-pointer flex-shrink-0 snap-start ${isActive
                                     ? "bg-[#5544CC]/5 border-[#5544CC]/20 shadow-sm"
                                     : "bg-white border-slate-100 hover:bg-slate-50/50"
                                     }`}

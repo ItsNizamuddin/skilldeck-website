@@ -41,7 +41,7 @@ export async function getIpLocation(ip: string): Promise<IpLocationData | null> 
 
         const endpoint = `http://ip-api.com/json/${queryIp}?fields=status,country,countryCode,region,regionName,city,timezone,currency,query`;
         const response = await fetch(endpoint, {
-            next: { revalidate: 60 },
+            next: { revalidate: 86400 },
             signal: controller.signal
         });
 

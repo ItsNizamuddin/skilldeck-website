@@ -2,10 +2,8 @@ import MainNav from "@/components/shared/Navbar";
 import Footer from "@/components/shared/Footer";
 import HeroSection from "@/components/Home";
 import { getCategories } from "@/lib/categories";
-import { getCountryCurrency } from "@/lib/ipLocation";
 import { fetchPlans } from "@/lib/plans";
 import type { Metadata } from "next";
-import { headers } from "next/headers";
 
 export const metadata: Metadata = {
     title: "World's 1st Fully Automated Plug & Play Platform For Training Companies",
@@ -26,15 +24,11 @@ export const metadata: Metadata = {
     },
 };
 
-export const revalidate = 0; // Disable caching for live plan currency resolution
+export const revalidate = 3600;
 
 export default async function Page() {
-    const headerList = await headers();
-    const country = headerList.get("cf-ipcountry") || headerList.get("x-vercel-ip-country");
-    const currency = getCountryCurrency(country);
-
     const categoriesPromise = getCategories();
-    const plansPromise = fetchPlans(currency);
+    const plansPromise = fetchPlans("USD");
 
     const [categories, plans] = await Promise.all([
         categoriesPromise,
