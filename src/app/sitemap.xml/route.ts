@@ -34,17 +34,13 @@ export async function GET(): Promise<Response> {
         ...categories.map(category => `${baseUrl}/${category.slug}.xml`)
     ];
 
-    const now = new Date().toISOString();
-
     const body = `<?xml version="1.0" encoding="UTF-8"?>
 <sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <sitemap>
     <loc>${escapeXml(`${baseUrl}/main-sitemap.xml`)}</loc>
-    <lastmod>${now}</lastmod>
   </sitemap>
 ${subSitemaps.map(url => `  <sitemap>
     <loc>${escapeXml(url)}</loc>
-    <lastmod>${now}</lastmod>
   </sitemap>`).join('\n')}
 </sitemapindex>`;
 

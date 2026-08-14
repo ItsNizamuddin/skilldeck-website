@@ -16,8 +16,8 @@ export const STATIC_LIFETIME_PLAN: PricingPlan = {
     _id: "lifetime-plan",
     code: "LIFETIME",
     status: PlanStatus.ACTIVE,
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
+    createdAt: "2024-01-01T00:00:00.000Z",
+    updatedAt: "2024-01-01T00:00:00.000Z",
     name: "Lifetime Access",
     description: "Pay once, own it forever. Best value for long-term power users.",
     price: 19999,
@@ -99,7 +99,7 @@ export const fetchPlans = async (currency?: string): Promise<PricingPlan[]> => {
         const url = `${apiUrl}/api/v1/admin/plans${queryString ? `?${queryString}` : ""}`;
 
         const response = await fetch(url, {
-            next: { revalidate: 60 }
+            next: { revalidate: 3600, tags: ['plans'] }
         });
 
         if (!response.ok) {

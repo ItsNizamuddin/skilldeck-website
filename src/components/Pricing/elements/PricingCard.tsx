@@ -1,8 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
-// import { IPlan, GroupedFeatures } from './types';
 import { Award, BookOpen, Building2, Check, Crown, HardDrive, Infinity, MapPin, Rocket, ShieldCheck, Sparkles, Users } from 'lucide-react';
 import { BillingInterval, computePlanAmount, formatOveragePrice, formatPrice, GroupedDisplayFeatures } from './utils';
-// import { IPlan } from '@saas-platform/interface-lib';
 import { PricingPlan } from '@/lib/plans';
 import DOMPurify from "@/lib/dompurify";
 import { GroupedFeatures } from './types';

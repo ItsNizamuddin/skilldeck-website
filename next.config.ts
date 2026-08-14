@@ -1,10 +1,10 @@
 import type { NextConfig } from "next";
 
-const isProd = process.env.NODE_ENV === "production";
+const isVercelProd = Boolean(process.env.VERCEL) && process.env.NODE_ENV === "production";
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
-  assetPrefix: isProd ? "https://skilldeck-website.vercel.app" : undefined,
+  assetPrefix: isVercelProd ? "https://skilldeck-website.vercel.app" : undefined,
   images: {
     remotePatterns: [
       { protocol: "https", hostname: "api.skilldeck.net" },
@@ -26,6 +26,24 @@ const nextConfig: NextConfig = {
       {
         source: '/:slug.xml',
         destination: '/api/sitemaps/:slug',
+      },
+    ];
+  },
+  async headers() {
+    return [
+      {
+        source: '/_next/:path*',
+        headers: [
+          { key: 'Access-Control-Allow-Origin', value: '*' },
+          { key: 'Access-Control-Allow-Methods', value: 'GET, OPTIONS' },
+          { key: 'Access-Control-Allow-Headers', value: '*' },
+        ],
+      },
+      {
+        source: '/(.*)',
+        headers: [
+          { key: 'Access-Control-Allow-Origin', value: '*' },
+        ],
       },
     ];
   },

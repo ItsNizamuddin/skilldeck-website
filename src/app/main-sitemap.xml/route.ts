@@ -26,7 +26,6 @@ ${routes
         (route) => `
   <url>
     <loc>${baseUrl}${route}</loc>
-    <lastmod>${new Date().toISOString()}</lastmod>
     <changefreq>weekly</changefreq>
     <priority>${route === "/" ? "1.0" : "0.8"}</priority>
   </url>`

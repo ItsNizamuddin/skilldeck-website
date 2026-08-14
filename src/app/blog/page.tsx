@@ -10,7 +10,7 @@ import BlogGridSkeleton from "@/components/Blogs/CategoryAndBlogsListing/element
 import CourseRelatedLinks from "@/components/category/courses/overview/CourseRelatedLinks";
 import { getCityContentByPath } from "@/lib/seo-registry";
 
-export const revalidate = 60; // Revalidate every 60 seconds
+export const revalidate = 3600; // Revalidate every 1 hour (on-demand webhook handles updates)
 
 const baseUrl = env.NEXT_PUBLIC_SITE_URL || 'https://skilldeck.net';
 

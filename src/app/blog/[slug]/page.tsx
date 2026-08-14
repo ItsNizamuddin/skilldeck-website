@@ -8,7 +8,7 @@ import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { Suspense } from 'react';
 
-export const revalidate = 60; // Revalidate every 60 seconds
+export const revalidate = 3600; // Revalidate every 1 hour (on-demand webhook handles updates)
 
 export async function generateStaticParams() {
     try {
@@ -71,7 +71,7 @@ async function getCourses(courseIds: string[], pageUrl?: string) {
                 ids: courseIds
             },
             queryParams,
-            next: { revalidate: 60 }
+            next: { revalidate: 3600, tags: ['courses'] }
         });
 
         if (!response.ok) {

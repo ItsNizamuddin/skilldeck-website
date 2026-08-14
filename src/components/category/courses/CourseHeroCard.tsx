@@ -100,7 +100,7 @@ export default function CourseHeroCard({
                         width={352}
                         height={188}
                         className="w-full h-auto object-cover max-h-[188px] rounded-lg"
-                        loading="lazy"
+                        priority
                     />
                 </div>
             )}

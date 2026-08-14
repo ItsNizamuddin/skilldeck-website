@@ -140,10 +140,10 @@ export function useSchedules(slug?: string) {
     const targetSlug = slug || context.defaultSlug;
 
     useEffect(() => {
-        if (targetSlug) {
+        if (targetSlug && targetSlug !== context.defaultSlug) {
             context.fetchForSlug(targetSlug);
         }
-    }, [targetSlug, context.fetchForSlug]);
+    }, [targetSlug, context.defaultSlug, context.fetchForSlug]);
 
     const result = (targetSlug && context.results[targetSlug]) || {
         schedules: null,

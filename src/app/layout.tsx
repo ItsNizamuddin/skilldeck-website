@@ -5,7 +5,7 @@ import "./sprites.css";
 import "./typo.css";
 
 const roboto = Roboto({
-  weight: ["400", "500", "700", "900"],
+  weight: ["400", "700"],
   subsets: ["latin"],
   variable: "--font-roboto",
   display: "swap",
@@ -52,6 +52,8 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <head>
+        <link rel="preconnect" href="https://api.skilldeck.net" crossOrigin="anonymous" />
+        <link rel="dns-prefetch" href="https://api.skilldeck.net" />
         <link rel="preconnect" href="https://www.gstatic.com" crossOrigin="anonymous" />
         <script
           type="application/ld+json"
