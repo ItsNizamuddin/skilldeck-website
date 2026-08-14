@@ -1,7 +1,10 @@
 import type { NextConfig } from "next";
 
+const isProd = process.env.NODE_ENV === "production";
+
 const nextConfig: NextConfig = {
   reactStrictMode: true,
+  assetPrefix: isProd ? "https://skilldeck-website.vercel.app" : undefined,
   images: {
     remotePatterns: [
       { protocol: "https", hostname: "api.skilldeck.net" },

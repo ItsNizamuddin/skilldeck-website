@@ -43,21 +43,21 @@ const DemoSection = () => {
                 <div className="text-center mb-12">
                     {/* Badge */}
                     <div className="inline-flex items-center justify-center mb-6">
-                        <span className="bg-[linear-gradient(125deg,rgba(92,63,250,1)_0%,rgba(203,59,149,1)_48%,rgba(254,106,27,1)_100%)] text-white px-4 py-1.5 rounded-full text-sm font-medium flex items-center gap-2">
+                        <span className="bg-[linear-gradient(125deg,rgba(92,63,250,1)_0%,rgba(203,59,149,1)_48%,rgba(254,106,27,1)_100%)] text-white px-4 py-1.5 rounded-full text-xs font-medium flex items-center gap-2">
                             <Sparkles className="w-4 h-4" />
                             See It In Action
                         </span>
                     </div>
 
                     {/* Title */}
-                    <h2 className="text-2xl lg:text-5xl 2xl:text-6xl font-bold text-white mb-4">
+                    <h2 className="text-2xl lg:text-4xl font-bold text-white mb-2">
                         Experience the{" "}
                         <span className="bg-[linear-gradient(125deg,rgba(92,63,250,1)_0%,rgba(203,59,149,1)_48%,rgba(254,106,27,1)_100%)] bg-clip-text text-transparent">
                             Power of Skilldeck
                         </span>
                     </h2>
 
-                    <p className="body-large text-slate-400 max-w-2xl mx-auto">
+                    <p className="body-small text-slate-400 max-w-2xl mx-auto">
                         Watch our platform in action and explore how it transforms training businesses worldwide.
                     </p>
                 </div>
@@ -124,17 +124,17 @@ const DemoSection = () => {
                             {features.map((feature) => (
                                 <div
                                     key={feature.title}
-                                    className="bg-slate-900/50 backdrop-blur-sm border border-slate-700/50 rounded-xl p-5 hover:border-brand-primary/50 transition-colors duration-300 group"
+                                    className="bg-slate-900/50 backdrop-blur-sm border border-slate-700/50 rounded-xl py-3 px-4 hover:border-brand-primary/50 transition-colors duration-300 group"
                                 >
-                                    <div className="flex items-start gap-4">
-                                        <div className="flex-shrink-0 w-7 h-7 bg-[linear-gradient(125deg,rgba(92,63,250,1)_0%,rgba(203,59,149,1)_48%,rgba(254,106,27,1)_100%)] rounded-md flex items-center justify-center">
-                                            <Check className="w-4 h-4 text-white" />
+                                    <div className="flex items-start gap-3">
+                                        <div className="flex-shrink-0 w-5 h-5 bg-[linear-gradient(125deg,rgba(92,63,250,1)_0%,rgba(203,59,149,1)_48%,rgba(254,106,27,1)_100%)] rounded-md flex items-center justify-center">
+                                            <Check className="w-3 h-3 text-white" />
                                         </div>
                                         <div>
-                                            <h4 className="heading-card text-white mb-1 group-hover:text-brand-primary transition-colors">
+                                            <h4 className="body-medium font-semibold text-white mb-0 group-hover:text-brand-primary transition-colors">
                                                 {feature.title}
                                             </h4>
-                                            <p className="body-small text-slate-400">
+                                            <p className="body-extrasmall text-slate-400">
                                                 {feature.description}
                                             </p>
                                         </div>

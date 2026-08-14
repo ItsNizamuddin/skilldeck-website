@@ -7,7 +7,7 @@ import Image from "next/image";
 import Link from "next/link";
 import React, { useState } from "react";
 import mainLogo from "../../../../../public/logos/mainlogo.svg";
-import { aboutLinks, mobileNavLinks, services } from "./navConfig";
+import { aboutLinks, mobileNavLinks } from "./navConfig";
 
 interface MobileMenuProps {
     isMenuOpen: boolean;
@@ -26,11 +26,9 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({
     ctaText,
     categories,
     isHomePage,
-    isCompaniesLoading,
     handleCompaniesClick,
     handleNavClick,
 }) => {
-    const [mobileServicesOpen, setMobileServicesOpen] = useState(false);
     const [mobileCoursesOpen, setMobileCoursesOpen] = useState(false);
     const [openCategoryIndex, setOpenCategoryIndex] = useState<number | null>(null);
     const [mobileAboutOpen, setMobileAboutOpen] = useState(false);
@@ -86,62 +84,6 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({
                 {/* Content */}
                 <div className="flex-1 overflow-y-auto bg-white">
                     <div className="p-4">
-                        {/* Services Accordion */}
-                        <div className="mb-1">
-                            <button
-                                type="button"
-                                data-no-loader="true"
-                                onClick={() => setMobileServicesOpen(!mobileServicesOpen)}
-                                className="w-full flex items-center justify-between py-3 text-gray-800 font-medium hover:bg-gray-50 rounded-lg transition-colors"
-                            >
-                                <span className="text-[15px] font-medium">Services</span>
-                                <ChevronDown className={cn(
-                                    "w-4 h-4 text-gray-500 transition-transform duration-200",
-                                    mobileServicesOpen && "rotate-180"
-                                )} />
-                            </button>
-
-                            {mobileServicesOpen && (
-                                <div className="mt-1 border-l-2 border-blue-100 space-y-1">
-                                    <Link
-                                        href="/services"
-                                        onClick={closeMenu}
-                                        className="flex items-center gap-2 px-3 py-2.5 text-gray-600 text-sm hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
-                                    >
-                                        <Layers className="w-4 h-4" />
-                                        <span>All Services</span>
-                                    </Link>
-                                    {services.map((service) => (
-                                        <Link
-                                            key={service.name}
-                                            href={service.href}
-                                            onClick={closeMenu}
-                                            className="flex items-center gap-2 px-3 py-2.5 text-gray-600 text-sm hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
-                                        >
-                                            <service.icon className="w-4 h-4" />
-                                            <span>{service.name}</span>
-                                        </Link>
-                                    ))}
-                                    <Link
-                                        href="/services/marketplace"
-                                        onClick={closeMenu}
-                                        className="flex items-center gap-2 px-3 py-2.5 text-gray-600 text-sm hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
-                                    >
-                                        <ShoppingCart className="w-4 h-4 text-purple-600" />
-                                        <span>Marketplace</span>
-                                    </Link>
-                                    <Link
-                                        href="/web-templates"
-                                        onClick={closeMenu}
-                                        className="flex items-center gap-2 px-3 py-2.5 text-gray-600 text-sm hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
-                                    >
-                                        <Layout className="w-4 h-4" />
-                                        <span>Web Templates</span>
-                                    </Link>
-                                </div>
-                            )}
-                        </div>
-
                         {/* Courses Accordion */}
                         <div className="mb-1">
                             <button

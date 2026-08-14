@@ -2,6 +2,7 @@ import { ChartColumn, Check, CheckCircle2, Sparkles, X } from "lucide-react";
 import Image from "next/image";
 import skilldeckLogo from "../../../../public/logos/mainlogo.svg";
 import withoutSkilldeckImage from "../../../../public/theProblem/withandwithout.webp";
+import InteractiveDotBackground from "@/components/ui/InteractiveDotBackground";
 
 const withoutSkilldeck = [
     "10+ different software subscriptions",
@@ -33,7 +34,7 @@ const SkilldSolution = () => {
             <div className="container mx-auto px-2 xl:px-0">
 
                 {/* Header */}
-                <div className="text-center mb-10 md:mb-14">
+                <div className="text-center mb-10">
                     <div className="inline-flex items-center justify-center mb-6">
                         <span className="inline-flex items-center gap-2 bg-gradient-to-r from-emerald-500 to-cyan-500 text-white px-4 py-1.5 rounded-full text-xs md:text-sm font-medium">
                             <Sparkles className="w-4 h-4" aria-hidden="true" />
@@ -41,16 +42,16 @@ const SkilldSolution = () => {
                         </span>
                     </div>
 
-                    <h2 className="text-3xl lg:text-5xl 2xl:text-6xl font-bold text-brand-dark mb-2">
+                    <h2 className="text-2xl lg:text-4xl font-bold text-brand-dark mb-2">
                         Everything You Need.
                     </h2>
-                    <h2 className="heading-section font-bold mb-4">
+                    <h2 className="heading-section2 font-bold mb-4">
                         <span className="bg-[linear-gradient(125deg,rgba(92,63,250,1)_0%,rgba(203,59,149,1)_48%,rgba(254,106,27,1)_100%)] bg-clip-text text-transparent">
                             One Dashboard. One Cost.
                         </span>
                     </h2>
 
-                    <p className="body-large max-w-3xl mx-auto">
+                    <p className="body-medium max-w-3xl mx-auto">
                         Skilldeck eliminates up to{" "}
                         <span className="font-bold text-brand-dark">90% of unnecessary expenses</span>{" "}
                         by replacing multiple tools, teams, and manual processes with a single, powerful, AI-enabled platform.
@@ -58,7 +59,8 @@ const SkilldSolution = () => {
                 </div>
 
                 {/* Blue Banner */}
-                <div className="bg-[linear-gradient(125deg,rgba(92,63,250,1)_0%,rgba(203,59,149,1)_48%,rgba(254,106,27,1)_100%)] rounded-2xl p-6 md:p-10 mb-10 md:mb-14">
+                <div className="bg-[#0a0f1d] rounded-2xl p-4 md:p-10 mb-10 md:mb-14">
+
                     <div className="text-center">
                         <h3 className="heading-section2 text-white mb-3">
                             Just one system that runs your entire training business end-to-end.
@@ -112,7 +114,7 @@ const SkilldSolution = () => {
                                             <div className="flex-shrink-0 w-5 h-5 rounded-full bg-red-100 flex items-center justify-center">
                                                 <X className="w-3 h-3 text-red-500" aria-hidden="true" />
                                             </div>
-                                            <span className="body-medium">{item}</span>
+                                            <span className="body-small">{item}</span>
                                         </li>
                                     ))}
                                 </ul>
@@ -121,7 +123,14 @@ const SkilldSolution = () => {
                     </div>
 
                     {/* With Skilldeck */}
-                    <div className="bg-[linear-gradient(125deg,rgba(92,63,250,1)_0%,rgba(203,59,149,1)_48%,rgba(254,106,27,1)_100%)] rounded-2xl p-5 md:p-6 shadow-lg relative overflow-hidden">
+                    <div className="bg-[#0a0f1d] rounded-2xl p-5 md:p-6 shadow-lg relative overflow-hidden">
+                        <InteractiveDotBackground />
+
+                        {/* Background elements */}
+                        <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(37,99,235,0.15),rgba(255,255,255,0))] pointer-events-none" />
+                        <div className="absolute top-0 left-1/4 w-96 h-96 bg-brand-primary/10 rounded-full blur-3xl pointer-events-none" />
+                        <div className="absolute bottom-0 right-1/4 w-80 h-80 bg-brand-secondary/10 rounded-full blur-3xl pointer-events-none" />
+
                         <div className="space-y-4 mb-5">
                             <div className="flex items-center gap-2">
                                 <div className="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center border border-white/30">
@@ -141,13 +150,13 @@ const SkilldSolution = () => {
                             </div>
                         </div>
 
-                        <ul className="space-y-3">
+                        <ul className="space-y-2">
                             {withSkilldeck.map((item) => (
-                                <li key={item} className="flex items-start gap-3">
+                                <li key={item} className="flex items-start gap-2">
                                     <div className="flex-shrink-0 w-5 h-5 rounded-full bg-white flex items-center justify-center mt-0.5">
                                         <Check className="w-3 h-3 text-brand-primary" aria-hidden="true" />
                                     </div>
-                                    <span className="body-medium text-white/90">{item}</span>
+                                    <span className="body-small text-white/90">{item}</span>
                                 </li>
                             ))}
                         </ul>

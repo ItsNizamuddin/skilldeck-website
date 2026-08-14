@@ -40,9 +40,9 @@ export default function NotFound() {
                 <div className="border-t border-slate-200 pt-8">
                     <p className="body-small text-slate-500 mb-4">Need help? Try these:</p>
                     <div className="flex flex-wrap justify-center gap-4 body-small">
-                        <Link href="/services" className="text-brand-primary hover:underline font-medium">
+                        {/* <Link href="/services" className="text-brand-primary hover:underline font-medium">
                             Browse Services
-                        </Link>
+                        </Link> */}
                         <span className="text-slate-300">•</span>
                         <Link href="/contact-us" className="text-brand-primary hover:underline font-medium">
                             Contact Support

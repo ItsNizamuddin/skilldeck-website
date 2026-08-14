@@ -133,7 +133,7 @@ export default function CompanyCard({ company }: CompanyCardProps) {
                 <Button
                     as={Link}
                     href={`/companies/${company.slug}?id=${company.id}`}
-                    variant="primary"
+                    variant="outline-primary"
                     className="flex-1 h-11 justify-center gap-1.5"
                 >
                     View profile

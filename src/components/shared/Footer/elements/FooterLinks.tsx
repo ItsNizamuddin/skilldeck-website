@@ -12,14 +12,14 @@ const FooterLinks = () => {
         setOpenSection(openSection === section ? "" : section);
     };
 
-    const productLinks = [
-        { label: "All Services", href: "/services" },
-        { label: "LMS Platform", href: "/services/lms" },
-        { label: "Website Builder", href: "/services/cms" },
-        { label: "Web Chat", href: "/services/webchat" },
-        { label: "CRM", href: "/services/crm" },
-        { label: "Web Templates", href: "/web-templates" },
-    ];
+    // const productLinks = [
+    //     { label: "All Services", href: "/services" },
+    //     { label: "LMS Platform", href: "/services/lms" },
+    //     { label: "Website Builder", href: "/services/cms" },
+    //     { label: "Web Chat", href: "/services/webchat" },
+    //     { label: "CRM", href: "/services/crm" },
+    //     { label: "Web Templates", href: "/web-templates" },
+    // ];
 
     const companyLinks = [
         { label: "About Us", href: "/about-us" },
@@ -63,7 +63,7 @@ const FooterLinks = () => {
     return (
         <div className="lg:col-span-8 grid grid-cols-1 md:grid-cols-3 gap-0 md:gap-8">
             {/* Services Links */}
-            <FooterSection title="Services">
+            {/* <FooterSection title="Services">
                 <ul className="space-y-1">
                     {productLinks.map((link, index) => (
                         <li key={index}>
@@ -73,7 +73,7 @@ const FooterLinks = () => {
                         </li>
                     ))}
                 </ul>
-            </FooterSection>
+            </FooterSection> */}
 
             {/* Company Links */}
             <FooterSection title="Company">

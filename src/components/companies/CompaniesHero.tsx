@@ -7,7 +7,7 @@ interface CompaniesHeroProps {
 
 export default function CompaniesHero({ totalCompanies }: CompaniesHeroProps) {
     return (
-        <section className="relative bg-white pt-20 md:pt-24 pb-10 lg:pt-16 lg:pb-0 overflow-hidden">
+        <section className="relative bg-white pt-20 md:pt-24 pb-10 lg:pt-7 lg:pb-0 overflow-hidden">
             <div className="container mx-auto px-4 lg:px-0">
 
                 {/* ── Main hero grid ── */}
@@ -120,7 +120,7 @@ export default function CompaniesHero({ totalCompanies }: CompaniesHeroProps) {
                                     {icon}
                                 </div>
                                 <div className="min-w-0">
-                                    <p className="text-xl sm:text-2xl md:text-3xl font-extrabold text-slate-900 leading-none">
+                                    <p className="text-lg md:text-xl 2xl:text-2xl font-extrabold text-slate-900 leading-none">
                                         {typeof value === "string" ? value : value?.totalCompanies ?? ""}
                                     </p>
                                     <p className="text-[10px] sm:text-xs text-slate-500 font-semibold mt-1.5 leading-tight">{label}</p>

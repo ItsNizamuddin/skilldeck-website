@@ -11,7 +11,6 @@ import { useEffect, useState } from "react";
 import mainLogo from "../../../../../public/logos/mainlogo.svg";
 import { MobileMenu } from "./MobileMenu";
 import NavCategoriesDropdown from "./NavCategoriesDropdown";
-import { services } from "./navConfig";
 
 interface Props {
     isHidden?: boolean;
@@ -42,7 +41,7 @@ function MainNav({ isHidden, categories }: Props) {
 
     const isBusinessPage = pathname.startsWith("/blog") ||
         pathname.startsWith("/companies") ||
-        (pathname !== "/" && !["/about-us", "/contact-us", "/services", "/register", "/careers", "/web-templates"].some(p => pathname.startsWith(p)));
+        (pathname !== "/" && !["/about-us", "/contact-us", "/register", "/careers", "/web-templates"].some(p => pathname.startsWith(p)));
 
     const ctaText = isBusinessPage ? "List your Institute" : "Try for free";
 
@@ -162,83 +161,6 @@ function MainNav({ isHidden, categories }: Props) {
                         {/* Desktop Navigation */}
                         <div className="hidden lg:flex items-center">
                             <NavMenu setActive={setActive}>
-                                <MenuItem setActive={setActive} active={active} item="Services" centered>
-                                    <div className="w-[85vw] max-w-5xl bg-white rounded-xl grid grid-cols-12 gap-6 p-4 h-full border border-slate-100 shadow-xl">
-                                        <div className="col-span-12 lg:col-span-3 flex flex-col gap-4">
-                                            <Link href="/services" className="flex-1 relative overflow-hidden rounded-2xl p-6 group">
-                                                <div className="absolute inset-0 bg-gradient-to-br from-blue-600 to-purple-600 transition-transform duration-500 group-hover:scale-110" />
-                                                <div className="relative z-10 h-full flex flex-col justify-between text-white">
-                                                    <div>
-                                                        <div className="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center mb-4">
-                                                            <Layers className="w-6 h-6" />
-                                                        </div>
-                                                        <h4 className="text-xl font-bold mb-2">All Services</h4>
-                                                        <p className="text-sm text-white leading-relaxed">
-                                                            Explore our comprehensive suite of tools designed to scale your business.
-                                                        </p>
-                                                    </div>
-                                                    <div className="flex items-center gap-2 text-sm font-semibold mt-4">
-                                                        <span>View Catalog</span>
-                                                        <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
-                                                    </div>
-                                                </div>
-                                            </Link>
-
-                                            <Link href="/web-templates" className="relative overflow-hidden rounded-2xl p-5 bg-gradient-to-br from-slate-50 to-slate-100 border border-slate-200 group hover:border-blue-200 hover:shadow-lg transition-all">
-                                                <div className="flex items-center gap-4">
-                                                    <div className="w-10 h-10 bg-white rounded-lg shadow-sm flex items-center justify-center group-hover:scale-110 transition-transform">
-                                                        <Layout className="w-5 h-5 text-blue-600" />
-                                                    </div>
-                                                    <div>
-                                                        <h4 className="font-bold text-slate-800 group-hover:text-blue-600 transition-colors">Web Templates</h4>
-                                                        <p className="text-xs text-slate-500">Premium ready-to-use designs</p>
-                                                    </div>
-                                                </div>
-                                            </Link>
-
-                                            <Link href="/services/marketplace" className="relative overflow-hidden rounded-2xl p-5 bg-gradient-to-br from-slate-50 to-slate-100 border border-slate-200 group hover:border-purple-200 hover:shadow-lg transition-all">
-                                                <div className="flex items-center gap-4">
-                                                    <div className="w-10 h-10 bg-white rounded-lg shadow-sm flex items-center justify-center group-hover:scale-110 transition-transform">
-                                                        <ShoppingCart className="w-5 h-5 text-purple-600" />
-                                                    </div>
-                                                    <div>
-                                                        <h4 className="font-bold text-slate-800 group-hover:text-purple-600 transition-colors">Marketplace</h4>
-                                                        <p className="text-xs text-slate-500">Discover and buy tools</p>
-                                                    </div>
-                                                </div>
-                                            </Link>
-                                        </div>
-
-                                        <div className="col-span-12 lg:col-span-9 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
-                                            <div className="px-2 pb-2 text-xs font-semibold text-slate-400 uppercase tracking-wider col-span-full">
-                                                Core Platform
-                                            </div>
-                                            {services.slice(0, 4).map((service) => (
-                                                <ProductItem
-                                                    key={service.name}
-                                                    title={service.name}
-                                                    description={service.description}
-                                                    href={service.href}
-                                                    icon={service.icon}
-                                                />
-                                            ))}
-
-                                            <div className="px-2 pb-2 pt-4 text-xs font-semibold text-slate-400 uppercase tracking-wider col-span-full border-t border-slate-100 mt-2">
-                                                Additional Services
-                                            </div>
-                                            {services.slice(4).map((service) => (
-                                                <ProductItem
-                                                    key={service.name}
-                                                    title={service.name}
-                                                    description={service.description}
-                                                    href={service.href}
-                                                    icon={service.icon}
-                                                />
-                                            ))}
-                                        </div>
-                                    </div>
-                                </MenuItem>
-
                                 <HoveredLink
                                     href="/companies"
                                     onClick={handleCompaniesClick}
@@ -285,7 +207,7 @@ function MainNav({ isHidden, categories }: Props) {
                                     target="_blank"
                                     rel="nofollow"
                                     variant="outline"
-                                    size="md"
+                                    size="sm"
                                     className="rounded-full"
                                 >
                                     SaaS Guide
@@ -297,7 +219,7 @@ function MainNav({ isHidden, categories }: Props) {
                                     href="/register"
                                     rel="nofollow"
                                     variant="primary"
-                                    size="md"
+                                    size="sm"
                                     className="flex items-center gap-2 rounded-full"
                                 >
                                     {ctaText}

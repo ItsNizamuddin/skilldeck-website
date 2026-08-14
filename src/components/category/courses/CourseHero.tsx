@@ -107,7 +107,7 @@ export default function CourseHero({ course, courseSlug, locationSlug }: CourseH
                         </div>
 
                         {/* Attribute pills */}
-                        <div className="flex flex-wrap gap-4 md:gap-5">
+                        <div className="flex flex-wrap gap-2 md:gap-5">
                             <AttrPill
                                 icon={<Clock className="w-4 h-4" aria-hidden="true" />}
                                 label={courseCard?.courseDuration || "Duration"}
