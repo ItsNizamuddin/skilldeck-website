@@ -71,7 +71,7 @@ export const OverviewHeader = ({ title = "", description = "", stats = [] }: { t
                             {/* Icon container */}
                             {resolved && (
                                 <div
-                                    className="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0"
+                                    className="w-10 h-10 rounded-lg flex items-center justify-center shrink-0"
                                     style={{ backgroundColor: iconBg }}
                                 >
                                     <resolved.Icon

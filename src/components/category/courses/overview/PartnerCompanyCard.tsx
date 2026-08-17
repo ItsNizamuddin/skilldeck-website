@@ -31,7 +31,7 @@ export default function PartnerCompanyCard({
             className={`relative bg-white border border-slate-100 rounded-3xl p-5 flex flex-col justify-between transition-all duration-300 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.02)] hover:shadow-[0_12px_30px_-6px_rgba(0,0,0,0.06)] hover:scale-[1.01] max-w-[320px] w-full mx-auto ${borderHoverClass}`}
         >
             {hasRank && (
-                <div className="absolute top-0 left-0 bg-gradient-to-r from-purple-700 to-pink-500 text-white text-[9px] font-black tracking-wider uppercase px-3 py-1.5 rounded-tl-3xl rounded-br-2xl flex items-center gap-1 shadow-sm">
+                <div className="absolute top-0 left-0 bg-linear-to-r from-purple-700 to-pink-500 text-white text-[9px] font-black tracking-wider uppercase px-3 py-1.5 rounded-tl-3xl rounded-br-2xl flex items-center gap-1 shadow-sm">
                     <Trophy className="w-2.5 h-2.5 text-white" />
                     <span>Rank {partner.rank}</span>
                 </div>

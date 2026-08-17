@@ -4,6 +4,8 @@ const isVercelProd = Boolean(process.env.VERCEL) && process.env.NODE_ENV === "pr
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
+  poweredByHeader: false,
+  compress: true,
   assetPrefix: isVercelProd ? "https://skilldeck-website.vercel.app" : undefined,
   images: {
     remotePatterns: [
@@ -17,9 +19,18 @@ const nextConfig: NextConfig = {
     ],
     formats: ["image/avif", "image/webp"],
     minimumCacheTTL: 31536000,
+    deviceSizes: [640, 750, 828, 1080, 1200, 1920],
+    imageSizes: [16, 32, 48, 64, 96, 128, 256],
   },
   experimental: {
-    optimizePackageImports: ["lucide-react", "framer-motion", "lodash", "date-fns"],
+    optimizePackageImports: [
+      "lucide-react",
+      "framer-motion",
+      "lodash",
+      "date-fns",
+      "@radix-ui/react-accordion",
+      "@radix-ui/react-dialog",
+    ],
   },
   async rewrites() {
     return [
@@ -40,9 +51,25 @@ const nextConfig: NextConfig = {
         ],
       },
       {
+        source: '/(logos|images|fonts)/:path*',
+        headers: [
+          { key: 'Access-Control-Allow-Origin', value: '*' },
+          { key: 'Cache-Control', value: 'public, max-age=31536000, immutable' },
+        ],
+      },
+      {
+        source: '/favicon.ico',
+        headers: [
+          { key: 'Access-Control-Allow-Origin', value: '*' },
+          { key: 'Cache-Control', value: 'public, max-age=31536000, immutable' },
+        ],
+      },
+      {
         source: '/(.*)',
         headers: [
           { key: 'Access-Control-Allow-Origin', value: '*' },
+          { key: 'X-Content-Type-Options', value: 'nosniff' },
+          { key: 'X-DNS-Prefetch-Control', value: 'on' },
         ],
       },
     ];

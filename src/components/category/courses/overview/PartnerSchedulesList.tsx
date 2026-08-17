@@ -67,11 +67,11 @@ export default function PartnerSchedulesList({
         if (!activePartner?.schedules) return;
         const total = Math.min(activePartner.schedules.length, 3);
         if (total <= 1) return;
-        
+
         let nextIndex = index;
         if (nextIndex < 0) nextIndex = total - 1;
         if (nextIndex >= total) nextIndex = 0;
-        
+
         setActiveBatchIndex(nextIndex);
         if (batchContainerRef.current) {
             const cardEl = batchContainerRef.current.children[nextIndex] as HTMLElement;
@@ -95,14 +95,14 @@ export default function PartnerSchedulesList({
 
             <div className="grid grid-cols-1 lg:grid-cols-10 gap-6 items-start">
                 {/* Left Side: Clickable Sidebar Tabs */}
-                <div className="lg:col-span-3 flex flex-row lg:flex-col gap-3 lg:space-y-3 lg:max-h-[500px] lg:overflow-y-auto pr-1 overflow-x-auto pb-3 lg:pb-0 scrollbar-none flex-nowrap shrink-0 snap-x snap-mandatory">
+                <div className="lg:col-span-3 flex flex-row lg:flex-col gap-3 lg:space-y-3 lg:max-h-125 lg:overflow-y-auto pr-1 overflow-x-auto pb-3 lg:pb-0 scrollbar-none flex-nowrap shrink-0 snap-x snap-mandatory">
                     {sortedPartners.map((partner) => {
                         const isActive = activeCompanyId === partner.id;
                         return (
                             <button
                                 key={partner.id}
                                 onClick={() => setActiveCompanyId(partner.id)}
-                                className={`relative w-[260px] md:w-[280px] lg:w-full text-left p-2 pt-5 rounded-2xl border transition-colors duration-150 flex items-center gap-3 cursor-pointer flex-shrink-0 snap-start ${isActive
+                                className={`relative w-65 md:w-70 lg:w-full text-left p-2 pt-5 rounded-2xl border transition-colors duration-150 flex items-center gap-3 cursor-pointer shrink-0 snap-start ${isActive
                                     ? "bg-[#5544CC]/5 border-[#5544CC]/20 shadow-sm"
                                     : "bg-white border-slate-100 hover:bg-slate-50/50"
                                     }`}
@@ -113,7 +113,7 @@ export default function PartnerSchedulesList({
                                         <span>Rank {partner.rank}</span>
                                     </div>
                                 )}
-                                <div className="w-16 h-8 relative flex-shrink-0 flex items-center justify-center overflow-hidden p-1 rounded-lg">
+                                <div className="w-16 h-8 relative shrink-0 flex items-center justify-center overflow-hidden p-1 rounded-lg">
                                     {partner.logo ? (
                                         <Image
                                             src={partner.logo}
@@ -134,7 +134,7 @@ export default function PartnerSchedulesList({
                                     </div>
                                     <div className="flex items-center justify-between text-[9px] text-slate-400 font-medium">
                                         <span className="truncate">{partner.address || "Online / Hybrid"}</span>
-                                        <span className="flex-shrink-0 bg-white border border-slate-200 px-1.5 py-0.5 rounded-full text-slate-500 font-bold ml-1">
+                                        <span className="shrink-0 bg-white border border-slate-200 px-1.5 py-0.5 rounded-full text-slate-500 font-bold ml-1">
                                             {partner.schedulesCount} Batches
                                         </span>
                                     </div>
@@ -145,12 +145,12 @@ export default function PartnerSchedulesList({
                 </div>
 
                 {/* Right Side: Active Company Schedules Grid */}
-                <div className="relative lg:col-span-7 bg-slate-50/40 border border-slate-100 rounded-2xl p-3 lg:p-5 min-h-[300px]">
+                <div className="relative lg:col-span-7 bg-slate-50/40 border border-slate-100 rounded-2xl p-3 lg:p-5 min-h-75">
                     {activePartner && (
                         <div className="space-y-6">
                             {/* Active Company Name Header inside the right panel */}
                             <div className="flex items-center gap-4">
-                                <div className="w-32 h-10 relative flex-shrink-0 flex items-center justify-center overflow-hidden ">
+                                <div className="w-32 h-10 relative shrink-0 flex items-center justify-center overflow-hidden ">
                                     {activePartner.logo ? (
                                         <Image
                                             src={activePartner.logo}
@@ -183,7 +183,7 @@ export default function PartnerSchedulesList({
                                     let hasDiscount = schActual > schSell && schSell > 0;
 
                                     return (
-                                        <div key={sch._id || sch.id} className="bg-white border border-slate-100 rounded-2xl p-4 flex flex-col justify-between gap-4 shadow-sm hover:border-[#5544CC]/20 transition-all w-[280px] md:w-auto flex-shrink-0 snap-start">
+                                        <div key={sch._id || sch.id} className="bg-white border border-slate-100 rounded-2xl p-4 flex flex-col justify-between gap-4 shadow-sm hover:border-[#5544CC]/20 transition-all w-70 md:w-auto shrink-0 snap-start">
                                             <div className="space-y-3">
                                                 {/* Header Badges */}
                                                 <div className="flex items-center gap-2">
@@ -198,7 +198,7 @@ export default function PartnerSchedulesList({
                                                 {/* Date & Time info */}
                                                 <div className="space-y-2">
                                                     <div className="flex items-center gap-2 text-xs">
-                                                        <Calendar className="w-3.5 h-3.5 text-[#5544CC] flex-shrink-0" />
+                                                        <Calendar className="w-3.5 h-3.5 text-[#5544CC] shrink-0" />
                                                         <div>
                                                             <span className="text-slate-400 font-medium block text-[9px] uppercase tracking-wider leading-none mb-0.5">Start date</span>
                                                             <span className="font-bold text-slate-700">
@@ -211,7 +211,7 @@ export default function PartnerSchedulesList({
                                                         </div>
                                                     </div>
                                                     <div className="flex items-center gap-2 text-xs">
-                                                        <Clock className="w-3.5 h-3.5 text-[#5544CC] flex-shrink-0" />
+                                                        <Clock className="w-3.5 h-3.5 text-[#5544CC] shrink-0" />
                                                         <div>
                                                             <span className="text-slate-400 font-medium block text-[9px] uppercase tracking-wider leading-none mb-0.5">Duration</span>
                                                             <span className="font-bold text-slate-700">
@@ -282,11 +282,10 @@ export default function PartnerSchedulesList({
                                                 key={idx}
                                                 aria-label={`Go to batch ${idx + 1}`}
                                                 onClick={() => handleBatchScroll(idx)}
-                                                className={`w-1.5 h-1.5 rounded-full transition-all duration-300 ${
-                                                    idx === activeBatchIndex
+                                                className={`w-1.5 h-1.5 rounded-full transition-all duration-300 ${idx === activeBatchIndex
                                                         ? "w-4 bg-[#5544CC]"
                                                         : "bg-slate-300 hover:bg-slate-400"
-                                                }`}
+                                                    }`}
                                             />
                                         ))}
                                     </div>

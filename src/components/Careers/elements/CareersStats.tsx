@@ -17,7 +17,7 @@ export default function CareersStats() {
                             <div className="inline-flex items-center justify-center w-10 md:w-12 h-10 md:h-12 bg-blue-50 rounded-xl mb-4">
                                 <stat.icon className="w-6 h-6 text-brand-primary" />
                             </div>
-                            <div className="text-xl md:text-2xl lg:text-3xl font-bold text-slate-900 mb-1">{stat.value}</div>
+                            <div className="text-xl md:text-2xl font-bold text-slate-900 ">{stat.value}</div>
                             <div className="body-small text-slate-600">{stat.label}</div>
                         </div>
                     ))}

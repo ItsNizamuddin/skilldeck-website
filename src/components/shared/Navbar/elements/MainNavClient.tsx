@@ -154,7 +154,7 @@ function MainNav({ isHidden, categories }: Props) {
                         "bg-white/95 backdrop-blur-md rounded-full px-4 md:px-6 shadow-lg border border-gray-100 flex items-center justify-between transition-all duration-300",
                         isScrolled && "shadow-xl"
                     )}>
-                        <Link href="/" className="flex items-center gap-2 flex-shrink-0" data-no-loader="true">
+                        <Link href="/" className="flex items-center gap-2 shrink-0" data-no-loader="true">
                             <Image src={mainLogo} alt="Logo" width={128} height={32} className="w-28 md:w-32 h-auto" priority style={{ height: 'auto' }} />
                         </Link>
 
@@ -183,7 +183,7 @@ function MainNav({ isHidden, categories }: Props) {
                                 </HoveredLink>
 
                                 <MenuItem setActive={setActive} active={active} item="About">
-                                    <div className="flex flex-col space-y-3 min-w-[180px] bg-white p-3 shadow-lg rounded-md border border-slate-100">
+                                    <div className="flex flex-col space-y-3 min-w-45 bg-white p-3 shadow-lg rounded-md border border-slate-100">
                                         <HoveredLink href="/about-us">About Us</HoveredLink>
                                         <HoveredLink href="/contact-us">Contact Us</HoveredLink>
                                         <HoveredLink href="/blog">Blog</HoveredLink>

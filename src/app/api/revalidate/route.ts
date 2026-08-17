@@ -49,6 +49,10 @@ export async function POST(request: NextRequest) {
         revalidatePath('/blog');
         revalidatePath(`/blog/${slug}`);
         purgeUrls.push(`${SITE_URL}/blog`, `${SITE_URL}/blog/${slug}`);
+    } else if (type === 'footer') {
+        revalidateTag('footer', 'max');
+        revalidatePath('/', 'layout');
+        purgeUrls.push(`${SITE_URL}/*`);
     } else if (type === 'all') {
         revalidatePath('/', 'layout');
         purgeUrls.push(`${SITE_URL}/*`);

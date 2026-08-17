@@ -18,6 +18,15 @@ export const metadata: Metadata = {
     template: "%s | Skilldeck",
   },
   description: "Automate your marketing, sales, and operations. Skilldeck replaces 10+ tools with one powerful platform for training companies.",
+  icons: {
+    icon: [
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/logos/mainlogo.svg", type: "image/svg+xml" },
+    ],
+    apple: [
+      { url: "/favicon.ico" },
+    ],
+  },
 };
 
 import { FormProvider } from "@/components/Forms/FormContext";
@@ -33,15 +42,24 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const webSiteSchema = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "@id": "https://skilldeck.net/#website",
+    "name": "SkillDeck",
+    "alternateName": ["Skilldeck", "SkillDeck SaaS", "skilldeck.net"],
+    "url": "https://skilldeck.net/"
+  };
+
   const orgSchema = {
     "@context": "https://schema.org",
     "@type": "Organization",
+    "@id": "https://skilldeck.net/#organization",
     "name": "SkillDeck",
-    "url": "https://www.skilldeck.net",
-    "logo": "https://cloud-local.skilldeck.net/7c33d526-309d-4fc9-83ac-1312cb8c343b/public/uploads/skilldeck_logo-f60d95bc-7df7-45fe-87ac-2e014025a085.png",
+    "url": "https://skilldeck.net",
+    "logo": "https://skilldeck.net/logos/mainlogo.svg",
     "sameAs": [
-      "https://www.linkedin.com/company/skilldeck",
-      "https://twitter.com/skilldeck"
+      "https://www.linkedin.com/company/skilldeck-software/",
     ]
   };
 
@@ -52,12 +70,15 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <head>
+        <link rel="icon" href="/favicon.ico" sizes="any" />
+        <link rel="icon" href="/logos/mainlogo.svg" type="image/svg+xml" />
+        <link rel="apple-touch-icon" href="/favicon.ico" />
         <link rel="preconnect" href="https://api.skilldeck.net" crossOrigin="anonymous" />
         <link rel="dns-prefetch" href="https://api.skilldeck.net" />
         <link rel="preconnect" href="https://www.gstatic.com" crossOrigin="anonymous" />
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(orgSchema) }}
+          dangerouslySetInnerHTML={{ __html: JSON.stringify([webSiteSchema, orgSchema]) }}
         />
       </head>
       <body className="min-h-full flex flex-col" suppressHydrationWarning>
