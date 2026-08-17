@@ -14,7 +14,7 @@ export const metadata: Metadata = {
 
 export default function PrivacyPolicyPage() {
     return (
-        <div className="min-h-screen bg-gradient-to-b from-white via-blue-50/10 to-white flex flex-col">
+        <div className="min-h-screen bg-linear-to-b from-white via-blue-50/10 to-white flex flex-col">
             <MainNav />
 
             <main className="flex-1 py-20 lg:py-32 px-4 lg:px-0">

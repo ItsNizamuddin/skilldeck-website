@@ -1,39 +1,26 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { ChevronDown, Mail } from "lucide-react";
+import { ChevronDown } from "lucide-react";
 import Link from "next/link";
 import React, { useState } from "react";
+import { FooterColumn } from "@/types";
 
-const FooterLinks = () => {
-    const [openSection, setOpenSection] = useState<string>("Services");
+interface FooterLinksProps {
+    columns?: FooterColumn[];
+}
+
+const FooterLinks = ({ columns = [] }: FooterLinksProps) => {
+    const [openSection, setOpenSection] = useState<string>("Company");
 
     const toggleSection = (section: string) => {
         setOpenSection(openSection === section ? "" : section);
     };
 
-    // const productLinks = [
-    //     { label: "All Services", href: "/services" },
-    //     { label: "LMS Platform", href: "/services/lms" },
-    //     { label: "Website Builder", href: "/services/cms" },
-    //     { label: "Web Chat", href: "/services/webchat" },
-    //     { label: "CRM", href: "/services/crm" },
-    //     { label: "Web Templates", href: "/web-templates" },
-    // ];
-
-    const companyLinks = [
-        { label: "About Us", href: "/about-us" },
-        { label: "Contact Us", href: "/contact-us" },
-        { label: "Blog", href: "/blog" },
-        { label: "Careers", href: "/careers" },
-        { label: "Html Sitemap", href: "/sitemap-html" },
-    ];
-
-    const legalLinks = [
-        { label: "Privacy Policy", href: "/privacy-policy" },
-        { label: "Terms of Service", href: "/terms-of-service" },
-        { label: "Cookie Policy", href: "/cookie-policy" },
-    ];
+    // Filter columns that have links or content (exclude order 1 / about column if rendered on left)
+    const linkColumns = columns.filter(
+        (col) => (col.links && col.links.length > 0) || (col.order && col.order > 1)
+    );
 
     const FooterSection = ({ title, children, className = "" }: { title: string, children: React.ReactNode, className?: string }) => (
         <div className={className}>
@@ -60,55 +47,36 @@ const FooterLinks = () => {
         </div>
     );
 
+    if (linkColumns.length === 0) {
+        return null;
+    }
+
     return (
-        <div className="lg:col-span-8 grid grid-cols-1 md:grid-cols-3 gap-0 md:gap-8">
-            {/* Services Links */}
-            {/* <FooterSection title="Services">
-                <ul className="space-y-1">
-                    {productLinks.map((link, index) => (
-                        <li key={index}>
-                            <Link href={link.href} rel="nofollow" className="text-slate-300 text-sm hover:text-white transition-colors block py-1">
-                                {link.label}
-                            </Link>
-                        </li>
-                    ))}
-                </ul>
-            </FooterSection> */}
-
-            {/* Company Links */}
-            <FooterSection title="Company">
-                <ul className="space-y-1">
-                    {companyLinks.map((link, index) => (
-                        <li key={index}>
-                            <Link href={link.href} rel="nofollow" className="text-slate-300 text-sm hover:text-white transition-colors block py-1">
-                                {link.label}
-                            </Link>
-                        </li>
-                    ))}
-                </ul>
-            </FooterSection>
-
-            {/* Legal Links */}
-            <FooterSection title="Legal" className="col-span-1 md:col-span-1">
-                <ul className="space-y-1">
-                    {legalLinks.map((link, index) => (
-                        <li key={index}>
-                            <Link href={link.href} rel="nofollow" className="text-slate-300 text-sm hover:text-white transition-colors block py-1">
-                                {link.label}
-                            </Link>
-                        </li>
-                    ))}
-                </ul>
-
-                {/* Contact */}
-                <div className="mt-6 border-t border-slate-800 pt-6 md:border-0 md:pt-0">
-                    <h3 className="text-slate-400 text-xs uppercase tracking-wider font-semibold mb-3">Contact</h3>
-                    <Link href="mailto:hello@skilldeck.net" rel="nofollow" className="flex items-center gap-2 text-slate-300 text-sm hover:text-white transition-colors">
-                        <Mail className="w-4 h-4" />
-                        hello@skilldeck.net
-                    </Link>
-                </div>
-            </FooterSection>
+        <div className={`lg:col-span-8 grid grid-cols-1 md:grid-cols-${Math.min(linkColumns.length, 3)} gap-0 md:gap-8`}>
+            {linkColumns.map((col, idx) => (
+                <FooterSection key={`${col.title}-${idx}`} title={col.title}>
+                    {col.links && col.links.length > 0 && (
+                        <ul className="space-y-1">
+                            {col.links.map((link, linkIdx) => (
+                                <li key={`${link.label}-${linkIdx}`}>
+                                    <Link
+                                        href={link.url || "#"}
+                                        rel="nofollow"
+                                        className="text-slate-300 text-sm hover:text-white transition-colors block py-1"
+                                    >
+                                        {link.label}
+                                    </Link>
+                                </li>
+                            ))}
+                        </ul>
+                    )}
+                    {col.content && (
+                        <p className="text-slate-400 text-sm py-1 leading-relaxed">
+                            {col.content}
+                        </p>
+                    )}
+                </FooterSection>
+            ))}
         </div>
     );
 };

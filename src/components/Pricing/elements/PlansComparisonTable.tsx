@@ -1,4 +1,4 @@
- import React from 'react';
+import React from 'react';
 // import { IPlan } from './types';
 import { BillingInterval } from './utils';
 import PlansComparisonTableMobile from './PlansComparisonTableMobile';

@@ -12,6 +12,17 @@ function hasTextContent(html: string): boolean {
     return text.length > 0;
 }
 
+/** Force rel="nofollow noreferrer" on every <a> tag in raw HTML */
+function injectNofollow(html: string): string {
+    return html.replace(/<a\b([^>]*?)>/gi, (_, attrs) => {
+        // Replace or append rel attribute
+        if (/\brel=/i.test(attrs)) {
+            return `<a${attrs.replace(/\brel="[^"]*"/i, 'rel="nofollow noreferrer"')}>`;
+        }
+        return `<a${attrs} rel="nofollow noreferrer">`;
+    });
+}
+
 // Server Component — no "use client"
 export default function CompanyAboutCard({ companyName, description }: Props) {
     if (!description || !hasTextContent(description)) return null;
@@ -29,7 +40,7 @@ export default function CompanyAboutCard({ companyName, description }: Props) {
             {/* Full description — HTML from backend, rendered with jodit-content styles and truncated */}
             {description && (
                 <TruncatedContent
-                    content={DOMPurify.sanitize(description)}
+                    content={injectNofollow(DOMPurify.sanitize(description))}
                     maxLines={10}
                     className="jodit-content text-slate-600"
                 />

@@ -34,7 +34,7 @@ export const Button: React.FC<ButtonProps> = ({
       <Component
         className={cn(
           "rounded-xl inline-flex transition-all duration-200 transform active:scale-95",
-          "hover:-translate-y-[1px] hover:shadow-lg hover:shadow-[#5c3ffa]/25",
+          "hover:-translate-y-1px hover:shadow-lg hover:shadow-[#5c3ffa]/25",
           "disabled:opacity-50 disabled:pointer-events-none",
           "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#5c3ffa]",
           className

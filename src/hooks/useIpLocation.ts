@@ -54,9 +54,14 @@ export const useIpLocation = (ip?: string | null) => {
                     if (ip) {
                         internalParams = `?ip=${ip}`;
                     } else {
-                        // Try to fetch public IP first if not provided
+                        // Try to fetch public IP first if not provided (with safe 1.2s timeout so network tools/adblockers never stall page load)
                         try {
-                            const ipRes = await fetch('https://api64.ipify.org?format=json');
+                            const controller = new AbortController();
+                            const timeoutId = setTimeout(() => controller.abort(), 1200);
+                            const ipRes = await fetch('https://api64.ipify.org?format=json', {
+                                signal: controller.signal
+                            });
+                            clearTimeout(timeoutId);
                             if (ipRes.ok) {
                                 const ipData = await ipRes.json();
                                 if (ipData.ip) {
@@ -64,7 +69,7 @@ export const useIpLocation = (ip?: string | null) => {
                                 }
                             }
                         } catch (e) {
-                            console.warn("Failed to fetch public IP from external service", e);
+                            console.warn("Failed to fetch public IP from external service (fallback to server IP)", e);
                         }
                     }
 

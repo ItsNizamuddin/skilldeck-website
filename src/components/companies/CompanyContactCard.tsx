@@ -84,7 +84,7 @@ export default function CompanyContactCard({ companyName, tenantId, contact, add
                             <a
                                 href={item.href}
                                 target={item.external ? "_blank" : undefined}
-                                rel={item.external ? "noopener noreferrer" : undefined}
+                                rel={item.external ? "nofollow noreferrer" : undefined}
                                 className="flex-1 min-w-0"
                             >
                                 <div className="text-[10px] text-slate-400 uppercase tracking-wide">{item.label}</div>

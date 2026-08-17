@@ -40,6 +40,16 @@ function hasTextContent(html?: string): boolean {
     return text.length > 0;
 }
 
+/** Force rel="nofollow noreferrer" on every anchor tag in raw HTML */
+function injectNofollow(html: string): string {
+    return html.replace(/<a\b([^>]*?)>/gi, (match, attrs) => {
+        if (/\brel=/i.test(attrs)) {
+            return match.replace(/\brel="[^"]*"/i, 'rel="nofollow noreferrer"');
+        }
+        return `<a${attrs} rel="nofollow noreferrer">`;
+    });
+}
+
 // Pure Server Component — no "use client"
 export default function CompanyProfileHero({ tenant }: Props) {
     const p = tenant.platformProfile || {};
@@ -53,7 +63,7 @@ export default function CompanyProfileHero({ tenant }: Props) {
     ];
 
     return (
-        <section className="bg-gradient-to-b from-indigo-50/80 to-white border-b border-slate-200">
+        <section className="bg-linear-to-b from-indigo-50/80 to-white border-b border-slate-200">
             {/* Breadcrumb — using shared Breadcrumb UI component */}
             <div className="container mx-auto px-2 lg:px-0 pt-20 md:pt-20 lg:pt-28 lg:pb-6">
                 <Breadcrumb
@@ -69,7 +79,7 @@ export default function CompanyProfileHero({ tenant }: Props) {
             <div className="container mx-auto px-2 lg:px-0 py-4 lg:py-8">
                 <div className="flex flex-col md:flex-row items-start gap-6">
                     {/* Logo */}
-                    <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl bg-white shadow border border-slate-200 flex items-center justify-center overflow-hidden flex-shrink-0">
+                    <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl bg-white shadow border border-slate-200 flex items-center justify-center overflow-hidden shrink-0">
                         {tenant.logo ? (
                             <Image src={tenant.logo} alt={tenant.name} width={96} height={96} className="object-contain w-full h-full p-2" />
                         ) : (
@@ -84,14 +94,14 @@ export default function CompanyProfileHero({ tenant }: Props) {
                             <h1 className="text-2xl sm:text-3xl font-black text-slate-900 leading-tight">{tenant.name}</h1>
 
                             {/* Verified badge — blue BadgeCheck */}
-                            <BadgeCheck className="w-4 h-4 text-blue-500 flex-shrink-0" aria-label="Verified" />
+                            <BadgeCheck className="w-4 h-4 text-blue-500 fleshrink-0" aria-label="Verified" />
 
                             {/* Sponsored / Featured Partner badge — teal circle */}
                             {tenant.isSponsored && (
                                 <span
                                     aria-label="Featured Partner"
                                     title="Featured Partner"
-                                    className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-teal-500 flex-shrink-0"
+                                    className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-teal-500 shrink-0"
                                 >
                                     <svg className="w-3.5 h-3.5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
                                         <path d="M20 6L9 17l-5-5" />
@@ -133,7 +143,7 @@ export default function CompanyProfileHero({ tenant }: Props) {
                         {p.shortDescription && p.description && hasTextContent(p.description) && (
                             <div
                                 className="jodit-content text-slate-600 text-sm max-w-5xl"
-                                dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(p.shortDescription) }}
+                                dangerouslySetInnerHTML={{ __html: injectNofollow(DOMPurify.sanitize(p.shortDescription)) }}
                             />
                         )}
 
@@ -160,7 +170,7 @@ export default function CompanyProfileHero({ tenant }: Props) {
 
                     {/* Rating — only if from backend */}
                     {tenant.rating && (
-                        <div className="flex flex-col items-end gap-1 flex-shrink-0">
+                        <div className="flex flex-col items-end gap-1 shrink-0">
                             <div className="flex items-center gap-1">
                                 {Array.from({ length: 5 }).map((_, i) => (
                                     <Star

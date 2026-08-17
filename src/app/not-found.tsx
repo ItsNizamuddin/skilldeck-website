@@ -4,7 +4,7 @@ import Link from 'next/link';
 
 export default function NotFound() {
     return (
-        <div className="min-h-screen bg-gradient-to-b from-slate-50 to-white flex items-center justify-center px-4 lg:px-0">
+        <div className="min-h-screen bg-linear-to-b from-slate-50 to-white flex items-center justify-center px-4 lg:px-0">
             <div className="container mx-auto max-w-2xl text-center">
                 {/* 404 Illustration */}
                 <div className="relative mb-8">
