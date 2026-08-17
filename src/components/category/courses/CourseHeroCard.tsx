@@ -101,6 +101,7 @@ export default function CourseHeroCard({
                         height={188}
                         className="w-full h-auto object-cover max-h-[188px] rounded-lg"
                         priority
+                        fetchPriority="high"
                     />
                 </div>
             )}
