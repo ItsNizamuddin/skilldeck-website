@@ -9,6 +9,7 @@ import Image from "next/image";
 import { useEffect, useMemo, useState } from "react";
 import FeaturedProvidersList from "./FeaturedProvidersList";
 import PartnerAdvertiseWidget from "./PartnerAdvertiseWidget";
+import { usePathname } from "next/navigation";
 
 import { useIpLocation } from "@/hooks/useIpLocation";
 import { formatNumber, getCurrencySymbol } from "@/lib/courseCardHelpers";
@@ -33,12 +34,14 @@ export default function CourseCheckoutCard({
     const { data: locationData } = useIpLocation();
     const [isMounted, setIsMounted] = useState(false);
     const [showAd, setShowAd] = useState(false);
+    const pathname = usePathname();
+    const isPatternPage = pathname?.startsWith("/info/");
 
     useEffect(() => {
         setIsMounted(true);
         if (typeof window !== "undefined") {
             const isHidden = localStorage.getItem("hide-partner-ad");
-            if (isHidden === "true") return;
+            if (isHidden === "true" || isPatternPage) return;
 
             // Show widget after 30 seconds
             const timer = setTimeout(() => {
@@ -47,7 +50,7 @@ export default function CourseCheckoutCard({
 
             return () => clearTimeout(timer);
         }
-    }, []);
+    }, [isPatternPage]);
 
     const handleCloseAd = () => {
         setShowAd(false);
@@ -521,10 +524,12 @@ export default function CourseCheckoutCard({
             </div>
 
             {/* Partner & Advertise Widget */}
-            <PartnerAdvertiseWidget
-                showAd={showAd}
-                onClose={handleCloseAd}
-            />
+            {!isPatternPage && (
+                <PartnerAdvertiseWidget
+                    showAd={showAd}
+                    onClose={handleCloseAd}
+                />
+            )}
         </div>
     );
 }

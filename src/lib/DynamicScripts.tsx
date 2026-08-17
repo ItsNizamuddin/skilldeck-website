@@ -96,10 +96,10 @@ export default async function DynamicScripts() {
                 const inlineContent = extractInlineContent(script.script);
 
                 // Determine Next.js Script strategy based on location:
-                // - "head" scripts use beforeInteractive (injected into <head>)
-                // - all others use afterInteractive (default, loads after hydration)
-                const strategy: "beforeInteractive" | "afterInteractive" =
-                    script.location === "head" ? "beforeInteractive" : "afterInteractive";
+                // - "head" scripts use afterInteractive (non-blocking, loaded after hydration)
+                // - all others use lazyOnload (loaded during idle time)
+                const strategy: "afterInteractive" | "lazyOnload" =
+                    script.location === "head" ? "afterInteractive" : "lazyOnload";
 
                 // External script (has a src attribute)
                 if (src) {
