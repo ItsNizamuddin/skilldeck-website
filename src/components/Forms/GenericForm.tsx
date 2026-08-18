@@ -439,7 +439,6 @@ const GenericForm: React.FC<GenericFormProps> = ({
                             setIsInteracted(false);
                             setError(null);
                             setShowThankyou(false);
-                            if (onClose) onClose();
                         }}
                         className="
                             w-full max-w-sm mx-auto py-3.5 bg-[linear-gradient(125deg,rgba(92,63,250,1)_0%,rgba(203,59,149,1)_48%,rgba(254,106,27,1)_100%)] text-white rounded-xl font-semibold
@@ -449,8 +448,7 @@ const GenericForm: React.FC<GenericFormProps> = ({
                             transition-all duration-200
                         "
                     >
-                        Send Another Message
-                    </button>
+                        Submit Another Response</button>
                 </div>
             ) : (
                 <form
