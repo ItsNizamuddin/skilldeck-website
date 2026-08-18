@@ -14,6 +14,7 @@ interface MobileMenuProps {
     closeMenu: () => void;
     ctaText: string;
     categories: any[];
+    servicesCategories?: any[];
     isHomePage: boolean;
     isCompaniesLoading: boolean;
     handleCompaniesClick: () => void;
@@ -25,12 +26,15 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({
     closeMenu,
     ctaText,
     categories,
+    servicesCategories = [],
     isHomePage,
     handleCompaniesClick,
     handleNavClick,
 }) => {
     const [mobileCoursesOpen, setMobileCoursesOpen] = useState(false);
+    const [mobileServicesOpen, setMobileServicesOpen] = useState(false);
     const [openCategoryIndex, setOpenCategoryIndex] = useState<number | null>(null);
+    const [openServiceCategoryIndex, setOpenServiceCategoryIndex] = useState<number | null>(null);
     const [mobileAboutOpen, setMobileAboutOpen] = useState(false);
 
     const sortedCategories = [...categories]
@@ -38,6 +42,14 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({
         .map(cat => ({
             ...cat,
             courses: [...(cat.courses || [])].sort((a, b) => (a.order || 0) - (b.order || 0))
+        }));
+
+    const sortedServicesCategories = [...servicesCategories]
+        .filter(cat => cat.services && cat.services.length > 0)
+        .sort((a, b) => (a.order || 0) - (b.order || 0))
+        .map(cat => ({
+            ...cat,
+            services: [...(cat.services || [])].sort((a, b) => (a.order || 0) - (b.order || 0))
         }));
 
     return (
@@ -153,6 +165,65 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({
                                                     >
                                                         View All in {category.name}
                                                     </Link>
+                                                </div>
+                                            )}
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
+
+                        {/* Services Accordion */}
+                        <div className="mb-1">
+                            <button
+                                type="button"
+                                data-no-loader="true"
+                                onClick={() => setMobileServicesOpen(!mobileServicesOpen)}
+                                className="w-full flex items-center justify-between py-3 text-gray-800 font-medium hover:bg-gray-50 rounded-lg transition-colors"
+                            >
+                                <span className="text-[15px]">Services</span>
+                                <ChevronDown className={cn(
+                                    "w-4 h-4 text-gray-500 transition-transform duration-200",
+                                    mobileServicesOpen && "rotate-180"
+                                )} />
+                            </button>
+
+                            {mobileServicesOpen && (
+                                <div className="mt-1 pl-3 border-l-2 border-blue-100 space-y-1">
+                                    {sortedServicesCategories.map((category, catIdx) => (
+                                        <div key={category._id} className="flex flex-col">
+                                            <button
+                                                type="button"
+                                                data-no-loader="true"
+                                                onClick={() => setOpenServiceCategoryIndex(openServiceCategoryIndex === catIdx ? null : catIdx)}
+                                                className="flex items-start justify-between w-full py-2 text-gray-600 text-sm hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                                            >
+                                                <span className="text-start font-semibold">{category.name}</span>
+                                                <ChevronDown className={cn(
+                                                    "w-3 h-3 transition-transform duration-200",
+                                                    openServiceCategoryIndex === catIdx && "rotate-180"
+                                                )} />
+                                            </button>
+
+                                            {openServiceCategoryIndex === catIdx && (
+                                                <div className="mt-1 space-y-1 border-l border-slate-100">
+                                                    {category.services && category.services.length > 0 ? (
+                                                        category.services.map((service: any) => (
+                                                            <Link
+                                                                key={service.slug}
+                                                                href={`/services/${service.slug}`}
+                                                                onClick={closeMenu}
+                                                                className="flex items-center gap-3 py-2 text-xs pl-1 text-slate-500 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors text-start"
+                                                            >
+                                                                <div className="relative w-7 h-7 shrink-0 flex items-center justify-center bg-slate-50 rounded-lg">
+                                                                    <Layers className="w-3.5 h-3.5 text-slate-400" />
+                                                                </div>
+                                                                {service.service_name}
+                                                            </Link>
+                                                        ))
+                                                    ) : (
+                                                        <span className="block px-4 py-2 text-xs text-slate-400 italic">Coming Soon</span>
+                                                    )}
                                                 </div>
                                             )}
                                         </div>

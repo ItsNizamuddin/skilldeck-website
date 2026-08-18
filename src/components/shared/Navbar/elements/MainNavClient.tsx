@@ -11,13 +11,15 @@ import { useEffect, useState } from "react";
 import mainLogo from "../../../../../public/logos/mainlogo.svg";
 import { MobileMenu } from "./MobileMenu";
 import NavCategoriesDropdown from "./NavCategoriesDropdown";
+import NavServicesDropdown from "./NavServicesDropdown";
 
 interface Props {
     isHidden?: boolean;
     categories: any[];
+    servicesCategories?: any[];
 }
 
-function MainNav({ isHidden, categories }: Props) {
+function MainNav({ isHidden, categories, servicesCategories = [] }: Props) {
     const pathname = usePathname();
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [isScrolled, setIsScrolled] = useState(false);
@@ -35,6 +37,14 @@ function MainNav({ isHidden, categories }: Props) {
         .map(cat => ({
             ...cat,
             courses: [...(cat.courses || [])].sort((a, b) => (a.order || 0) - (b.order || 0))
+        }));
+
+    const sortedServicesCategories = [...servicesCategories]
+        .filter(cat => cat.services && cat.services.length > 0)
+        .sort((a, b) => (a.order || 0) - (b.order || 0))
+        .map(cat => ({
+            ...cat,
+            services: [...(cat.services || [])].sort((a, b) => (a.order || 0) - (b.order || 0))
         }));
 
     const isHomePage = pathname === "/";
@@ -58,9 +68,12 @@ function MainNav({ isHidden, categories }: Props) {
     };
 
     const handleNavClick = (e: React.MouseEvent, sectionId: string | null) => {
-        if (isHomePage && sectionId) {
-            e.preventDefault();
-            scrollToSection(sectionId);
+        if (sectionId) {
+            const element = document.getElementById(sectionId);
+            if (element) {
+                e.preventDefault();
+                scrollToSection(sectionId);
+            }
         }
         closeMenu();
     };
@@ -151,7 +164,7 @@ function MainNav({ isHidden, categories }: Props) {
             >
                 <nav className="container mx-auto pt-2 ">
                     <div className={cn(
-                        "bg-white/95 backdrop-blur-md rounded-full px-4 md:px-6 shadow-lg border border-gray-100 flex items-center justify-between transition-all duration-300",
+                        "bg-white/95 backdrop-blur-md rounded-full px-4 py-1 md:py-0 md:px-6 shadow-lg border border-gray-100 flex items-center justify-between transition-all duration-300",
                         isScrolled && "shadow-xl"
                     )}>
                         <Link href="/" className="flex items-center gap-2 shrink-0" data-no-loader="true">
@@ -161,6 +174,11 @@ function MainNav({ isHidden, categories }: Props) {
                         {/* Desktop Navigation */}
                         <div className="hidden lg:flex items-center">
                             <NavMenu setActive={setActive}>
+                                <NavServicesDropdown
+                                    initialCategories={sortedServicesCategories}
+                                    active={active}
+                                    setActive={setActive}
+                                />
                                 <HoveredLink
                                     href="/companies"
                                     onClick={handleCompaniesClick}
@@ -174,7 +192,11 @@ function MainNav({ isHidden, categories }: Props) {
                                     Features
                                 </HoveredLink>
 
-                                <HoveredLink href={isHomePage ? "#plans" : "/#plans"} data-no-loader="true" onClick={(e: React.MouseEvent) => handleNavClick(e, "plans")}>
+                                <HoveredLink 
+                                    href={(isHomePage || pathname.startsWith("/services/")) ? (isHomePage ? "#plans" : "#plans") : "/pricing"} 
+                                    data-no-loader={(isHomePage || pathname.startsWith("/services/")) ? "true" : undefined} 
+                                    onClick={(e: React.MouseEvent) => handleNavClick(e, "plans")}
+                                >
                                     Plans
                                 </HoveredLink>
 
@@ -196,6 +218,8 @@ function MainNav({ isHidden, categories }: Props) {
                                     active={active}
                                     setActive={setActive}
                                 />
+
+
                             </NavMenu>
                         </div>
 
@@ -250,6 +274,7 @@ function MainNav({ isHidden, categories }: Props) {
                 closeMenu={closeMenu}
                 ctaText={ctaText}
                 categories={categories}
+                servicesCategories={servicesCategories}
                 isHomePage={isHomePage}
                 isCompaniesLoading={isCompaniesLoading}
                 handleCompaniesClick={handleCompaniesClick}

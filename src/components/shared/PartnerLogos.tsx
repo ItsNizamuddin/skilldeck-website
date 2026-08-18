@@ -23,6 +23,15 @@ export default function PartnerLogos({
         const fetchPartners = async () => {
             try {
                 const res = await fetch("/api/tenants?fields=logo,legalName&limit=15");
+                if (!res.ok) {
+                    setPartnerLogos(getFallbackLogos());
+                    return;
+                }
+                const contentType = res.headers.get("content-type");
+                if (!contentType || !contentType.includes("application/json")) {
+                    setPartnerLogos(getFallbackLogos());
+                    return;
+                }
                 const result = await res.json();
                 if (result.data) {
                     const logos = result.data

@@ -67,7 +67,7 @@ const PlansComparisonTableMobile: React.FC<Props> = ({
             <div className="">
                 <div className="rounded-lg border border-gray-200 bg-white shadow-sm">
                     <table className="w-full border-collapse">
-                        <thead className="bg-gray-50 sticky top-0 z-20 shadow-sm">
+                        <thead className="bg-gray-50 sticky top-12 z-20 shadow-sm">
                             <tr>
                                 <th scope="col" className="w-1/3 px-3 py-3 text-left text-xs font-bold text-gray-600 uppercase tracking-wider border-r border-gray-200 align-center pb-4">
                                     Features
