@@ -134,7 +134,12 @@ export default function NavCategoriesDropdown({
                                                     <Link
                                                         key={course.slug || idx}
                                                         href={`/${activeCategory.slug}/${course.slug}`}
-                                                        onClick={() => setLoadingTarget(course.slug)}
+                                                        onClick={() => {
+                                                            const targetPath = `/${activeCategory.slug}/${course.slug}`;
+                                                            if (typeof window !== 'undefined' && window.location.pathname !== targetPath) {
+                                                                setLoadingTarget(course.slug);
+                                                            }
+                                                        }}
                                                         className="flex items-center gap-2.5 p-2 rounded-xl border border-slate-100 hover:border-blue-100 hover:bg-blue-50/30 hover:shadow-sm transition-all duration-200 group"
                                                     >
                                                         <div
