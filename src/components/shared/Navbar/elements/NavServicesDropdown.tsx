@@ -116,7 +116,12 @@ export default function NavServicesDropdown({
                                                 <Link
                                                     key={service.slug || idx}
                                                     href={`/services/${service.slug}`}
-                                                    onClick={() => setLoadingTarget(service.slug)}
+                                                    onClick={() => {
+                                                        const targetPath = `/services/${service.slug}`;
+                                                        if (typeof window !== 'undefined' && window.location.pathname !== targetPath) {
+                                                            setLoadingTarget(service.slug);
+                                                        }
+                                                    }}
                                                     className="flex items-center gap-2.5 p-2 rounded-xl border border-slate-100 hover:border-indigo-100 hover:bg-indigo-50/30 hover:shadow-sm transition-all duration-200 group"
                                                 >
                                                     <DynamicServiceIcon
