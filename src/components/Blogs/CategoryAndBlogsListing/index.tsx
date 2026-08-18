@@ -19,7 +19,7 @@ const CategoryAndBlogsListing = ({ categories, initialBlogs, initialCategory, in
                             partnerBlogs={partnerBlogs}
                         />
                     </div>
-                    <div className="hidden lg:block col-span-3 px-4 md:px-0 md:py-6 lg:py-6">
+                    <div className="hidden lg:block col-span-3 px-4 lg:px-0 md:py-6 lg:py-6">
                         <BlogSticky />
                     </div>
                 </div>

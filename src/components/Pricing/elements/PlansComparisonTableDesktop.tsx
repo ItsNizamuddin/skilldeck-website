@@ -30,7 +30,7 @@ const PlansComparisonTableDesktop: React.FC<Props> = ({
                             const price = computePlanAmount(plan, billingInterval) || 0;
                             return (
                                 <th key={plan.id} scope="col" className="p-4 text-center border-b border-gray-200 min-w-[200px] relative align-top bg-white pb-10">
-                                    <h3 className="text-sm font-bold text-blue-600 mb-1">{plan.name}</h3>
+                                    <h3 className="text-sm font-bold text-indigo-600 mb-1">{plan.name}</h3>
                                     <div className="mb-4">
                                         <div className="flex items-center justify-center gap-1">
                                             {loading ? (
@@ -52,14 +52,14 @@ const PlansComparisonTableDesktop: React.FC<Props> = ({
                                         (plan as any).uiMetadata?.isLifetime ? (
                                             <button
                                                 onClick={() => window.location.href = '/contact-us'}
-                                                className="absolute bottom-4 left-4 right-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 bg-blue-600 hover:bg-blue-700 text-white shadow-sm hover:shadow-md"
+                                                className="absolute bottom-4 left-4 right-4 py-2 rounded-lg text-sm font-bold transition-all duration-200 bg-[linear-gradient(135deg,#3730a3_0%,#4f46e5_50%,#6d28d9_100%)] hover:brightness-110 text-white shadow-sm hover:shadow-md hover:-translate-y-[1px]"
                                             >
                                                 Contact Sales
                                             </button>
                                         ) : (
                                             <button
                                                 onClick={() => onOpenPurchase?.(plan.id)}
-                                                className="absolute bottom-4 left-4 right-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 bg-blue-600 hover:bg-blue-700 text-white shadow-sm hover:shadow-md"
+                                                className="absolute bottom-4 left-4 right-4 py-2 rounded-lg text-sm font-bold transition-all duration-200 bg-[linear-gradient(135deg,#3730a3_0%,#4f46e5_50%,#6d28d9_100%)] hover:brightness-110 text-white shadow-sm hover:shadow-md hover:-translate-y-[1px]"
                                             >
                                                 Start Free Trial
                                             </button>
@@ -117,8 +117,8 @@ const PlansComparisonTableDesktop: React.FC<Props> = ({
                         })
                     ) && (
                             <React.Fragment key="lms-limits-section">
-                                <tr className="bg-blue-50/30 sticky top-[120px] z-10 ">
-                                    <td colSpan={plans.length + 1} className="px-4 py-2 text-xs font-bold text-blue-700 uppercase tracking-wider bg-blue-50/50 flex items-center gap-2">
+                                <tr className="bg-indigo-50/20 sticky top-[120px] z-10 ">
+                                    <td colSpan={plans.length + 1} className="px-4 py-2 text-xs font-bold text-indigo-700 uppercase tracking-wider bg-indigo-50/40 flex items-center gap-2">
                                         LMS / Training Resources
                                     </td>
                                 </tr>
@@ -131,7 +131,7 @@ const PlansComparisonTableDesktop: React.FC<Props> = ({
                                     const val = (plan.limits as any)?.[limit.key];
                                     return plan.isLmsEnabled !== false && (val === null || val === -1 || Number(val || 0) > 0);
                                 })).map((limit) => (
-                                    <tr key={limit.key} className="hover:bg-blue-50/10 transition-colors">
+                                    <tr key={limit.key} className="hover:bg-indigo-50/10 transition-colors">
                                         <td className="px-4 py-3 text-sm font-medium text-gray-700">{limit.label}</td>
                                         {plans.map(plan => {
                                             const limitValue = plan.isLmsEnabled !== false ? (plan.limits as unknown as IPlanLimits)?.[limit.key as keyof IPlanLimits] : undefined;

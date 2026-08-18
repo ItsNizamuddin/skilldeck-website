@@ -57,7 +57,7 @@ const SkillDeckIntro = () => {
 
                         {/* Feature Cards */}
                         <div className="pt-3 md:pt-6">
-                            <div className="flex flex-nowrap md:flex-wrap overflow-x-auto md:overflow-visible pb-4 md:pb-0 gap-3 md:gap-4 justify-start md:justify-center px-2 md:px-0 scrollbar-hide -mx-6 md:mx-0">
+                            <div className="flex flex-nowrap md:flex-wrap overflow-x-auto md:overflow-visible pb-4 md:pb-0 gap-3 md:gap-4 justify-start md:justify-center px-2 lg:px-0 scrollbar-hide -mx-6 md:mx-0">
                                 {features.map((feature, index) => (
                                     <div
                                         key={index}

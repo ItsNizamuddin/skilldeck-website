@@ -43,43 +43,59 @@ const PricingCard: React.FC<Props> = ({
     let cardBgClass = 'bg-white text-gray-900 border border-gray-200 shadow-sm';
     let textColorClass = 'text-gray-900';
     let subTextColorClass = 'text-gray-500';
-    let buttonClass = 'bg-[#0d5af0] text-white hover:brightness-110 hover:-translate-y-[1px] shadow-lg shadow-[#5c3ffa]/20 transition-all duration-300';
+    let buttonClass = 'bg-[linear-gradient(125deg,rgba(92,63,250,1)_0%,rgba(203,59,149,1)_48%,rgba(254,106,27,1)_100%)] text-white hover:brightness-110 hover:-translate-y-[1px] shadow-lg shadow-[#5c3ffa]/20 transition-all duration-300';
     let checkIconClass = 'text-green-500';
     let iconBgClass = 'bg-brand-50 text-brand-600';
 
     if (colorTheme === 'blue') {
-        cardBgClass = 'bg-[#0d5af0] text-white';
-        textColorClass = 'text-white';
-        subTextColorClass = 'text-blue-100';
-        buttonClass = 'bg-white text-[#0d5af0] hover:bg-slate-50 hover:-translate-y-[1px] transition-all duration-300';
-        checkIconClass = 'text-white';
-        iconBgClass = 'bg-white/20 text-white';
+        // Growth — white card with brand gradient border (padding-box trick)
+        cardBgClass = 'bg-white text-gray-900 shadow-xl';
+        textColorClass = 'text-gray-900';
+        subTextColorClass = 'text-gray-500';
+        buttonClass = 'bg-[linear-gradient(125deg,rgba(92,63,250,1)_0%,rgba(203,59,149,1)_48%,rgba(254,106,27,1)_100%)] text-white font-bold hover:brightness-110 hover:-translate-y-[1px] transition-all duration-300 shadow-lg shadow-[#5c3ffa]/20';
+        checkIconClass = 'text-[#5c3ffa]';
+        iconBgClass = 'bg-[#5c3ffa]/10 text-[#5c3ffa]';
     } else if (colorTheme === 'slate') {
-        cardBgClass = 'bg-gradient-to-br from-slate-900 to-slate-800 text-white border-0';
+        if (isLifetime) {
+            // Lifetime — simple clean dark charcoal, no flashy gradient
+            cardBgClass = 'bg-gray-900 text-white border border-gray-700/50 shadow-2xl';
+            checkIconClass = 'text-emerald-400';
+            iconBgClass = 'bg-white/10 text-white';
+            buttonClass = 'bg-white text-gray-900 font-bold hover:bg-gray-100 hover:-translate-y-[1px] transition-all duration-300 shadow-sm';
+        } else {
+            cardBgClass = 'bg-gradient-to-br from-slate-900 to-slate-800 text-white border-0 shadow-2xl';
+            checkIconClass = 'text-emerald-400';
+            iconBgClass = 'bg-white/10 text-white';
+            buttonClass = 'bg-white text-slate-950 hover:bg-slate-50 hover:-translate-y-[1px] transition-all duration-300';
+        }
         textColorClass = 'text-white';
         subTextColorClass = 'text-gray-400';
-        buttonClass = 'bg-white text-slate-950 hover:bg-slate-50 hover:-translate-y-[1px] transition-all duration-300';
-        checkIconClass = 'text-emerald-400';
-        iconBgClass = 'bg-white/10 text-white';
     } else if (colorTheme === 'purple') {
-        iconBgClass = 'bg-purple-50 text-purple-600';
+        // Business — clean white card with indigo accent, visually distinct from plain Starter
+        cardBgClass = 'bg-white text-gray-900 border-2 border-indigo-100 shadow-xl shadow-indigo-100/60';
+        textColorClass = 'text-gray-900';
+        subTextColorClass = 'text-gray-500';
+        buttonClass = 'bg-[linear-gradient(135deg,#3730a3_0%,#4f46e5_50%,#6d28d9_100%)] text-white hover:brightness-110 hover:-translate-y-[1px] transition-all duration-300 shadow-lg shadow-indigo-500/30';
+        checkIconClass = 'text-indigo-500';
+        iconBgClass = 'bg-indigo-50 text-indigo-600';
     }
 
+    // Unified dark background flag — only true for actual dark-background cards
+    const isDark = isLifetime || colorTheme === 'slate';
 
-    // Icon Selection - "More Realistic" via specific choices
+    // Icon Selection
     const renderIcon = () => {
-        if (icon === 'rocket') return <Rocket className={`w-6 h-6 ${isHighlighted ? 'text-white' : 'text-brand-600'}`} />;
-        if (icon === 'building') return <Building2 className={`w-6 h-6 ${isHighlighted ? 'text-white' : 'text-purple-600'}`} />;
-        if (icon === 'infinity') return <Infinity className="w-6 h-6 text-white" />;
-        return <Crown className={`w-6 h-6 ${isHighlighted ? 'text-white' : 'text-brand-600'}`} />;
+        if (icon === 'rocket') return <Rocket className={`w-5 h-5 ${isDark ? 'text-white' : 'text-brand-600'}`} />;
+        if (icon === 'building') return <Building2 className={`w-5 h-5 ${isDark ? 'text-white' : 'text-purple-600'}`} />;
+        if (icon === 'infinity') return <Infinity className="w-5 h-5 text-white" />;
+        return <Crown className={`w-5 h-5 ${isDark ? 'text-white' : 'text-brand-600'}`} />;
     };
 
-    // Customize Icon BG per plan if not highlighted
-    if (!isHighlighted && !isLifetime) {
+    // Customize Icon BG per plan if not dark-themed
+    if (!isDark) {
         if (icon === 'building') iconBgClass = 'bg-purple-50 text-purple-600';
         if (icon === 'rocket') iconBgClass = 'bg-blue-50 text-blue-600';
     }
-
 
     const scrollRef = useRef<HTMLDivElement>(null);
     const [canScrollDown, setCanScrollDown] = useState(false);
@@ -101,236 +117,211 @@ const PricingCard: React.FC<Props> = ({
         return () => window.removeEventListener('resize', checkScroll);
     }, [groups]);
 
-    return (
-        <div className="relative h-full flex flex-col group/card-container">
-            {/* Stacked Effect for Lifetime */}
-            {isLifetime && (
-                <>
-                    <div className="absolute top-2 left-2 right-[-8px] bottom-[-8px] bg-slate-200 dark:bg-slate-700 rounded-[2rem] -z-10 transform translate-y-2 translate-x-2 transition-transform duration-300 group-hover/card-container:translate-x-3 group-hover/card-container:translate-y-3" />
-                    <div className="absolute top-2 left-2 right-[-16px] bottom-[-16px] bg-slate-100 dark:bg-slate-800 rounded-[2rem] -z-20 transform translate-y-4 translate-x-4 transition-transform duration-300 group-hover/card-container:translate-x-6 group-hover/card-container:translate-y-6" />
-                </>
+    const cardInnerContent = (
+        <div
+            className={`
+                relative flex flex-col p-4 rounded-2xl h-full transition-all duration-300
+                ${cardBgClass}
+                ${!isHighlighted && !isLifetime ? 'hover:shadow-xl hover:-translate-y-1' : 'transform group-hover/card-container:-translate-y-1 shadow-2xl z-10'}
+            `}
+        >
+            {isHighlighted && (
+                <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-[#FFCB27] text-black text-[10px] font-bold px-4 py-1.5 rounded-full shadow-sm whitespace-nowrap uppercase tracking-wide z-20">
+                    Most Popular
+                </div>
             )}
 
-            <div
-                className={`
-                    relative flex flex-col p-4 rounded-2xl h-full transition-all duration-300
-                    ${cardBgClass}
-                    ${!isHighlighted && !isLifetime ? 'hover:shadow-xl hover:-translate-y-1' : 'transform group-hover/card-container:-translate-y-1 shadow-2xl z-10'}
-                `}
-            >
-                {isHighlighted && (
-                    <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-[#FFCB27] text-black text-xs font-bold px-4 py-1.5 rounded-full shadow-sm whitespace-nowrap uppercase tracking-wide z-20">
-                        Most Popular
-                    </div>
-                )}
+            {!isLifetime && savingsPercentage > 0 && billingInterval === 'YEARLY' && (
+                <div className="absolute top-0 right-0 bg-green-500 text-white text-[10px] md:text-xs font-bold px-2 md:px-2 py-1 md:py-1.5 rounded-bl-xl rounded-tr-xl z-20">
+                    Save {savingsPercentage}%
+                </div>
+            )}
 
-                {!isLifetime && savingsPercentage > 0 && billingInterval === 'YEARLY' && (
-                    <div className="absolute top-0 right-0 bg-green-500 text-white text-[10px] md:text-xs font-bold px-2 md:px-2 py-1 md:py-1.5 rounded-bl-xl z-20">
-                        Save {savingsPercentage}%
-                    </div>
-                )}
-
-                {/* STICKY HEADER SECTION */}
-                <div className="flex-none z-10">
-                    {/* Header Info */}
-                    <div className="space-y-2 mb-2">
-                        <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${iconBgClass}`}>
+            {/* STICKY HEADER SECTION */}
+            <div className="flex-none z-10">
+                {/* Header Info */}
+                <div className="space-y-1 mb-2">
+                    {/* Icon + Plan Name inline (flex row) */}
+                    <div className="flex items-center gap-3">
+                        <div className={`w-10 h-10 shrink-0 rounded-xl flex items-center justify-center ${iconBgClass}`}>
                             {renderIcon()}
                         </div>
-
-                        <h3 className={`text-xl font-bold h-7 truncate ${textColorClass}`}>
+                        <h3 className={`text-base font-bold truncate leading-tight ${textColorClass}`}>
                             {plan.name}
                         </h3>
+                    </div>
 
+                    {/* Description below — smart render: split ✓ items into vertical list */}
+                    {(() => {
+                        const raw = DOMPurify.sanitize(plan.description || 'For growing teams');
+                        // Strip HTML tags to plain text
+                        const plainText = raw.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
+
+                        // Decode common HTML entities (e.g. &amp; → &, &nbsp; → space)
+                        const decodeEntities = (str: string) => str
+                            .replace(/&amp;/g, '&')
+                            .replace(/&lt;/g, '<')
+                            .replace(/&gt;/g, '>')
+                            .replace(/&quot;/g, '"')
+                            .replace(/&#039;/g, "'")
+                            .replace(/&nbsp;/g, ' ');
+
+                        // Handle all checkmark variants: ✓ (U+2713), ✔ (U+2714), ✅
+                        const checkmarkRegex = /[✓✔✅]/u;
+                        const splitRegex = /[✓✔✅]/gu;
+
+                        if (!checkmarkRegex.test(plainText)) {
+                            // No checkmarks — render as plain HTML
+                            return (
+                                <div
+                                    className={`text-[11px] 2xl:text-xs leading-relaxed h-28 overflow-hidden ${subTextColorClass}`}
+                                    dangerouslySetInnerHTML={{ __html: raw }}
+                                />
+                            );
+                        }
+
+                        const parts = plainText.split(splitRegex).map((s: any) => decodeEntities(s.trim())).filter(Boolean);
+                        const [intro, ...bullets] = parts;
+                        return (
+                            <div className={`space-y-1.5 h-36 overflow-hidden ${subTextColorClass}`}>
+                                {intro && (
+                                    <p className="text-[10px] 2xl:text-[11px] leading-relaxed ">{intro}</p>
+                                )}
+                                <ul className="space-y-1">
+                                    {bullets.map((item: any, i: any) => (
+                                        <li key={i} className="flex items-start gap-1.5">
+                                            <Check className={`w-3 h-3 mt-0.5 shrink-0 ${checkIconClass}`} strokeWidth={3} />
+                                            <span className="text-[11px] 2xl:text-xs leading-snug">{item}</span>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
+                        );
+                    })()}
+
+                    {/* <div className="h-fit flex items-center">
                         <div
-                            className={`text-[11px] 2xl:text-xs leading-relaxed h-32 overflow-hidden ${subTextColorClass}`}
+                            className={`inline-block px-2.5 py-1 rounded-lg text-[11px] 2xl:text-xs font-semibold leading-normal ${isDark
+                                ? 'bg-white/15 text-white shadow-sm'
+                                : 'bg-[linear-gradient(125deg,rgba(92,63,250,0.1)_0%,rgba(203,59,149,0.1)_100%)] text-[#5c3ffa] border border-[#5c3ffa]/20'
+                                }`}
                             dangerouslySetInnerHTML={{
-                                __html: DOMPurify.sanitize(plan.description || "For growing teams")
+                                __html: DOMPurify.sanitize(plan.themeDescription || `${plan.name} Features`)
                             }}
                         />
+                    </div> */}
 
-                        <div className="h-fit flex items-center">
-                            <div
-                                className={`inline-block px-2.5 py-1 rounded-lg text-[11px] 2xl:text-xs font-semibold leading-normal ${isHighlighted || colorTheme !== 'default'
-                                    ? 'bg-white/15 text-white shadow-sm'
-                                    : 'bg-brand-50 text-brand-700 border border-brand-100/50'
-                                    }`}
-                                dangerouslySetInnerHTML={{
-                                    __html: DOMPurify.sanitize(plan.themeDescription || `${plan.name} Features`)
-                                }}
-                            />
-                        </div>
-
-                        <div className="h-10 flex items-baseline justify-start">
-                            {loading ? (
-                                <div className={`animate-pulse rounded-lg h-8 w-32 ${colorTheme !== 'default' ? 'bg-white/20' : 'bg-slate-200'}`} />
-                            ) : !isLifetime ? (
-                                <>
-                                    <span className={`text-3xl font-bold ${textColorClass}`}>
-                                        {formatPrice(displayPrice, plan.currency || 'USD')}
-                                    </span>
-                                    <span className={`text-xs md:text-sm ml-2 ${subTextColorClass}`}>
-                                        /{billingInterval === 'YEARLY' ? 'year' : 'mo'}
-                                    </span>
-                                </>
-                            ) : (
-                                <span className={`text-3xl font-bold ${textColorClass}`}>
-                                    Custom
+                    <div className="h-7 flex items-baseline justify-start">
+                        {loading ? (
+                            <div className={`animate-pulse rounded-lg h-8 w-32 ${isDark ? 'bg-white/20' : 'bg-slate-200'}`} />
+                        ) : !isLifetime ? (
+                            <>
+                                <span className={`text-xl font-bold ${textColorClass}`}>
+                                    {formatPrice(displayPrice, plan.currency || 'USD')}
                                 </span>
-                            )}
-                        </div>
+                                <span className={`text-xs md:text-sm ml-2 ${subTextColorClass}`}>
+                                    /{billingInterval === 'YEARLY' ? 'year' : 'mo'}
+                                </span>
+                            </>
+                        ) : (
+                            <span className={`text-2xl font-bold ${textColorClass}`}>
+                                Custom
+                            </span>
+                        )}
+                    </div>
+                    {billingInterval === 'YEARLY' && !isLifetime && (
 
-                        <div className="h-5">
+                        <div className="h-3">
                             {loading ? (
-                                <div className={`animate-pulse rounded-md h-4 w-40 mt-1 ${colorTheme !== 'default' ? 'bg-white/10' : 'bg-slate-100'}`} />
+                                <div className={`animate-pulse rounded-md h-4 w-40 mt-1 ${isDark ? 'bg-white/10' : 'bg-slate-100'}`} />
                             ) : billingInterval === 'YEARLY' && monthlyEquivalent && !isLifetime ? (
                                 <p className={`text-xs 2xl:text-sm ${subTextColorClass}`}>
                                     {formatPrice(monthlyEquivalent, plan.currency || 'USD')}/mo billed annually
                                 </p>
                             ) : null}
                         </div>
-                    </div>
-
-                    {/* Action Button */}
-                    {isLifetime ? (
-                        <button
-                            // onClick={() => triggerForm('lifetime_plan_enquiry')}
-                            className={`w-full py-3 md:py-3.5 rounded-xl font-bold text-xs md:text-sm mb-6 transition-colors shadow-sm ${buttonClass}`}
-                        >
-                            Contact Sales
-                        </button>
-                    ) : (
-                        <button
-                            onClick={() => onPurchase?.(plan.id)}
-                            className={`w-full py-3 md:py-3.5 rounded-xl font-bold text-xs md:text-sm mb-6 transition-colors shadow-sm ${buttonClass}`}
-                        >
-                            Start Free Trial
-                        </button>
                     )}
 
-                    {/* Divider */}
-                    <div className={`w-full h-px mb-4 ${isHighlighted || isLifetime ? 'bg-white/20' : 'bg-gray-100'}`} />
                 </div>
 
-                {/* SCROLLABLE FEATURES SECTION */}
-                {!isLifetime && (
+                {/* Action Button */}
+                {isLifetime ? (
                     <button
-                        onClick={() => setIsExpanded(!isExpanded)}
-                        className="md:hidden w-full py-2.5 rounded-xl border border-gray-200 font-bold text-xs text-gray-700 bg-white hover:bg-gray-50 transition-colors shadow-sm mb-4"
+                        // onClick={() => triggerForm('lifetime_plan_enquiry')}
+                        className={`w-full py-3 md:py-3.5 rounded-xl font-bold text-xs md:text-sm mb-6 transition-colors shadow-sm ${buttonClass}`}
                     >
-                        {isExpanded ? 'Hide features' : 'Show features'}
+                        Contact Sales
+                    </button>
+                ) : (
+                    <button
+                        onClick={() => onPurchase?.(plan.id)}
+                        className={`w-full py-3 md:py-3.5 rounded-xl font-bold text-xs md:text-sm mb-6 transition-colors shadow-sm ${buttonClass}`}
+                    >
+                        Start Free Trial
                     </button>
                 )}
 
-                <div className={`flex-1 min-h-0 relative group/list ${(isExpanded || isLifetime) ? 'block' : 'hidden'} md:block`}>
-                    <div
-                        ref={scrollRef}
-                        onScroll={checkScroll}
-                        className="h-full overflow-y-auto pr-2 pricing-scrollbar"
-                    >
-                        {/* Limits with Overage Pricing */}
-                        <div className="space-y-4 pb-2 ">
-                            {plan.limits && Object.keys(plan.limits).length > 0 && (
-                                <div className="mb-6">
-                                    <h4 className={`text-[10px] font-bold uppercase tracking-widest mb-3 ${isHighlighted || isLifetime ? 'text-white/80' : 'text-gray-500'}`}>
-                                        Platform Resources
-                                    </h4>
-                                    <div className="grid grid-cols-1 gap-2 mb-6">
-                                        {['seats', 'storage', 'locations', 'courses'].map(key => {
-                                            const val = (plan.limits as any)[key] ?? (plan.limits as any)[key === 'storage' ? 'storageGB' : ''];
-                                            const config = getResourceConfig(key);
-                                            const isUnlimited = isLifetime || val === undefined || val === null || Number(val) === -1 || (key === 'storage' && Number(val) === 0);
+                {/* Divider */}
+                <div className={`w-full h-px mb-4 ${isDark ? 'bg-white/20' : 'bg-gray-100'}`} />
+            </div>
 
-                                            let priceKey = `${key.replace(/s$/, '')}UnitPrice`;
-                                            let yearlyPriceKey = `yearly${key.replace(/s$/, '').charAt(0).toUpperCase() + key.replace(/s$/, '').slice(1)}UnitPrice`;
+            {/* SCROLLABLE FEATURES SECTION */}
+            {!isLifetime && (
+                <button
+                    onClick={() => setIsExpanded(!isExpanded)}
+                    className="md:hidden w-full py-2.5 rounded-xl border border-gray-200 font-bold text-xs text-gray-700 bg-white hover:bg-gray-50 transition-colors shadow-sm mb-4"
+                >
+                    {isExpanded ? 'Hide features' : 'Show features'}
+                </button>
+            )}
 
-                                            if (key === 'seats') { priceKey = 'seatUnitPrice'; yearlyPriceKey = 'yearlySeatUnitPrice'; }
-                                            else if (key === 'storage') { priceKey = 'storageUnitPrice'; yearlyPriceKey = 'yearlyStorageUnitPrice'; }
-                                            else if (key === 'locations') { priceKey = 'locationUnitPrice'; yearlyPriceKey = 'yearlyLocationUnitPrice'; }
-                                            else if (key === 'courses') { priceKey = 'courseUnitPrice'; yearlyPriceKey = 'yearlyCourseUnitPrice'; }
-
-                                            let overageText = '';
-                                            if (!isLifetime && !isUnlimited) {
-                                                const priceText = formatOveragePrice(plan, { priceKey, yearlyPriceKey }, billingInterval);
-                                                if (priceText) overageText = priceText;
-                                            }
-
-                                            const displayValue = isUnlimited ? 'Unlimited' : (key === 'storage' ? `${val} GB` : val);
-
-                                            return (
-                                                <div key={key} className={`h-[52px] w-full flex items-center justify-between rounded-xl px-3 border ${isHighlighted || isLifetime ? 'bg-white/10 border-white/20' : 'bg-gray-50/80 border-gray-100/80'}`}>
-                                                    <div className="flex items-center gap-2.5 min-w-0 pr-2">
-                                                        <div className={`shrink-0 p-1.5 rounded-lg shadow-sm ${isHighlighted || isLifetime ? 'bg-white/20 text-white' : 'bg-white text-gray-500'}`}>
-                                                            {config.icon}
-                                                        </div>
-                                                        <span className={`text-sm font-semibold truncate ${isHighlighted || isLifetime ? 'text-white' : 'text-gray-700'}`}>
-                                                            {displayValue} <span className={`font-medium ${isHighlighted || isLifetime ? 'text-white/70' : 'text-gray-500'}`}>{config.label}</span>
-                                                        </span>
-                                                    </div>
-                                                    {overageText && (
-                                                        <div className={`shrink-0 text-[10px] font-bold tracking-tight ${isHighlighted || isLifetime ? 'text-white/90' : 'text-blue-600'}`}>
-                                                            {overageText}
-                                                        </div>
-                                                    )}
-                                                </div>
-                                            );
-                                        })}
-                                    </div>
-                                </div>
-                            )}
-
-                            <div>
-                                <h4 className={`text-[10px] font-bold uppercase tracking-widest mb-3 ${!isLifetime && plan.isLmsEnabled === false
-                                    ? 'text-gray-400 opacity-60'
-                                    : (isHighlighted || isLifetime ? 'text-white/80' : 'text-blue-500')
-                                    }`}>
-                                    LMS / Training Resources
+            <div className={`flex-1 min-h-0 relative group/list ${(isExpanded || isLifetime) ? 'block' : 'hidden'} md:block`}>
+                <div
+                    ref={scrollRef}
+                    onScroll={checkScroll}
+                    className="h-full overflow-y-auto pr-2 pricing-scrollbar"
+                >
+                    {/* Limits with Overage Pricing */}
+                    <div className="space-y-4 pb-2 ">
+                        {plan.limits && Object.keys(plan.limits).length > 0 && (
+                            <div className="mb-6">
+                                <h4 className={`text-[10px] font-bold uppercase tracking-widest mb-3 ${isDark ? 'text-white/80' : 'text-gray-500'}`}>
+                                    Platform Resources
                                 </h4>
-                                <div className="mb-6 grid grid-cols-1 gap-2">
-                                    {['lmsCourses', 'students', 'instructors', 'certificates'].map(key => {
+                                <div className="grid grid-cols-1 gap-2 mb-6">
+                                    {['seats', 'storage', 'locations', 'courses'].map(key => {
+                                        const val = (plan.limits as any)[key] ?? (plan.limits as any)[key === 'storage' ? 'storageGB' : ''];
                                         const config = getResourceConfig(key);
-                                        const val = plan.isLmsEnabled !== false ? (plan.limits as any)[key] : undefined;
-                                        const isLmsDisabled = !isLifetime && plan.isLmsEnabled === false;
+                                        const isUnlimited = isLifetime || val === undefined || val === null || Number(val) === -1 || (key === 'storage' && Number(val) === 0);
 
                                         let priceKey = `${key.replace(/s$/, '')}UnitPrice`;
                                         let yearlyPriceKey = `yearly${key.replace(/s$/, '').charAt(0).toUpperCase() + key.replace(/s$/, '').slice(1)}UnitPrice`;
 
-                                        if (key === 'lmsCourses') { priceKey = 'lmsCourseUnitPrice'; yearlyPriceKey = 'yearlyLmsCourseUnitPrice'; }
-                                        else if (key === 'students') { priceKey = 'studentUnitPrice'; yearlyPriceKey = 'yearlyStudentUnitPrice'; }
-                                        else if (key === 'instructors') { priceKey = 'instructorUnitPrice'; yearlyPriceKey = 'yearlyInstructorUnitPrice'; }
-                                        else if (key === 'certificates') { priceKey = 'certificateUnitPrice'; yearlyPriceKey = 'yearlyCertificateUnitPrice'; }
+                                        if (key === 'seats') { priceKey = 'seatUnitPrice'; yearlyPriceKey = 'yearlySeatUnitPrice'; }
+                                        else if (key === 'storage') { priceKey = 'storageUnitPrice'; yearlyPriceKey = 'yearlyStorageUnitPrice'; }
+                                        else if (key === 'locations') { priceKey = 'locationUnitPrice'; yearlyPriceKey = 'yearlyLocationUnitPrice'; }
+                                        else if (key === 'courses') { priceKey = 'courseUnitPrice'; yearlyPriceKey = 'yearlyCourseUnitPrice'; }
 
-                                        const isUnlimited = isLifetime || val === null || Number(val) === -1;
                                         let overageText = '';
-                                        if (!isLmsDisabled && !isUnlimited) {
+                                        if (!isLifetime && !isUnlimited) {
                                             const priceText = formatOveragePrice(plan, { priceKey, yearlyPriceKey }, billingInterval);
                                             if (priceText) overageText = priceText;
                                         }
 
-                                        const displayValue = isLmsDisabled ? 'Not Included' : (isUnlimited ? 'Unlimited' : val);
+                                        const displayValue = isUnlimited ? 'Unlimited' : (key === 'storage' ? `${val} GB` : val);
 
                                         return (
-                                            <div key={key} className={`h-[52px] w-full flex items-center justify-between rounded-xl px-3 border ${isLmsDisabled
-                                                ? (isHighlighted || isLifetime ? 'bg-white/5 border-white/10 opacity-60' : 'bg-gray-50/40 border-gray-100/50 opacity-60')
-                                                : (isHighlighted || isLifetime ? 'bg-white/10 border-white/20' : 'bg-blue-50/30 border-blue-100/50')
-                                                }`}>
+                                            <div key={key} className={`h-[42px] w-full flex items-center justify-between rounded-xl px-3 border ${isDark ? 'bg-white/10 border-white/20' : 'bg-gray-50/80 border-gray-100/80'}`}>
                                                 <div className="flex items-center gap-2.5 min-w-0 pr-2">
-                                                    <div className={`shrink-0 p-1.5 rounded-lg shadow-sm ${isLmsDisabled
-                                                        ? (isHighlighted || isLifetime ? 'bg-white/10 text-white/50' : 'bg-white text-gray-400')
-                                                        : (isHighlighted || isLifetime ? 'bg-white/20 text-white' : 'bg-white text-blue-500')
-                                                        }`}>
+                                                    <div className={`shrink-0 p-1.5 rounded-lg shadow-sm ${isDark ? 'bg-white/20 text-white' : 'bg-white text-gray-500'}`}>
                                                         {config.icon}
                                                     </div>
-                                                    <span className={`text-sm font-semibold truncate ${isHighlighted || isLifetime ? 'text-white' : 'text-gray-700'}`}>
-                                                        {isLmsDisabled ? (
-                                                            <span className={isHighlighted || isLifetime ? 'text-white/50' : 'text-gray-400 font-medium'}>Not Included</span>
-                                                        ) : (
-                                                            <>{displayValue}</>
-                                                        )} <span className={`font-medium ${isHighlighted || isLifetime ? 'text-white/70' : 'text-gray-500'}`}>{config.label}</span>
+                                                    <span className={`text-xs font-semibold truncate ${isDark ? 'text-white' : 'text-gray-700'}`}>
+                                                        {displayValue} <span className={`font-medium ${isDark ? 'text-white/70' : 'text-gray-500'}`}>{config.label}</span>
                                                     </span>
                                                 </div>
                                                 {overageText && (
-                                                    <div className={`shrink-0 text-[10px] font-bold tracking-tight ${isHighlighted || isLifetime ? 'text-white/90' : 'text-blue-600'}`}>
+                                                    <div className={`shrink-0 text-[10px] font-bold tracking-tight ${isDark ? 'text-white/90' : 'text-blue-600'}`}>
                                                         {overageText}
                                                     </div>
                                                 )}
@@ -339,65 +330,146 @@ const PricingCard: React.FC<Props> = ({
                                     })}
                                 </div>
                             </div>
+                        )}
 
-                            {isLifetime ? (
-                                <div className="mt-6">
-                                    <h4 className={`text-xs font-bold uppercase tracking-wider mb-3 text-white/80`}>
-                                        Included Features
-                                    </h4>
-                                    <div className="flex items-center gap-3">
-                                        <Check className={`w-4 h-4 text-emerald-400`} strokeWidth={3} />
-                                        <span className={`text-sm font-medium text-white`}>
-                                            Everything Included
-                                        </span>
-                                    </div>
-                                </div>
-                            ) : plan.displayFeatures && plan.displayFeatures.length > 0 ? (
-                                plan.displayFeatures.map((group: any, idx: number) => {
-                                    const category = group.category;
+                        <div>
+                            <h4 className={`text-[10px] font-bold uppercase tracking-widest mb-3 ${!isLifetime && plan.isLmsEnabled === false
+                                ? 'text-gray-400 opacity-60'
+                                : (isDark ? 'text-white/80' : 'text-blue-500')
+                                }`}>
+                                LMS / Training Resources
+                            </h4>
+                            <div className="mb-6 grid grid-cols-1 gap-2">
+                                {['lmsCourses', 'students', 'instructors', 'certificates'].map(key => {
+                                    const config = getResourceConfig(key);
+                                    const val = plan.isLmsEnabled !== false ? (plan.limits as any)[key] : undefined;
+                                    const isLmsDisabled = !isLifetime && plan.isLmsEnabled === false;
+
+                                    let priceKey = `${key.replace(/s$/, '')}UnitPrice`;
+                                    let yearlyPriceKey = `yearly${key.replace(/s$/, '').charAt(0).toUpperCase() + key.replace(/s$/, '').slice(1)}UnitPrice`;
+
+                                    if (key === 'lmsCourses') { priceKey = 'lmsCourseUnitPrice'; yearlyPriceKey = 'yearlyLmsCourseUnitPrice'; }
+                                    else if (key === 'students') { priceKey = 'studentUnitPrice'; yearlyPriceKey = 'yearlyStudentUnitPrice'; }
+                                    else if (key === 'instructors') { priceKey = 'instructorUnitPrice'; yearlyPriceKey = 'yearlyInstructorUnitPrice'; }
+                                    else if (key === 'certificates') { priceKey = 'certificateUnitPrice'; yearlyPriceKey = 'yearlyCertificateUnitPrice'; }
+
+                                    const isUnlimited = isLifetime || val === null || Number(val) === -1;
+                                    let overageText = '';
+                                    if (!isLmsDisabled && !isUnlimited) {
+                                        const priceText = formatOveragePrice(plan, { priceKey, yearlyPriceKey }, billingInterval);
+                                        if (priceText) overageText = priceText;
+                                    }
+
+                                    const displayValue = isLmsDisabled ? 'Not Included' : (isUnlimited ? 'Unlimited' : val);
+
                                     return (
-                                        <div key={idx} className="mt-6 first:mt-4">
-                                            <h4 className={`text-xs font-bold uppercase tracking-wider mb-3 flex items-center gap-1.5 ${isHighlighted || isLifetime ? 'text-white/80' : 'text-gray-600'}`}>
-                                                {category}
-                                            </h4>
-                                            <div className="mb-4 last:mb-0 space-y-2.5">
-                                                {group.items && group.items.map((item: string, itemIdx: number) => (
-                                                    <div key={itemIdx} className="flex items-start gap-3">
-                                                        <div className="mt-0.5 shrink-0">
-                                                            <Check className={`w-4 h-4 ${checkIconClass}`} strokeWidth={3} />
-                                                        </div>
-                                                        <span className={`text-sm font-medium leading-tight pt-0.5 ${isHighlighted || isLifetime ? 'text-white' : 'text-gray-600'}`}>
-                                                            {item}
-                                                        </span>
-                                                    </div>
-                                                ))}
+                                        <div key={key} className={`h-[42px] w-full flex items-center justify-between rounded-xl px-3 border ${isLmsDisabled
+                                            ? (isDark ? 'bg-white/5 border-white/10 opacity-60' : 'bg-gray-50/40 border-gray-100/50 opacity-60')
+                                            : (isDark ? 'bg-white/10 border-white/20' : 'bg-blue-50/30 border-blue-100/50')
+                                            }`}>
+                                            <div className="flex items-center gap-2.5 min-w-0 pr-2">
+                                                <div className={`shrink-0 p-1.5 rounded-lg shadow-sm ${isLmsDisabled
+                                                    ? (isDark ? 'bg-white/10 text-white/50' : 'bg-white text-gray-400')
+                                                    : (isDark ? 'bg-white/20 text-white' : 'bg-white text-blue-500')
+                                                    }`}>
+                                                    {config.icon}
+                                                </div>
+                                                <span className={`text-xs font-semibold truncate ${isDark ? 'text-white' : 'text-gray-700'}`}>
+                                                    {isLmsDisabled ? (
+                                                        <span className={isDark ? 'text-white/50' : 'text-gray-400 font-medium'}>Not Included</span>
+                                                    ) : (
+                                                        <>{displayValue}</>
+                                                    )} <span className={`font-medium ${isDark ? 'text-white/70' : 'text-gray-500'}`}>{config.label}</span>
+                                                </span>
                                             </div>
+                                            {overageText && (
+                                                <div className={`shrink-0 text-[10px] font-bold tracking-tight ${isDark ? 'text-white/90' : 'text-blue-600'}`}>
+                                                    {overageText}
+                                                </div>
+                                            )}
                                         </div>
                                     );
-                                })
-                            ) : (
-                                <div className="flex items-center justify-center h-full text-gray-400 text-sm italic py-6">
-                                    All basic features included
-                                </div>
-                            )}
+                                })}
+                            </div>
                         </div>
+
+                        {isLifetime ? (
+                            <div className="mt-6">
+                                <h4 className={`text-xs font-bold uppercase tracking-wider mb-3 text-white/80`}>
+                                    Included Features
+                                </h4>
+                                <div className="flex items-center gap-3">
+                                    <Check className={`w-4 h-4 text-emerald-400`} strokeWidth={3} />
+                                    <span className={`text-sm font-medium text-white`}>
+                                        Everything Included
+                                    </span>
+                                </div>
+                            </div>
+                        ) : plan.displayFeatures && plan.displayFeatures.length > 0 ? (
+                            plan.displayFeatures.map((group: any, idx: number) => {
+                                const category = group.category;
+                                return (
+                                    <div key={idx} className="mt-6 first:mt-4">
+                                        <h4 className={`text-xs font-bold uppercase tracking-wider mb-3 flex items-center gap-1.5 ${isDark ? 'text-white/80' : 'text-gray-600'}`}>
+                                            {category}
+                                        </h4>
+                                        <div className="mb-4 last:mb-0 space-y-2.5">
+                                            {group.items && group.items.map((item: string, itemIdx: number) => (
+                                                <div key={itemIdx} className="flex items-start gap-3">
+                                                    <div className="mt-0.5 shrink-0">
+                                                        <Check className={`w-4 h-4 ${checkIconClass}`} strokeWidth={3} />
+                                                    </div>
+                                                    <span className={`text-sm font-medium leading-tight pt-0.5 ${isDark ? 'text-white' : 'text-gray-600'}`}>
+                                                        {item}
+                                                    </span>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+                                );
+                            })
+                        ) : (
+                            <div className="flex items-center justify-center h-full text-gray-400 text-sm italic py-6">
+                                All basic features included
+                            </div>
+                        )}
                     </div>
                 </div>
-
-                <div className="hidden md:block mt-auto pt-4 flex-none z-10">
-                    {isLifetime ? (
-                        <></>
-                    ) : (
-                        <button
-                            onClick={() => onPurchase?.(plan.id)}
-                            className={`w-full py-3 md:py-3.5 rounded-xl font-bold text-xs md:text-sm mb-6 transition-colors shadow-sm ${buttonClass}`}
-                        >
-                            Start Free Trial
-                        </button>
-                    )}
-                </div>
             </div>
-        </div >
+
+            <div className="hidden md:block mt-auto pt-4 flex-none z-10">
+                {isLifetime ? (
+                    <></>
+                ) : (
+                    <button
+                        onClick={() => onPurchase?.(plan.id)}
+                        className={`w-full py-3 md:py-3.5 rounded-xl font-bold text-xs md:text-sm mb-6 transition-colors shadow-sm ${buttonClass}`}
+                    >
+                        Start Free Trial
+                    </button>
+                )}
+            </div>
+        </div>
+    );
+
+    return (
+        <div className="relative h-full flex flex-col group/card-container">
+            {/* Stacked Effect for Lifetime */}
+            {isLifetime && (
+                <>
+                    <div className="absolute top-2 left-2 right-[-8px] bottom-[-8px] bg-gray-700/50 rounded-[2rem] -z-10 transform translate-y-2 translate-x-2 transition-transform duration-300 group-hover/card-container:translate-x-3 group-hover/card-container:translate-y-3" />
+                    <div className="absolute top-2 left-2 right-[-16px] bottom-[-16px] bg-gray-600/30 rounded-[2rem] -z-20 transform translate-y-4 translate-x-4 transition-transform duration-300 group-hover/card-container:translate-x-6 group-hover/card-container:translate-y-6" />
+                </>
+            )}
+
+            {colorTheme === 'blue' ? (
+                <div className="p-[2px] rounded-[18px] bg-[linear-gradient(125deg,rgba(92,63,250,1)_0%,rgba(203,59,149,1)_48%,rgba(254,106,27,1)_100%)] shadow-xl shadow-[#5c3ffa]/15 h-full">
+                    {cardInnerContent}
+                </div>
+            ) : (
+                cardInnerContent
+            )}
+        </div>
     );
 };
 
@@ -415,3 +487,4 @@ const getResourceConfig = (key: string) => {
 };
 
 export default PricingCard;
+

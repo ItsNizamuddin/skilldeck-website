@@ -189,7 +189,6 @@ const CompanyForm: React.FC<CompanyFormProps> = ({ onClose, className = '', tena
         if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) return "Invalid email format";
         if (!formData.phone.trim()) return "Phone number is required";
         if (formData.phone.trim().length < 10) return "Please enter a valid phone number";
-        if (showPreferredDateTime && !formData.preferredDateTime) return "Please select a preferred callback time";
         return null;
     };
 
@@ -389,23 +388,6 @@ const CompanyForm: React.FC<CompanyFormProps> = ({ onClose, className = '', tena
                     icon={<MessageSquare className="w-4 h-4 text-brand-primary" />}
                     hideIcons={hideIcons}
                 />
-
-                {showPreferredDateTime && (
-                    <div className="space-y-1">
-                        <label className="text-xs font-bold text-gray-500 ml-1">Preferred Callback Time</label>
-                        <FormInput
-                            name="preferredDateTime"
-                            placeholder="Preferred Date & Time"
-                            value={formData.preferredDateTime}
-                            onChange={handleChange}
-                            type="datetime-local"
-                            icon={<Calendar className="w-4 h-4 text-brand-primary" />}
-                            required
-                            hideIcons={hideIcons}
-                        />
-                    </div>
-                )}
-
                 <div
                     className={
                         layout === 'compact'

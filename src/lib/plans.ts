@@ -44,7 +44,7 @@ export const STATIC_LIFETIME_PLAN: PricingPlan = {
 const enrichPlan = (plan: IPlan, index?: number): PricingPlan => {
     const name = plan.name.toLowerCase();
     const isEnterprise = name.includes("enterprise");
-    const isStarter = name.includes("starter") || name.includes("business");
+    const isStarter = name.includes("starter");  // no longer matches 'business'
     let isLifetime = name.includes("lifetime");
 
     let colorTheme: PricingPlan["uiMetadata"]["colorTheme"] = "default";
@@ -55,7 +55,11 @@ const enrichPlan = (plan: IPlan, index?: number): PricingPlan => {
     if (index === 1) {
         isHighlighted = true;
         badge = "Most Popular";
-        colorTheme = "blue";
+        colorTheme = "blue"; // brand gradient — only Growth gets this
+        icon = "building";
+    } else if (index === 2) {
+        // Business / 3rd plan — plain white, same as Starter
+        colorTheme = "default";
         icon = "building";
     }
 
