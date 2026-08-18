@@ -1,6 +1,7 @@
 import { fetchPlans } from "@/lib/plans";
-import { getCategories } from "@/lib/categories";
 import PricingWrapper from "@/components/Pricing/PricingWrapper";
+import MainNav from "@/components/shared/Navbar";
+import Footer from "@/components/shared/Footer";
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -38,16 +39,16 @@ export default async function PricingPage() {
     // PricingSection will automatically re-fetch with the correct local
     // currency (e.g. INR) from the user's geoLocation session storage
     // via the useIpLocation hook, client-side.
-    const [categories, plans] = await Promise.all([
-        getCategories(),
-        fetchPlans('USD'),
-    ]);
+    const plans = await fetchPlans('USD');
 
     return (
-        <PricingWrapper 
-            plans={plans} 
-            categories={categories} 
-            faqs={faqs} 
-        />
+        <>
+            <MainNav />
+            <PricingWrapper 
+                plans={plans} 
+                faqs={faqs} 
+            />
+            <Footer />
+        </>
     );
 }

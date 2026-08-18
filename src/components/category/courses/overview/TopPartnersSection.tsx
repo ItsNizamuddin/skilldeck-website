@@ -104,6 +104,30 @@ export default function TopPartnersSection({ courseSlug }: TopPartnersSectionPro
                         }
                     }
                 });
+
+                // FALLBACK: If no active currency price was found, search for USD instead
+                if (lowestPrice === 0 && activeCurrency.toUpperCase() !== "USD") {
+                    instSchedules.forEach((sch: any) => {
+                        const priceObj = sch.pricing?.find(
+                            (p: any) => p.currency?.code?.toUpperCase() === "USD"
+                        );
+                        if (priceObj) {
+                            const sell = priceObj.comparedPrice || 0;
+                            if (lowestPrice === 0 || sell < lowestPrice) {
+                                lowestPrice = sell;
+                                lowestCompared = priceObj.actualPrice || sell;
+                                symbol = priceObj.currency?.symbol || "$";
+                            }
+                        } else if (sch.currency?.toUpperCase() === "USD") {
+                            const sell = sch.price || 0;
+                            if (lowestPrice === 0 || sell < lowestPrice) {
+                                lowestPrice = sell;
+                                lowestCompared = sch.price || sell;
+                                symbol = "$";
+                            }
+                        }
+                    });
+                }
             }
 
             return {

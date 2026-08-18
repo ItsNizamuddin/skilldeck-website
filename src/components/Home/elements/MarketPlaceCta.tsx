@@ -26,15 +26,18 @@ const MarketPlaceCta = () => {
                         {/* Text Content */}
                         <div className="flex-1 text-center sm:text-left">
                             <h3 className="heading-section2 text-white mb-2">
-                                Marketplace Signup is <span className="text-brand-primary">Completely Free Forever!</span>
+                                Marketplace Signup is <span
+                                    className="bg-clip-text text-transparent font-extrabold inline-block"
+                                    style={{ background: "var(--gradient-brand)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}
+                                >Completely Free Forever!</span>
                             </h3>
-                            <p className="body-medium text-slate-300 max-w-lg">
+                            <p className="body-small text-slate-300 max-w-lg">
                                 Join our marketplace platform at no cost. Simply register to start using all marketplace features today.
                             </p>
                         </div>
 
                         {/* CTA Button */}
-                        <div className="flex-shrink-0">
+                        <div className="shrink-0">
                             <Link
                                 href="/register"
                                 className="relative z-20 inline-flex items-center justify-center px-6 py-3 bg-[linear-gradient(125deg,rgba(92,63,250,1)_0%,rgba(203,59,149,1)_48%,rgba(254,106,27,1)_100%)] hover:brightness-110 body-small font-semibold text-white rounded-xl shadow-lg shadow-blue-500/20 transition-all duration-200 hover:-translate-y-0.5 lg:mr-14"

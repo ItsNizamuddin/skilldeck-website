@@ -21,7 +21,7 @@ const PlansComparisonTableDesktop: React.FC<Props> = ({
     return (
         <div className="hidden xl:block rounded-xl border border-gray-200 bg-white shadow-sm overflow-x-auto xl:overflow-visible">
             <table className="w-full border-collapse relative">
-                <thead className="sticky top-0 z-20 bg-white shadow-sm">
+                <thead className="sticky top-16 z-20 bg-white shadow-sm">
                     <tr>
                         <th scope="col" className="p-4 text-left bg-gray-50 border-b border-gray-200 min-w-[200px] align-middle pb-5">
                             <span className="text-sm font-semibold text-gray-500 uppercase tracking-wider">Features</span>

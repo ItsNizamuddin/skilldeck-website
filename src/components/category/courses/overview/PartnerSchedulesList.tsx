@@ -174,12 +174,30 @@ export default function PartnerSchedulesList({
                             {/* Grid of Schedules */}
                             <div ref={batchContainerRef} className="flex md:grid md:grid-cols-2 gap-4 overflow-x-auto pb-4 md:pb-0 scrollbar-none flex-nowrap md:flex-wrap snap-x snap-mandatory">
                                 {activePartner.schedules.slice(0, 3).map((sch: any) => {
-                                    const schPriceObj = sch.pricing?.find(
+                                    let schPriceObj = sch.pricing?.find(
                                         (p: any) => p.currency?.code?.toUpperCase() === activeCurrency.toUpperCase()
                                     );
+                                    let schSymbol = getCurrencySymbol(activeCurrency);
+
+                                    // FALLBACK: If no price for the active currency, fall back to USD
+                                    if (!schPriceObj && activeCurrency.toUpperCase() !== "USD") {
+                                        schPriceObj = sch.pricing?.find(
+                                            (p: any) => p.currency?.code?.toUpperCase() === "USD"
+                                        );
+                                        if (schPriceObj) {
+                                            schSymbol = schPriceObj.currency?.symbol || "$";
+                                        }
+                                    } else if (schPriceObj) {
+                                        schSymbol = schPriceObj.currency?.symbol || schSymbol;
+                                    }
+
                                     let schSell = schPriceObj?.comparedPrice || sch.price || 0;
                                     let schActual = schPriceObj?.actualPrice || schSell;
-                                    let schSymbol = schPriceObj?.currency?.symbol || getCurrencySymbol(activeCurrency);
+
+                                    if (!schPriceObj && sch.currency) {
+                                        schSymbol = getCurrencySymbol(sch.currency);
+                                    }
+
                                     let hasDiscount = schActual > schSell && schSell > 0;
 
                                     return (

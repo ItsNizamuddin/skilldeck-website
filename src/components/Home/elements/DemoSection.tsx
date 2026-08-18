@@ -29,7 +29,7 @@ const DemoSection = () => {
     const thumbnailUrl = `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
 
     return (
-        <section className="py-16 md:py-24 bg-[#0a0f1d] relative overflow-hidden">
+        <section className="py-10 md:py-24 bg-[#0a0f1d] relative overflow-hidden">
             {/* Interactive Dot Grid Background */}
             <InteractiveDotBackground />
 

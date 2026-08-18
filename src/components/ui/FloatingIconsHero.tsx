@@ -65,27 +65,28 @@ export default function FloatingIconsHero({
                 </p>
 
                 <div className="mt-4 md:mt-10 flex flex-col sm:flex-row items-center justify-center gap-4 w-full sm:w-auto">
+                    <Button
+                        as="a"
+                        href={ctaHref}
+                        variant="primary"
+                        size="md"
+                        className="px-8 py-3 text-sm font-semibold gap-2 w-full sm:w-auto justify-center flex items-center"
+                    >
+                        {ctaText}
+                        <ArrowRight className="w-4 h-4" />
+                    </Button>
                     {secondaryCtaText && secondaryCtaHref && (
                         <Button
                             as="a"
                             href={secondaryCtaHref}
                             variant="outline"
                             size="md"
-                            className="px-8 py-3.5 text-sm md:text-base font-semibold w-full sm:w-auto text-center"
+                            className="px-8 py-3 text-sm font-semibold w-full sm:w-auto text-center"
                         >
                             {secondaryCtaText}
                         </Button>
                     )}
-                    <Button
-                        as="a"
-                        href={ctaHref}
-                        variant="primary"
-                        size="md"
-                        className="px-8 py-3.5 text-sm md:text-base font-semibold gap-2 w-full sm:w-auto justify-center flex items-center"
-                    >
-                        {ctaText}
-                        <ArrowRight className="w-4 h-4" />
-                    </Button>
+
                 </div>
             </div>
         </section>
