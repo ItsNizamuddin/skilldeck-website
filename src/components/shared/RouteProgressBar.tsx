@@ -29,9 +29,9 @@ export default function RouteProgressBar() {
         const injectSpinner = (element: HTMLElement) => {
             if (element.querySelector('.route-btn-spinner')) return;
 
-            let svg = element.querySelector('svg.route-loader-target') || 
-                      element.querySelector('.route-loader-target svg');
-            
+            let svg = element.querySelector('svg.route-loader-target') ||
+                element.querySelector('.route-loader-target svg');
+
             if (!svg) {
                 const svgs = element.querySelectorAll('svg');
                 if (svgs.length > 0) {
@@ -56,7 +56,7 @@ export default function RouteProgressBar() {
 
         const handleAnchorClick = (e: MouseEvent) => {
             const target = e.target as HTMLElement;
-            
+
             // Skip loading if the clicked element or any parent specifies data-no-loader
             if (target.closest('[data-no-loader]')) {
                 return;
@@ -64,7 +64,7 @@ export default function RouteProgressBar() {
 
             // Find closest anchor tag
             const anchor = target.closest('a');
-            
+
             if (anchor) {
                 const href = anchor.getAttribute('href');
                 const targetAttr = anchor.getAttribute('target');
@@ -88,11 +88,6 @@ export default function RouteProgressBar() {
                 }
             }
 
-            // Also check if they clicked a submit button in a form
-            const button = target.closest('button');
-            if (button && button.type === 'submit' && button.closest('form')) {
-                injectSpinner(button);
-            }
         };
 
         document.addEventListener('click', handleAnchorClick);

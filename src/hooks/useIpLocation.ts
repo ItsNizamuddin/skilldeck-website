@@ -135,7 +135,6 @@ export const useIpLocation = (ip?: string | null) => {
                             document.cookie = `geo_country=${parsed.countryCode || ''}; path=/; max-age=${60 * 60 * 24 * 7}; SameSite=Lax`;
                             document.cookie = `geo_timezone=${parsed.timezone || ''}; path=/; max-age=${60 * 60 * 24 * 7}; SameSite=Lax`;
                         }
-                        return;
                     } catch (e) {
                         if (typeof window !== 'undefined') {
                             localStorage.removeItem('geolocation');
@@ -145,13 +144,12 @@ export const useIpLocation = (ip?: string | null) => {
                     }
                 }
 
-                // 2. Fetch fresh data if no cache exists
+                // 2. Fetch fresh data (in background if cached)
                 const freshData = await fetchFreshLocation();
 
                 if (freshData) {
-                    const cachedStr = cachedData || '';
                     const freshStr = JSON.stringify(freshData);
-                    if (freshStr !== cachedStr) {
+                    if (freshStr !== cachedData) {
                         setData(freshData);
                         if (typeof window !== 'undefined') {
                             sessionStorage.setItem(CACHE_KEY, freshStr);
