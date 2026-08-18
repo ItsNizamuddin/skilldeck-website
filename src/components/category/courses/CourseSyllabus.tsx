@@ -47,7 +47,7 @@ export default function CourseSyllabus({ data }: CourseSyllabusProps) {
 
     return (
         <section className="py-6 md:py-12 bg-white" id="course-syllabus">
-            <div className="container mx-auto px-2 md:px-0 max-w-4xl">
+            <div className="container mx-auto px-2 lg:px-0 max-w-4xl">
                 {/* Header */}
                 <div className="space-y-2 mb-4">
                     <SectionTag text="Curriculum" />

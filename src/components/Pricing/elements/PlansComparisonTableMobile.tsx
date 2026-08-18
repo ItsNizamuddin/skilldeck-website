@@ -54,7 +54,7 @@ const PlansComparisonTableMobile: React.FC<Props> = ({
                             key={plan.id}
                             onClick={() => togglePlan(index)}
                             className={`px-4 py-2 rounded-full text-xs font-bold transition-all ${activePlanIndexes.includes(index)
-                                ? 'bg-blue-600 text-white shadow-md'
+                                ? 'bg-[linear-gradient(135deg,#3730a3_0%,#4f46e5_50%,#6d28d9_100%)] text-white shadow-md'
                                 : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                                 }`}
                         >
@@ -77,7 +77,7 @@ const PlansComparisonTableMobile: React.FC<Props> = ({
 
                                     return (
                                         <th key={plan.id} scope="col" className="w-1/3 px-3 py-3 text-center bg-white relative align-top pb-10">
-                                            <div className="text-xs font-bold text-blue-600 mb-1">{plan.name}</div>
+                                            <div className="text-xs font-bold text-indigo-600 mb-1">{plan.name}</div>
                                             {loading ? (
                                                 <div className="animate-pulse bg-slate-200 rounded h-5 w-16 mx-auto mb-2" />
                                             ) : (
@@ -94,7 +94,7 @@ const PlansComparisonTableMobile: React.FC<Props> = ({
                                             )}
                                             <button
                                                 onClick={() => onOpenPurchase?.(plan.id)}
-                                                className="absolute bottom-2 left-2 right-2 py-1.5 rounded-md text-xs font-medium bg-blue-600 hover:bg-blue-700 text-white transition-colors"
+                                                className="absolute bottom-2 left-2 right-2 py-1.5 rounded-md text-xs font-bold bg-[linear-gradient(135deg,#3730a3_0%,#4f46e5_50%,#6d28d9_100%)] hover:brightness-110 text-white transition-colors hover:-translate-y-[1px]"
                                             >
                                                 Get Started
                                             </button>
@@ -155,8 +155,8 @@ const PlansComparisonTableMobile: React.FC<Props> = ({
                                 })
                             ) && (
                                     <React.Fragment key="lms-limits-section-mobile">
-                                        <tr className="bg-blue-50/30 sticky top-[118px] z-10 ">
-                                            <td colSpan={3} className="px-3 py-2 text-xs font-bold text-blue-700 uppercase tracking-wider bg-blue-50/50 flex items-center gap-2">
+                                        <tr className="bg-indigo-50/20 sticky top-[118px] z-10 ">
+                                            <td colSpan={3} className="px-3 py-2 text-xs font-bold text-indigo-700 uppercase tracking-wider bg-indigo-50/40 flex items-center gap-2">
                                                 LMS / Training Resources
                                             </td>
                                         </tr>
@@ -169,7 +169,7 @@ const PlansComparisonTableMobile: React.FC<Props> = ({
                                             const val = (plan.limits as any)?.[limit.key];
                                             return plan.isLmsEnabled !== false && (val === null || val === -1 || Number(val || 0) > 0);
                                         })).map((limit, idx) => (
-                                            <tr key={limit.key} className={idx % 2 === 0 ? 'bg-white' : 'bg-blue-50/10'}>
+                                            <tr key={limit.key} className={idx % 2 === 0 ? 'bg-white' : 'bg-indigo-50/10'}>
                                                 <td className="px-3 py-3 text-xs font-semibold text-gray-700 border-r border-gray-200">
                                                     {limit.label}
                                                 </td>

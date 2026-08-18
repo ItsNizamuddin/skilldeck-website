@@ -7,8 +7,8 @@ export const RenderValue = ({ value }: { value: any }) => {
     if (isEnabled) {
         return (
             <div className="flex justify-center">
-                <div className="w-6 h-6 rounded-full bg-green-100 flex items-center justify-center">
-                    <Check className="w-4 h-4 text-green-600" />
+                <div className="w-6 h-6 rounded-full bg-indigo-100 flex items-center justify-center">
+                    <Check className="w-4 h-4 text-indigo-600" />
                 </div>
             </div>
         );

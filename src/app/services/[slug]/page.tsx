@@ -215,7 +215,7 @@ export default async function ServicePage({ params }: { params: Promise<ServiceP
                 {/* FAQ Accordion Section */}
                 {service.faqs?.accordions && service.faqs.accordions.length > 0 && (
                     <section className="py-10 md:py-16 bg-white border-t border-slate-100">
-                        <div className="container mx-auto px-2 md:px-0 max-w-4xl space-y-6 lg:space-y-12">
+                        <div className="container mx-auto px-2 lg:px-0 max-w-4xl space-y-6 lg:space-y-12">
                             <div className="text-center space-y-2">
                                 <span className="text-xs font-bold uppercase tracking-widest text-indigo-600">
                                     {service.faqs.tagline || "Got Questions?"}

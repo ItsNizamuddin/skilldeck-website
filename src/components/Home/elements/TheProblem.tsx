@@ -58,9 +58,9 @@ const TheProblem = () => {
                     {/* Main Title */}
                     <h2 className="heading-section mb-2">
                         The Problem with the{" "}
-                        <span className="bg-gradient-to-r from-[#e91cff] to-[#43baff] bg-clip-text text-transparent">
-                            Training Industry
-                        </span>{" "}
+                            <span className="bg-[linear-gradient(125deg,rgba(92,63,250,1)_0%,rgba(203,59,149,1)_48%,rgba(254,106,27,1)_100%)] bg-clip-text text-transparent">
+                                Training Industry
+                            </span>{" "}
                         Today
                     </h2>
 
