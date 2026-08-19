@@ -90,7 +90,7 @@ export default function PartnerSchedulesList({
         <div id="detailed-schedules" className="pt-10 space-y-6">
             <div className="space-y-2 pb-4 border-b border-slate-100/60">
                 <h3 className="text-xl font-extrabold text-slate-800 tracking-tight">Upcoming Batches & Schedules</h3>
-                <p className="text-xs text-slate-500 font-medium">Select your preferred training provider on the left to view their batches.</p>
+                <p className="text-xs text-slate-500 font-medium">Hover over your preferred training provider on the left to view their batches.</p>
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-10 gap-6 items-start">
@@ -102,6 +102,7 @@ export default function PartnerSchedulesList({
                             <button
                                 key={partner.id}
                                 onClick={() => setActiveCompanyId(partner.id)}
+                                onMouseEnter={() => setActiveCompanyId(partner.id)}
                                 className={`relative w-65 md:w-70 lg:w-full text-left p-2 pt-5 rounded-2xl border transition-colors duration-150 flex items-center gap-3 cursor-pointer shrink-0 snap-start ${isActive
                                     ? "bg-[#5544CC]/5 border-[#5544CC]/20 shadow-sm"
                                     : "bg-white border-slate-100 hover:bg-slate-50/50"
@@ -268,10 +269,10 @@ export default function PartnerSchedulesList({
                                                             onClick={onClick}
                                                             variant="primary"
                                                             size="sm"
-                                                            className="text-[10px] font-bold py-1.5 px-3 rounded-lg shadow-md shadow-purple-600/10 flex items-center gap-1.5 transition-all cursor-pointer"
+                                                            className="text-[10px] font-bold py-1.5 px-3 rounded-lg shadow-md shadow-purple-600/10 flex items-center gap-1.5 transition-all cursor-pointer capitalize"
                                                         >
-                                                            <Phone className="w-3 h-3 fill-white/20" />
-                                                            <span>Request Call</span>
+                                                            <Phone className="w-3 h-3 fill-white/20 " />
+                                                            <span>I am intrested</span>
                                                         </Button>
                                                     )}
                                                 />
@@ -301,8 +302,8 @@ export default function PartnerSchedulesList({
                                                 aria-label={`Go to batch ${idx + 1}`}
                                                 onClick={() => handleBatchScroll(idx)}
                                                 className={`w-1.5 h-1.5 rounded-full transition-all duration-300 ${idx === activeBatchIndex
-                                                        ? "w-4 bg-[#5544CC]"
-                                                        : "bg-slate-300 hover:bg-slate-400"
+                                                    ? "w-4 bg-[#5544CC]"
+                                                    : "bg-slate-300 hover:bg-slate-400"
                                                     }`}
                                             />
                                         ))}

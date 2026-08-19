@@ -47,11 +47,16 @@ export default function RouteProgressBar() {
                 svg.classList.add('route-btn-icon-hidden');
                 // Insert spinner in place of the SVG
                 svg.parentNode?.insertBefore(spinner, svg);
-            } else {
-                // Fallback: append spinner to the end of the element
+                element.classList.add('route-loading-active');
+            } else if (
+                element.classList.contains('btn') ||
+                element.classList.contains('button') ||
+                element.getAttribute('role') === 'button'
+            ) {
+                // Fallback: append spinner only if it is styled as a button
                 element.appendChild(spinner);
+                element.classList.add('route-loading-active');
             }
-            element.classList.add('route-loading-active');
         };
 
         const handleAnchorClick = (e: MouseEvent) => {

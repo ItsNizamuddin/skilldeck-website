@@ -124,7 +124,7 @@ const DemoSection = () => {
                             {features.map((feature) => (
                                 <div
                                     key={feature.title}
-                                    className="bg-slate-900/50 backdrop-blur-sm border border-slate-700/50 rounded-xl py-3 px-4 hover:border-brand-primary/50 transition-colors duration-300 group"
+                                    className="bg-transparent backdrop-blur-[1.5px] border border-slate-700/50 rounded-xl py-3 px-4 hover:border-brand-primary/50 transition-colors duration-300 group"
                                 >
                                     <div className="flex items-start gap-3">
                                         <div className="flex-shrink-0 w-5 h-5 bg-[linear-gradient(125deg,rgba(92,63,250,1)_0%,rgba(203,59,149,1)_48%,rgba(254,106,27,1)_100%)] rounded-md flex items-center justify-center">

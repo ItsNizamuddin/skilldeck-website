@@ -51,7 +51,7 @@ function MainNav({ isHidden, categories, servicesCategories = [] }: Props) {
 
     const isBusinessPage = pathname.startsWith("/blog") ||
         pathname.startsWith("/companies") ||
-        (pathname !== "/" && !["/about-us", "/contact-us", "/register", "/careers", "/web-templates"].some(p => pathname.startsWith(p)));
+        (pathname !== "/" && !["/about-us", "/contact-us", "/register", "/careers", "/web-templates", "/services"].some(p => pathname.startsWith(p)));
 
     const ctaText = isBusinessPage ? "List your Institute" : "Try for free";
 
@@ -174,6 +174,14 @@ function MainNav({ isHidden, categories, servicesCategories = [] }: Props) {
                         {/* Desktop Navigation */}
                         <div className="hidden lg:flex items-center">
                             <NavMenu setActive={setActive}>
+                                {isBusinessPage && (
+                                    <NavCategoriesDropdown
+                                        initialCategories={sortedCategories}
+                                        active={active}
+                                        setActive={setActive}
+                                    />
+                                )}
+
                                 <NavServicesDropdown
                                     initialCategories={sortedServicesCategories}
                                     active={active}
@@ -192,9 +200,9 @@ function MainNav({ isHidden, categories, servicesCategories = [] }: Props) {
                                     Features
                                 </HoveredLink>
 
-                                <HoveredLink 
-                                    href={(isHomePage || pathname.startsWith("/services/")) ? (isHomePage ? "#plans" : "#plans") : "/pricing"} 
-                                    data-no-loader={(isHomePage || pathname.startsWith("/services/")) ? "true" : undefined} 
+                                <HoveredLink
+                                    href={(isHomePage || pathname.startsWith("/services/")) ? (isHomePage ? "#plans" : "#plans") : "/pricing"}
+                                    data-no-loader={(isHomePage || pathname.startsWith("/services/")) ? "true" : undefined}
                                     onClick={(e: React.MouseEvent) => handleNavClick(e, "plans")}
                                 >
                                     Plans
@@ -213,11 +221,13 @@ function MainNav({ isHidden, categories, servicesCategories = [] }: Props) {
                                     </div>
                                 </MenuItem>
 
-                                <NavCategoriesDropdown
-                                    initialCategories={sortedCategories}
-                                    active={active}
-                                    setActive={setActive}
-                                />
+                                {!isBusinessPage && (
+                                    <NavCategoriesDropdown
+                                        initialCategories={sortedCategories}
+                                        active={active}
+                                        setActive={setActive}
+                                    />
+                                )}
 
 
                             </NavMenu>

@@ -74,7 +74,6 @@ export default function CourseSectionsNav({ sections }: CourseSectionsNavProps) 
 
     const scrollToSection = (id: string) => {
         setActiveSection(id);
-        setIsExpanded(false); // Close mobile/tablet flyout
         const el = document.getElementById(id);
         if (el) {
             const offset = 85; // Header offset

@@ -10,9 +10,14 @@ import ScheduleCard from "./ScheduleCard";
 
 interface Props { companyId: string }
 
+interface CourseScheduleGroup {
+    primarySchedule: Schedule;
+    allBatches: Schedule[];
+}
+
 export default function CompanySchedulesList({ companyId }: Props) {
     const { data: location, loading: locationLoading } = useIpLocation();
-    const [schedules, setSchedules] = useState<Schedule[]>([]);
+    const [groupedCourses, setGroupedCourses] = useState<CourseScheduleGroup[]>([]);
     const [totalCount, setTotalCount] = useState<number>(0);
     const [mobileIndex, setMobileIndex] = useState<number>(0);
     const [loading, setLoading] = useState(true);
@@ -24,7 +29,7 @@ export default function CompanySchedulesList({ companyId }: Props) {
         (async () => {
             try {
                 setLoading(true);
-                const params = new URLSearchParams({ tenantId: companyId, limit: "4" });
+                const params = new URLSearchParams({ tenantId: companyId, limit: "50" });
                 if (location?.timezone) params.append("timezone", location.timezone);
                 if (location?.currency) params.append("currency", location.currency);
 
@@ -38,17 +43,51 @@ export default function CompanySchedulesList({ companyId }: Props) {
                     return mapToSchedule(s, { id: t.id || s.tenantId, name: t.name || t.legalName || "Unknown", logo: t.logo, isVerified: t.isVerified, slug: t.slug }, location);
                 });
 
-                // Sort by price ascending, placing undefined/free prices last
-                mapped.sort((a: Schedule, b: Schedule) => {
-                    const pA = a.pricing?.[0];
+                // Group batches by unique course
+                const now = Date.now();
+                const courseGroupsMap = new Map<string, Schedule[]>();
+
+                for (const s of mapped) {
+                    const courseKey = s.course?.slug || s.course?.title || s.id;
+                    if (!courseGroupsMap.has(courseKey)) {
+                        courseGroupsMap.set(courseKey, []);
+                    }
+                    courseGroupsMap.get(courseKey)!.push(s);
+                }
+
+                // For each course, sort its batches by earliest upcoming date
+                const groups: CourseScheduleGroup[] = [];
+
+                for (const [, batches] of courseGroupsMap.entries()) {
+                    batches.sort((a, b) => {
+                        const aTime = a.startsAt ? new Date(a.startsAt).getTime() : Infinity;
+                        const bTime = b.startsAt ? new Date(b.startsAt).getTime() : Infinity;
+                        const aIsFuture = aTime >= now;
+                        const bIsFuture = bTime >= now;
+
+                        if (aIsFuture && !bIsFuture) return -1;
+                        if (!aIsFuture && bIsFuture) return 1;
+                        if (aIsFuture && bIsFuture) return aTime - bTime;
+                        return bTime - aTime;
+                    });
+
+                    groups.push({
+                        primarySchedule: batches[0],
+                        allBatches: batches,
+                    });
+                }
+
+                // Sort courses by price ascending
+                groups.sort((a, b) => {
+                    const pA = a.primarySchedule.pricing?.[0];
                     const priceA = pA?.comparedPrice ?? pA?.price ?? Number.MAX_SAFE_INTEGER;
-                    const pB = b.pricing?.[0];
+                    const pB = b.primarySchedule.pricing?.[0];
                     const priceB = pB?.comparedPrice ?? pB?.price ?? Number.MAX_SAFE_INTEGER;
                     return priceA - priceB;
                 });
 
-                setSchedules(mapped);
-                setTotalCount(data.total ?? data.pagination?.total ?? data.pagination?.totalCount ?? (data.data || []).length);
+                setGroupedCourses(groups);
+                setTotalCount(groups.length);
             } catch (e: any) {
                 if (e.name !== "AbortError") console.error("CompanySchedulesList:", e);
             } finally {
@@ -67,7 +106,7 @@ export default function CompanySchedulesList({ companyId }: Props) {
                 </h2>
                 {!loading && (
                     <p className="text-sm text-slate-500 font-medium">
-                        {schedules.length} listed on SkillDeck out of {totalCount} in their catalogue.
+                        {groupedCourses.length} {groupedCourses.length === 1 ? "course" : "courses"} listed on SkillDeck.
                     </p>
                 )}
             </div>
@@ -75,8 +114,8 @@ export default function CompanySchedulesList({ companyId }: Props) {
             {loading ? (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     {[0, 1].map(i => (
-                        <div key={i} className="bg-white rounded-2xl border border-slate-200 overflow-hidden flex flex-col h-[380px]">
-                            <div className="w-full h-44 bg-slate-100 animate-pulse flex-shrink-0" />
+                        <div key={i} className="bg-white rounded-2xl border border-slate-200 overflow-hidden flex flex-col h-95">
+                            <div className="w-full h-44 bg-slate-100 animate-pulse shrink-0" />
                             <div className="p-5 flex-1 flex flex-col justify-between">
                                 <div className="space-y-3">
                                     <div className="h-5 w-3/4 bg-slate-100 animate-pulse rounded" />
@@ -90,30 +129,34 @@ export default function CompanySchedulesList({ companyId }: Props) {
                         </div>
                     ))}
                 </div>
-            ) : schedules.length > 0 ? (
+            ) : groupedCourses.length > 0 ? (
                 <>
                     {/* Mobile Slider View */}
                     <div className="block md:hidden space-y-4">
-                        {schedules[mobileIndex] && (
-                            <ScheduleCard schedule={schedules[mobileIndex]} showCompany={false} />
+                        {groupedCourses[mobileIndex] && (
+                            <ScheduleCard
+                                schedule={groupedCourses[mobileIndex].primarySchedule}
+                                allBatches={groupedCourses[mobileIndex].allBatches}
+                                showCompany={false}
+                            />
                         )}
 
-                        {schedules.length > 1 && (
+                        {groupedCourses.length > 1 && (
                             <div className="flex items-center justify-between bg-slate-50 border border-slate-200/60 rounded-xl p-2.5">
                                 <button
-                                    onClick={() => setMobileIndex(prev => (prev - 1 + schedules.length) % schedules.length)}
+                                    onClick={() => setMobileIndex(prev => (prev - 1 + groupedCourses.length) % groupedCourses.length)}
                                     className="w-9 h-9 flex items-center justify-center rounded-lg bg-white border border-slate-200 text-slate-600 hover:text-slate-800 transition active:scale-95 cursor-pointer"
-                                    aria-label="Previous batch"
+                                    aria-label="Previous course"
                                 >
                                     <ChevronLeft className="w-4 h-4" />
                                 </button>
                                 <span className="text-xs font-bold text-slate-500">
-                                    {mobileIndex + 1} of {schedules.length} batches
+                                    {mobileIndex + 1} of {groupedCourses.length} courses
                                 </span>
                                 <button
-                                    onClick={() => setMobileIndex(prev => (prev + 1) % schedules.length)}
+                                    onClick={() => setMobileIndex(prev => (prev + 1) % groupedCourses.length)}
                                     className="w-9 h-9 flex items-center justify-center rounded-lg bg-white border border-slate-200 text-slate-600 hover:text-slate-800 transition active:scale-95 cursor-pointer"
-                                    aria-label="Next batch"
+                                    aria-label="Next course"
                                 >
                                     <ChevronRight className="w-4 h-4" />
                                 </button>
@@ -122,9 +165,14 @@ export default function CompanySchedulesList({ companyId }: Props) {
                     </div>
 
                     {/* Desktop/Tablet Grid View */}
-                    <div className="hidden md:grid md:grid-cols-2 gap-6">
-                        {schedules.map((s) => (
-                            <ScheduleCard key={s.id} schedule={s} showCompany={false} />
+                    <div className="hidden md:grid md:grid-cols-2 gap-4">
+                        {groupedCourses.map((group) => (
+                            <ScheduleCard
+                                key={group.primarySchedule.id}
+                                schedule={group.primarySchedule}
+                                allBatches={group.allBatches}
+                                showCompany={false}
+                            />
                         ))}
                     </div>
 

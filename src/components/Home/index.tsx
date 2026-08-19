@@ -42,6 +42,7 @@ const Home = ({ plans = [], faqs = [] }: HomeProps) => {
             <HeroSection />
 
             <WhatYouGet />
+
             <DemoSection />
 
             <TheProblem />

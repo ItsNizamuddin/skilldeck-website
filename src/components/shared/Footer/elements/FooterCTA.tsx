@@ -17,9 +17,9 @@ const FooterCTA = () => {
         <div className="relative z-10 pt-12  pb-12 ">
             <div className="container mx-auto px-2 xl:px-0">
                 <div className="text-center max-w-3xl mx-auto">
-                    <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full px-4 py-2 mb-4">
+                    <div className="inline-flex items-center gap-2 bg-transparent backdrop-blur-[1.5px] border border-white/20 rounded-full px-4 py-2 mb-4">
                         <Sparkles className="w-4 h-4 text-blue-400" />
-                        <span className="text-slate-200 text-sm">Ready to Transform Your Business?</span>
+                        <span className="text-slate-200 text-xs">Ready to Transform Your Business?</span>
                     </div>
 
                     <h2 className="text-3xl lg:text-4xl font-bold text-white mb-2">
@@ -49,7 +49,7 @@ const FooterCTA = () => {
                             as={Link}
                             href="/register"
                             variant="primary"
-                            className="inline-flex items-center gap-2 text-sm md:text-base text-white px-8 py-3 h-12 font-medium shadow-lg"
+                            className="inline-flex items-center gap-2 text-sm md:text-base text-white px-8 py-3 h-12 font-medium"
                             rel="nofollow"
                         >
                             Get Started Today
@@ -63,7 +63,7 @@ const FooterCTA = () => {
                                 formId: 1
                             })}
                             variant="outline"
-                            className="inline-flex items-center gap-2 border-slate-700 hover:border-slate-600 text-white hover:text-white bg-slate-800 hover:bg-slate-700/80 text-sm md:text-base px-8 py-3 h-12 font-medium"
+                            className="inline-flex bg-transparent backdrop-blur-[1.5px] items-center gap-2 border-slate-700 text-white hover:text-white hover:backdrop-blur-[1px] text-sm md:text-base px-8 py-3 h-12 font-medium"
                         >
                             Talk to Sales
                         </Button>

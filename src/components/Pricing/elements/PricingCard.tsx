@@ -120,9 +120,8 @@ const PricingCard: React.FC<Props> = ({
     const cardInnerContent = (
         <div
             className={`
-                relative flex flex-col p-4 rounded-2xl h-full transition-all duration-300
+                relative flex flex-col p-4 ${colorTheme === 'blue' ? 'rounded-[18px]' : 'rounded-2xl'} h-full transition-all duration-300
                 ${cardBgClass}
-                ${!isHighlighted && !isLifetime ? 'hover:shadow-xl hover:-translate-y-1' : 'transform group-hover/card-container:-translate-y-1 shadow-2xl z-10'}
             `}
         >
             {isHighlighted && (
@@ -132,7 +131,7 @@ const PricingCard: React.FC<Props> = ({
             )}
 
             {!isLifetime && savingsPercentage > 0 && billingInterval === 'YEARLY' && (
-                <div className="absolute top-0 right-0 bg-green-500 text-white text-[10px] md:text-xs font-bold px-2 md:px-2 py-1 md:py-1.5 rounded-bl-xl rounded-tr-xl z-20">
+                <div className="absolute top-0 right-0.5 bg-green-500 text-white text-[10px] md:text-xs font-bold px-2 md:px-2 py-1 md:py-1.5 rounded-bl-xl rounded-tr-xl z-20">
                     Save {savingsPercentage}%
                 </div>
             )}
@@ -248,14 +247,14 @@ const PricingCard: React.FC<Props> = ({
                 {isLifetime ? (
                     <button
                         // onClick={() => triggerForm('lifetime_plan_enquiry')}
-                        className={`w-full py-3 md:py-3.5 rounded-xl font-bold text-xs md:text-sm mb-6 transition-colors shadow-sm ${buttonClass}`}
+                        className={`w-full py-3 rounded-xl font-bold text-xs md:text-xs mb-4 transition-colors shadow-sm ${buttonClass}`}
                     >
                         Contact Sales
                     </button>
                 ) : (
                     <button
                         onClick={() => onPurchase?.(plan.id)}
-                        className={`w-full py-3 md:py-3.5 rounded-xl font-bold text-xs md:text-sm mb-6 transition-colors shadow-sm ${buttonClass}`}
+                        className={`w-full py-3 rounded-xl font-bold text-xs md:text-xs mb-4 transition-colors shadow-sm ${buttonClass}`}
                     >
                         Start Free Trial
                     </button>
@@ -443,7 +442,7 @@ const PricingCard: React.FC<Props> = ({
                 ) : (
                     <button
                         onClick={() => onPurchase?.(plan.id)}
-                        className={`w-full py-3 md:py-3.5 rounded-xl font-bold text-xs md:text-sm mb-6 transition-colors shadow-sm ${buttonClass}`}
+                        className={`w-full py-3 rounded-xl font-bold text-xs md:text-xs mb-4 transition-colors shadow-sm ${buttonClass}`}
                     >
                         Start Free Trial
                     </button>
@@ -453,17 +452,10 @@ const PricingCard: React.FC<Props> = ({
     );
 
     return (
-        <div className="relative h-full flex flex-col group/card-container">
+        <div className="relative h-full flex flex-col group/card-container transition-all duration-300 hover:-translate-y-1">
             {/* Stacked Effect for Lifetime */}
-            {isLifetime && (
-                <>
-                    <div className="absolute top-2 left-2 right-[-8px] bottom-[-8px] bg-gray-700/50 rounded-[2rem] -z-10 transform translate-y-2 translate-x-2 transition-transform duration-300 group-hover/card-container:translate-x-3 group-hover/card-container:translate-y-3" />
-                    <div className="absolute top-2 left-2 right-[-16px] bottom-[-16px] bg-gray-600/30 rounded-[2rem] -z-20 transform translate-y-4 translate-x-4 transition-transform duration-300 group-hover/card-container:translate-x-6 group-hover/card-container:translate-y-6" />
-                </>
-            )}
-
             {colorTheme === 'blue' ? (
-                <div className="p-[2px] rounded-[18px] bg-[linear-gradient(125deg,rgba(92,63,250,1)_0%,rgba(203,59,149,1)_48%,rgba(254,106,27,1)_100%)] shadow-xl shadow-[#5c3ffa]/15 h-full">
+                <div className="p-[2px] rounded-2xl bg-[linear-gradient(125deg,rgba(92,63,250,1)_0%,rgba(203,59,149,1)_48%,rgba(254,106,27,1)_100%)] shadow-xl shadow-[#5c3ffa]/15 h-full">
                     {cardInnerContent}
                 </div>
             ) : (

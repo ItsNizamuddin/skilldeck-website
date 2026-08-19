@@ -8,10 +8,10 @@ interface PartnerLogosProps {
     title?: string;
 }
 
-export default function PartnerLogos({ 
-    showBorder = true, 
-    className = "", 
-    title = "Top Training Providers on Skilldeck" 
+export default function PartnerLogos({
+    showBorder = true,
+    className = "",
+    title = "Top Training Providers on Skilldeck"
 }: PartnerLogosProps) {
     const [partnerLogos, setPartnerLogos] = useState<{ src: string; alt: string }[]>([]);
 
@@ -22,7 +22,7 @@ export default function PartnerLogos({
 
         const fetchPartners = async () => {
             try {
-                const res = await fetch("/api/tenants?fields=logo,legalName&limit=15");
+                const res = await fetch("/api/tenants?fields=logo,legalName&limit=999");
                 if (!res.ok) {
                     setPartnerLogos(getFallbackLogos());
                     return;
@@ -66,12 +66,12 @@ export default function PartnerLogos({
                 <div className="absolute right-0 top-0 bottom-0 w-20 bg-gradient-to-l from-white via-white/80 to-transparent z-10 pointer-events-none" />
 
                 <div className="flex overflow-hidden py-2">
-                    <div className="flex animate-scroll gap-12 items-center">
+                    <div className="flex animate-scroll gap-12 items-center" style={{ animationDuration: "60s" }}>
                         {/* Duplicate the logos for seamless scrolling */}
                         {[...partnerLogos, ...partnerLogos].map((logo, idx) => (
                             <div
                                 key={idx}
-                                className="flex-shrink-0 transition-all duration-300 transform hover:scale-110 cursor-pointer w-32 h-16 flex items-center justify-center grayscale hover:grayscale-0 opacity-70 hover:opacity-100"
+                                className="flex-shrink-0 transition-all duration-300 transform hover:scale-110 cursor-pointer w-32 h-16 flex items-center justify-center"
                                 title={logo.alt}
                             >
                                 <img

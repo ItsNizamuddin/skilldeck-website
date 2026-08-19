@@ -51,7 +51,7 @@ export default function BrandLogos({
 
                 {/* Scrolling Logos */}
                 <div className="flex overflow-hidden py-2">
-                    <div className="flex animate-scroll gap-4 md:gap-6">
+                    <div className="flex animate-scroll gap-4 md:gap-6" style={{ animationDuration: "60s" }}>
                         {/* First set */}
                         {logos.map((logo, index) => (
                             <div
