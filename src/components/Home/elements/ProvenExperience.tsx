@@ -82,8 +82,7 @@ const ProvenExperience = () => {
 
                     {/* Scrolling row */}
                     <div className="flex overflow-hidden py-2">
-                        <div className="flex animate-scroll gap-4 md:gap-6">
-                            {/* Render twice for seamless loop */}
+                        <div className="flex animate-scroll gap-4 md:gap-6" style={{ animationDuration: "60s" }}>
                             {[...logos, ...logos].map((logo, index) => (
                                 <div
                                     key={index}

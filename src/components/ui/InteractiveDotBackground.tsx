@@ -10,10 +10,10 @@ interface InteractiveDotBackgroundProps {
 }
 
 export default function InteractiveDotBackground({
-    dotColor = "rgba(148, 163, 184, 0.3)",
+    dotColor = "#c7c5c5",
     gap = 16,
     radius = 1.5,
-    mouseRadius = 90,
+    mouseRadius = 100,
 }: InteractiveDotBackgroundProps) {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const mouseRef = useRef({ x: -1000, y: -1000 });
@@ -44,7 +44,7 @@ export default function InteractiveDotBackground({
             const dots = dotsRef.current;
             const mouse = mouseRef.current;
 
-            const springConstant = 0.08;
+            const springConstant = 0.10;
             const friction = 0.85;
             let needsFurtherAnimation = false;
 
@@ -60,17 +60,17 @@ export default function InteractiveDotBackground({
                 let currentDotColor = dotColor;
 
                 if (dist < mouseRadius && dist > 0.1) {
-                    const force = Math.pow((mouseRadius - dist) / mouseRadius, 2.5);
-                    const repelDist = force * 4; // Minimal physical displacement
+                    const force = Math.pow((mouseRadius - dist) / mouseRadius, 1);
+                    const repelDist = force * 20; // Strong physical displacement on hover
 
                     targetX = dot.originX - (dx / dist) * repelDist;
                     targetY = dot.originY - (dy / dist) * repelDist;
 
                     // Multi-stage highlight color change
-                    if (dist < mouseRadius * 0.4) {
-                        currentDotColor = "#a855f7"; // Closest: Bright Purple
-                    } else if (dist < mouseRadius * 0.8) {
-                        currentDotColor = "#2563eb"; // Medium: Brand Royal Blue
+                    if (dist < mouseRadius * 0.5) {
+                        currentDotColor = "#ffffff"; // Closest: Bright Purple
+                    } else if (dist < mouseRadius * 0.9) {
+                        currentDotColor = "#fa9356"; // Medium: Brand Royal Blue
                     }
                 }
 
@@ -83,7 +83,7 @@ export default function InteractiveDotBackground({
                 dot.x += dot.vx;
                 dot.y += dot.vy;
 
-                if (Math.abs(dot.vx) > 0.005 || Math.abs(dot.vy) > 0.005) {
+                if (Math.abs(dot.vx) > 0.05 || Math.abs(dot.vy) > 0.05) {
                     needsFurtherAnimation = true;
                 }
 
@@ -176,7 +176,7 @@ export default function InteractiveDotBackground({
     return (
         <canvas
             ref={canvasRef}
-            className="absolute inset-0 w-full h-full pointer-events-none select-none opacity-20"
+            className="absolute inset-0 w-full h-full pointer-events-none select-none opacity-20 z-0"
             style={{ display: "block" }}
         />
     );

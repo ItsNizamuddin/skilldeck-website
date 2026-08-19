@@ -114,7 +114,7 @@ export default function CourseHeroCard({
                     </div>
                     <div>
                         <div className="text-[10px] text-gray-400 font-medium">Start date</div>
-                        <div className="text-xs font-bold text-[#0F172A]">
+                        <div className="text-xs font-semibold text-[#0F172A]">
                             {!isMounted ? (
                                 <span className="h-3 w-16 bg-slate-100 rounded animate-pulse inline-block" />
                             ) : (

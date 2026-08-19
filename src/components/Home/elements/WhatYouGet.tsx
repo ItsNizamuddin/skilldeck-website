@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import {
     Briefcase,
@@ -22,6 +22,7 @@ import {
 } from "lucide-react";
 import { useRef, useState } from "react";
 import MarketplacePromotion from "./MarketplacePromotion";
+import AllFeaturesMarquee from "./AllFeaturesMarquee";
 
 const features = [
     {
@@ -253,8 +254,8 @@ const WhatYouGet = () => {
 
     return (
         <section id="features" className="scroll-mt-28 pb-12 pt-6 md:py-20 bg-gradient-to-b from-slate-50 to-white">
-            <div className="container mx-auto px-2 xl:px-0">
-                {/* Header Section */}
+            {/* Header Section */}
+            {/* <div className="container mx-auto">
                 <div className="text-center mb-4 md:mb-10">
                     <div className="inline-flex items-center justify-center mb-6">
                         <span className="badge-brand">
@@ -274,7 +275,6 @@ const WhatYouGet = () => {
                     </p>
                 </div>
 
-                {/* Mobile Swipe View */}
                 <div className="sm:hidden">
                     <div
                         ref={scrollContainerRef}
@@ -330,12 +330,17 @@ const WhatYouGet = () => {
                     </div>
                 </div>
 
-                {/* Desktop/Tablet Grid View */}
                 <div className="hidden sm:grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 md:gap-5">
                     {features.map((feature, index) => (
                         <FeatureCard key={index} feature={feature} />
                     ))}
                 </div>
+            </div> */}
+            {/* Auto-scrolling Features Marquee */}
+            <div className="mt-12">
+                <AllFeaturesMarquee />
+            </div>
+            <div className="container mx-auto px-2 xl:px-0">
 
                 {/* Marketplace Promotion Section */}
                 <MarketplacePromotion />

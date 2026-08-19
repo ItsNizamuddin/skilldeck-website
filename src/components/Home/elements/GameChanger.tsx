@@ -100,7 +100,7 @@ const GameChanger = () => {
                         return (
                             <div
                                 key={index}
-                                className="group bg-slate-900/50 rounded-2xl p-5 border border-white/10 backdrop-blur-sm transition-all duration-300 hover:border-white/20 hover:bg-slate-800/50"
+                                className="group bg-transparent backdrop-blur-[1.5px] rounded-2xl p-5 border border-white/10 transition-all duration-300 hover:border-white/20 hover:bg-slate-800/50"
                             >
                                 {/* Icon and Title */}
                                 <div className="flex items-center gap-3 mb-3">
@@ -123,7 +123,7 @@ const GameChanger = () => {
 
                 {/* Market-ready Badge */}
                 <div className="text-center mb-16">
-                    <div className="inline-block bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl px-8 py-6">
+                    <div className="inline-block bg-transparent backdrop-blur-[1.5px] border border-white/10 rounded-2xl px-8 py-6">
                         <p className="heading-section2 text-white">
                             You are{" "}
                             <span className="capitalize bg-[linear-gradient(125deg,rgba(92,63,250,1)_0%,rgba(203,59,149,1)_48%,rgba(254,106,27,1)_100%)] bg-clip-text text-transparent">
@@ -154,7 +154,7 @@ const GameChanger = () => {
 
                         {/* Scrolling Logos */}
                         <div className="flex overflow-hidden py-4">
-                            <div className="flex animate-scroll-dark gap-4 md:gap-6">
+                            <div className="flex animate-scroll-dark gap-4 md:gap-6" style={{ animationDuration: "60s" }}>
                                 {/* Double array for infinite scrolling */}
                                 {[...clientLogos, ...clientLogos].map((client, index) => (
                                     <div

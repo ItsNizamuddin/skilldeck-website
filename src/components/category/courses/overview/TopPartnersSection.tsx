@@ -216,14 +216,14 @@ export default function TopPartnersSection({ courseSlug }: TopPartnersSectionPro
                         Compare top training providers and choose the best one for your learning journey.
                     </p>
                 </div>
-                {schedules && schedules.length > 0 && partnersData.length > 4 && (
+                {/* {schedules && schedules.length > 0 && partnersData.length > 4 && (
                     <button
                         onClick={handleScrollToSchedules}
                         className="text-xs font-bold text-[#5544CC] hover:underline inline-flex items-center gap-1 cursor-pointer"
                     >
                         View All Batches <ArrowRight className="w-3.5 h-3.5" />
                     </button>
-                )}
+                )} */}
             </div>
 
             {/* Desktop View: Grid */}

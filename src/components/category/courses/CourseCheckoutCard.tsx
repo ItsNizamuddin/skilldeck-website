@@ -4,7 +4,7 @@ import CompanyContactButton from "@/components/companies/CompanyContactButton";
 import { Button } from "@/components/ui/Button";
 import { mapToInstitute } from "@/lib/scheduleMapper";
 import { Schedule } from "@/types/schedules";
-import { Calendar, Download, GitCompare, Phone, Share2 } from "lucide-react";
+import { Calendar, Download, GitCompare, Phone, Share2, SlidersHorizontal } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useMemo, useState } from "react";
 import FeaturedProvidersList from "./FeaturedProvidersList";
@@ -361,20 +361,25 @@ export default function CourseCheckoutCard({
             {/* Top Selector dropdown */}
             {mappedSchedules.length > 0 && (
                 <div className="relative w-full">
+                    {/* Filter Icon - left side */}
+                    <div className="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none text-slate-400 z-10">
+                        <SlidersHorizontal className="w-3.5 h-3.5" />
+                    </div>
                     <select
                         value={selectedCompanyId || "lowest"}
                         onChange={(e) => onCompanySelect(e.target.value)}
                         aria-label="Select training provider or pricing option"
-                        className="w-full bg-white border border-slate-200 rounded-xl px-4 py-2 text-xs 2xl:text-sm font-semibold text-slate-700 outline-none shadow-sm appearance-none cursor-pointer pr-10"
+                        className="w-full bg-white border border-slate-200 rounded-xl pl-9 pr-10 py-2 text-xs 2xl:text-sm font-semibold text-slate-700 outline-none shadow-sm appearance-none cursor-pointer"
                     >
                         <option value="lowest">Top lowest price available</option>
                         <option value="highest">Top highest price available</option>
                     </select>
-                    <div className="absolute inset-y-0 right-0 flex items-center pr-4 pointer-events-none text-slate-400">
+                    {/* Chevron - right side */}
+                    {/* <div className="absolute inset-y-0 right-0 flex items-center pr-4 pointer-events-none text-slate-400">
                         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
                         </svg>
-                    </div>
+                    </div> */}
                 </div>
             )}
 
@@ -415,7 +420,7 @@ export default function CourseCheckoutCard({
                 {activeScheduleInfo.matchedSchedule?.company && (
                     <div className="flex items-center justify-between border border-slate-100 rounded-xl p-2 bg-slate-50/50 min-w-0">
                         <div className="flex items-center gap-3 min-w-0">
-                            <div className="w-14 h-10 flex items-center justify-center overflow-hidden flex-shrink-0 relative">
+                            <div className="w-14 h-10 flex items-center justify-center overflow-hidden shrink-0 relative">
                                 {activeScheduleInfo.matchedSchedule.company.logo ? (
                                     <Image
                                         src={activeScheduleInfo.matchedSchedule.company.logo}
@@ -486,14 +491,14 @@ export default function CourseCheckoutCard({
                         )}
                     />
 
-                    <Button
+                    {/* <Button
                         type="button"
                         variant="outline"
                         className="w-full h-10 text-brand-primary border-2 border-brand-primary/30 hover:border-none text-sm font-bold gap-2"
                     >
                         <span>Download curriculum</span>
                         <Download className="w-4 h-4" />
-                    </Button>
+                    </Button> */}
                 </div>
                 {/* Auxiliary Share/Compare buttons */}
                 {/* <div className="grid grid-cols-2 gap-3">

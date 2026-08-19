@@ -54,7 +54,7 @@ const PlansComparisonTableMobile: React.FC<Props> = ({
                             key={plan.id}
                             onClick={() => togglePlan(index)}
                             className={`px-4 py-2 rounded-full text-xs font-bold transition-all ${activePlanIndexes.includes(index)
-                                ? 'bg-[linear-gradient(135deg,#3730a3_0%,#4f46e5_50%,#6d28d9_100%)] text-white shadow-md'
+                                ? 'bg-[linear-gradient(125deg,rgba(92,63,250,1)_0%,rgba(203,59,149,1)_48%,rgba(254,106,27,1)_100%)] text-white shadow-md'
                                 : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                                 }`}
                         >
@@ -94,7 +94,7 @@ const PlansComparisonTableMobile: React.FC<Props> = ({
                                             )}
                                             <button
                                                 onClick={() => onOpenPurchase?.(plan.id)}
-                                                className="absolute bottom-2 left-2 right-2 py-1.5 rounded-md text-xs font-bold bg-[linear-gradient(135deg,#3730a3_0%,#4f46e5_50%,#6d28d9_100%)] hover:brightness-110 text-white transition-colors hover:-translate-y-[1px]"
+                                                className="absolute bottom-2 left-2 right-2 py-1.5 rounded-md text-xs font-bold bg-[linear-gradient(125deg,rgba(92,63,250,1)_0%,rgba(203,59,149,1)_48%,rgba(254,106,27,1)_100%)] hover:brightness-110 text-white transition-colors hover:-translate-y-[1px]"
                                             >
                                                 Get Started
                                             </button>

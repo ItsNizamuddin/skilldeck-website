@@ -52,14 +52,14 @@ const PlansComparisonTableDesktop: React.FC<Props> = ({
                                         (plan as any).uiMetadata?.isLifetime ? (
                                             <button
                                                 onClick={() => window.location.href = '/contact-us'}
-                                                className="absolute bottom-4 left-4 right-4 py-2 rounded-lg text-sm font-bold transition-all duration-200 bg-[linear-gradient(135deg,#3730a3_0%,#4f46e5_50%,#6d28d9_100%)] hover:brightness-110 text-white shadow-sm hover:shadow-md hover:-translate-y-[1px]"
+                                                className="absolute bottom-4 left-4 right-4 py-2 rounded-lg text-sm font-bold transition-all duration-200 bg-[linear-gradient(125deg,rgba(92,63,250,1)_0%,rgba(203,59,149,1)_48%,rgba(254,106,27,1)_100%)] hover:brightness-110 text-white shadow-sm hover:shadow-md hover:-translate-y-[1px]"
                                             >
                                                 Contact Sales
                                             </button>
                                         ) : (
                                             <button
                                                 onClick={() => onOpenPurchase?.(plan.id)}
-                                                className="absolute bottom-4 left-4 right-4 py-2 rounded-lg text-sm font-bold transition-all duration-200 bg-[linear-gradient(135deg,#3730a3_0%,#4f46e5_50%,#6d28d9_100%)] hover:brightness-110 text-white shadow-sm hover:shadow-md hover:-translate-y-[1px]"
+                                                className="absolute bottom-4 left-4 right-4 py-2 rounded-lg text-sm font-bold transition-all duration-200 bg-[linear-gradient(125deg,rgba(92,63,250,1)_0%,rgba(203,59,149,1)_48%,rgba(254,106,27,1)_100%)] hover:brightness-110 text-white shadow-sm hover:shadow-md hover:-translate-y-[1px]"
                                             >
                                                 Start Free Trial
                                             </button>

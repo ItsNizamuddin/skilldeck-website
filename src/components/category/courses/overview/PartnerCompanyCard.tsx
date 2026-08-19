@@ -4,15 +4,16 @@ import { Button } from "@/components/ui/Button";
 import { formatPrice } from "@/lib/courseCardHelpers";
 import { ArrowRight, MapPin, Star, Trophy } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 
 interface PartnerCompanyCardProps {
     partner: any;
     index: number;
-    isCompared: boolean;
-    onCompareToggle: (id: string) => void;
-    onScrollToSchedules: () => void;
-    rankColorClass: string;
-    borderHoverClass: string;
+    isCompared?: boolean;
+    onCompareToggle?: (id: string) => void;
+    onScrollToSchedules?: () => void;
+    rankColorClass?: string;
+    borderHoverClass?: string;
 }
 
 export default function PartnerCompanyCard({
@@ -21,53 +22,46 @@ export default function PartnerCompanyCard({
     isCompared,
     onCompareToggle,
     onScrollToSchedules,
-    rankColorClass,
-    borderHoverClass,
+    rankColorClass = "",
+    borderHoverClass = "",
 }: PartnerCompanyCardProps) {
     const hasRank = typeof partner.rank === "number" && partner.rank > 0;
+    const companyHref = partner.slug
+        ? `/companies/${partner.slug}?id=${partner.id || partner._id}`
+        : `/companies/${partner.id || partner._id}`;
 
     return (
         <div
             className={`relative bg-white border border-slate-100 rounded-3xl p-5 flex flex-col justify-between transition-all duration-300 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.02)] hover:shadow-[0_12px_30px_-6px_rgba(0,0,0,0.06)] hover:scale-[1.01] max-w-[320px] w-full mx-auto ${borderHoverClass}`}
         >
             {hasRank && (
-                <div className="absolute top-0 left-0 bg-linear-to-r from-purple-700 to-pink-500 text-white text-[9px] font-black tracking-wider uppercase px-3 py-1.5 rounded-tl-3xl rounded-br-2xl flex items-center gap-1 shadow-sm">
+                <div className="absolute top-0 left-0 bg-gradient-to-r from-purple-700 to-pink-500 text-white text-[9px] font-black tracking-wider uppercase px-3 py-1.5 rounded-tl-3xl rounded-br-2xl flex items-center gap-1 shadow-sm">
                     <Trophy className="w-2.5 h-2.5 text-white" />
                     <span>Rank {partner.rank}</span>
                 </div>
             )}
-            {/* <div className="flex items-center justify-between gap-4 mb-4">
-                <div />
-                <label className="flex items-center gap-1.5 cursor-pointer select-none">
-                    <input
-                        type="checkbox"
-                        checked={isCompared}
-                        onChange={() => onCompareToggle(partner.id)}
-                        className="w-3.5 h-3.5 border-slate-300 rounded text-purple-600 focus:ring-purple-500 cursor-pointer"
-                    />
-                    <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wide">Compare</span>
-                </label>
-            </div> */}
 
             {/* Partner Info */}
             <div className="flex flex-col items-center text-center space-y-3 pb-3">
-                <div className="w-24 h-12 relative flex items-center justify-center overflow-hidden">
+                <Link href={companyHref} data-no-loader="true" className="w-24 h-12 relative flex items-center justify-center overflow-hidden group">
                     {partner.logo ? (
                         <Image
                             src={partner.logo}
                             alt={partner.name}
                             fill
                             sizes="96px"
-                            className="object-contain"
+                            className="object-contain transition-transform group-hover:scale-105"
                         />
                     ) : (
                         <span className="text-lg font-black text-purple-600 uppercase">
                             {partner.name?.charAt(0)}
                         </span>
                     )}
-                </div>
+                </Link>
                 <div>
-                    <h4 className="text-sm font-bold text-slate-800 line-clamp-1">{partner.name}</h4>
+                    <Link href={companyHref} data-no-loader="true" className="hover:text-purple-600 transition-colors">
+                        <h4 className="text-sm font-bold text-slate-800 line-clamp-1 hover:text-purple-600 transition-colors">{partner.name}</h4>
+                    </Link>
                     {partner.rating && partner.rating > 0 && (
                         <div className="flex items-center justify-center gap-1 mt-1 text-xs">
                             <span className="font-bold text-slate-700">{partner.rating}</span>
@@ -118,13 +112,14 @@ export default function PartnerCompanyCard({
                 </div>
             </div>
 
-            {/* CTA Link to schedules below */}
+            {/* CTA Link to company details page */}
             <Button
-                onClick={onScrollToSchedules}
+                as={Link}
+                href={companyHref}
                 variant={index === 0 ? "primary" : "outline"}
-                className={`w-full h-10 px-4 rounded-xl text-xs gap-2 ${index === 0
-                        ? "shadow-md shadow-purple-600/10 hover:brightness-105"
-                        : "border-slate-200 text-slate-700 hover:bg-slate-50 hover:text-slate-900"
+                className={`w-full h-10 px-4 rounded-xl text-xs gap-2 cursor-pointer ${index === 0
+                    ? "shadow-md shadow-purple-600/10 hover:brightness-105"
+                    : "border-slate-200 text-slate-700 hover:bg-slate-50 hover:text-slate-900"
                     }`}
             >
                 <span>View Details</span>

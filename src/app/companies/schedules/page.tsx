@@ -92,6 +92,39 @@ export default async function SchedulesPage({ searchParams }: Props) {
         );
     });
 
+    // Group schedules by company and course
+    const now = Date.now();
+    const courseGroupsMap = new Map<string, Schedule[]>();
+
+    for (const s of schedules) {
+        const groupKey = `${s.company?.id || s.tenantId || "company"}_${s.course?.slug || s.course?.title || s.id}`;
+        if (!courseGroupsMap.has(groupKey)) {
+            courseGroupsMap.set(groupKey, []);
+        }
+        courseGroupsMap.get(groupKey)!.push(s);
+    }
+
+    const groupedSchedules: { primarySchedule: Schedule; allBatches: Schedule[] }[] = [];
+
+    for (const [, batches] of courseGroupsMap.entries()) {
+        batches.sort((a, b) => {
+            const aTime = a.startsAt ? new Date(a.startsAt).getTime() : Infinity;
+            const bTime = b.startsAt ? new Date(b.startsAt).getTime() : Infinity;
+            const aIsFuture = aTime >= now;
+            const bIsFuture = bTime >= now;
+
+            if (aIsFuture && !bIsFuture) return -1;
+            if (!aIsFuture && bIsFuture) return 1;
+            if (aIsFuture && bIsFuture) return aTime - bTime;
+            return bTime - aTime;
+        });
+
+        groupedSchedules.push({
+            primarySchedule: batches[0],
+            allBatches: batches,
+        });
+    }
+
     const total: number = data.total ?? data.meta?.total ?? 0;
     const totalPages = Math.max(1, Math.ceil(total / LIMIT));
     const filteredCompanyName = sp.tenantId
@@ -113,7 +146,7 @@ export default async function SchedulesPage({ searchParams }: Props) {
                             <div className="absolute -bottom-1/4 -right-1/4 w-96 h-96 bg-violet-200/20 rounded-full blur-3xl" />
                         </div>
                         <div className="relative container mx-auto px-2 lg:px-0 pt-20 md:pt-20 lg:pt-28 lg:pb-6 text-center">
-                            <h1 className="text-xl md:text-3xl lg:text-4xl font-black text-slate-900 mb-4 leading-tight">
+                            <h1 className="text-xl md:text-2xl lg:text-3xl font-black text-slate-900 mb-4 leading-tight">
                                 Find Your Perfect{" "}
                                 <span className="bg-[linear-gradient(125deg,rgba(92,63,250,1)_0%,rgba(203,59,149,1)_48%,rgba(254,106,27,1)_100%)] bg-clip-text text-transparent">
                                     Training Schedule{filteredCompanyName ? ` at ${filteredCompanyName}` : ""}
@@ -150,10 +183,17 @@ export default async function SchedulesPage({ searchParams }: Props) {
                                 </div>
 
                                 {/* Schedule cards */}
-                                {schedules.length > 0 ? (
+                                {groupedSchedules.length > 0 ? (
                                     <>
                                         <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-2 gap-6">
-                                            {schedules.map((s, i) => <ScheduleCard key={s.id} schedule={s} index={i} />)}
+                                            {groupedSchedules.map((group, i) => (
+                                                <ScheduleCard
+                                                    key={group.primarySchedule.id}
+                                                    schedule={group.primarySchedule}
+                                                    allBatches={group.allBatches}
+                                                    index={i}
+                                                />
+                                            ))}
                                         </div>
 
                                         {/* Pagination */}
