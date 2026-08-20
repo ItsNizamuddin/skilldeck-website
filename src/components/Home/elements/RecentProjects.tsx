@@ -201,7 +201,7 @@ const ProjectCard = ({ project }: { project: Project }) => {
                     alt={project.title}
                     fill
                     sizes="(max-width: 768px) 100vw, 50vw"
-                    priority={project.id <= 2}
+                    loading="lazy"
                     draggable={false}
                     className="object-cover rounded-xl sm:rounded-2xl pointer-events-none"
                     placeholder="blur"
@@ -266,7 +266,7 @@ const ProjectCard = ({ project }: { project: Project }) => {
                     alt={project.title}
                     fill
                     sizes="(max-width: 768px) 100vw, 50vw"
-                    priority={project.id <= 2}
+                    loading="lazy"
                     draggable={false}
                     className="object-cover rounded-2xl lg:rounded-3xl pointer-events-none"
                     placeholder="blur"

@@ -87,8 +87,8 @@ export default function CompanyDirectory({
                     <span className="text-[10px] font-extrabold text-brand-primary uppercase tracking-widest bg-brand-primary/5 px-3 py-1 rounded-full">
                         All Institutes
                     </span>
-                    <h2 className="text-xl md:text-3xl font-extrabold text-slate-900 mt-1 leading-tight">
-                        Browse verified training companies
+                    <h2 className="text-xl lg:text-2xl font-extrabold text-slate-900 mt-1 capitalize leading-tight">
+                        Browse verified training institutes
                     </h2>
                     <p className="text-xs md:text-sm text-slate-500 max-w-2xl leading-relaxed">
                         Filter by city, specialism, fee band and placement record. Add up to four to compare.
@@ -105,7 +105,7 @@ export default function CompanyDirectory({
             {regularCompanies.length === 0 ? (
                 <div className="text-center py-16 bg-white rounded-2xl border border-slate-200/80 shadow-sm p-6 max-w-xl mx-auto">
                     <Building2 className="w-12 h-12 text-slate-300 mx-auto mb-3" />
-                    <h3 className="text-lg font-bold text-slate-900">No training companies found</h3>
+                    <h3 className="text-lg font-bold text-slate-900">No training institutes found</h3>
                     <p className="text-slate-500 mt-1.5 text-sm">
                         {search ? `No results matching "${search}". Please try a different query.` : "Please check back later."}
                     </p>
@@ -118,7 +118,7 @@ export default function CompanyDirectory({
                             {search ? `Search results for "${search}"` : "All training providers"}
                         </span>
                         <span className="text-xs font-semibold text-slate-500 capitalize">
-                            {totalRegular} {totalRegular === 1 ? "company" : "companies"} listed
+                            {totalRegular} {totalRegular === 1 ? "Institute" : "Institutes"} listed
                         </span>
                     </div>
 

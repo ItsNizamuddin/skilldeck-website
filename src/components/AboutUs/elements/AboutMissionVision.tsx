@@ -11,7 +11,7 @@ export default function AboutMissionVision() {
                         </div>
                         <h2 className="heading-section2 mb-4">Our Vision</h2>
                         <p className="body-medium text-gray-600">
-                            To provide the platform to as many training companies as possible and support with
+                            To provide the platform to as many training institutes as possible and support with
                             tech and marketing automation, handling all kinds of customization while making their
                             marketing, tech, and operations investment less expensive, with the highest return on investment.
                         </p>
@@ -22,7 +22,7 @@ export default function AboutMissionVision() {
                         </div>
                         <h2 className="heading-section2 text-white mb-4">Our Mission</h2>
                         <p className="body-medium text-gray-300">
-                            Help at least 10,000 companies in the next 3 years with the most affordable solution
+                            Help at least 10,000 institutes in the next 3 years with the most affordable solution
                             in the market and to be recognized as the most affordable tech solution ever and forever.
                         </p>
                     </div>

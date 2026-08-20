@@ -32,15 +32,15 @@ export default function ContactMethods() {
     return (
         <section className="py-12 px-4 lg:px-0">
             <div className="container mx-auto">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     {contactMethods.map((method, index) => (
-                        <div key={index} className="bg-white rounded-2xl p-6 2xl:p-8 shadow-md border border-gray-100 hover:shadow-lg transition-all duration-300">
-                            <div className="w-12 h-12 bg-[linear-gradient(125deg,rgba(92,63,250,1)_0%,rgba(203,59,149,1)_48%,rgba(254,106,27,1)_100%)] rounded-xl flex items-center justify-center mb-6 shadow-md">
+                        <div key={index} className="bg-white rounded-2xl p-5 shadow-md border border-gray-100 hover:shadow-lg transition-all duration-300">
+                            <div className="w-10 h-10 bg-[linear-gradient(125deg,rgba(92,63,250,1)_0%,rgba(203,59,149,1)_48%,rgba(254,106,27,1)_100%)] rounded-xl flex items-center justify-center mb-4 shadow-md">
                                 <method.icon className="w-6 h-6 text-white" />
                             </div>
-                            <h3 className="heading-card mb-2">{method.title}</h3>
+                            <h3 className="text-base lg:text-lg font-bold mb-1">{method.title}</h3>
                             <p className="body-small text-gray-600 mb-4">{method.description}</p>
-                            <p className="body-medium font-semibold text-brand-dark mb-4">{method.contact}</p>
+                            <p className="body-small font-semibold text-brand-dark mb-4">{method.contact}</p>
                             <Link
                                 href={method.href}
                                 className="inline-flex items-center text-brand-primary font-semibold hover:underline body-small"

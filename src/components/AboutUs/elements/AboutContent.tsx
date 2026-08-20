@@ -24,7 +24,7 @@ export default function AboutContent() {
 
                         <h2 className="heading-section mb-4 leading-tight">
                             Built Exclusively for
-                            <span className="bg-[linear-gradient(125deg,rgba(92,63,250,1)_0%,rgba(203,59,149,1)_48%,rgba(254,106,27,1)_100%)] bg-clip-text text-transparent"> Training Companies</span>
+                            <span className="bg-[linear-gradient(125deg,rgba(92,63,250,1)_0%,rgba(203,59,149,1)_48%,rgba(254,106,27,1)_100%)] bg-clip-text text-transparent"> Training Institutes</span>
                         </h2>
 
                         <p className="body-medium mb-6">
@@ -35,7 +35,7 @@ export default function AboutContent() {
                         <div className="bg-gradient-to-r from-blue-50/50 to-purple-50/30 rounded-2xl p-6 border border-blue-100/50 lg:mb-8">
                             <p className="body-medium text-gray-700">
                                 <span className="font-bold text-brand-primary">The only less expensive, high-performing solution</span> for
-                                training companies with hundreds of features to automate tech needs across departments.
+                                training Institutes with hundreds of features to automate tech needs across departments.
                                 Focus on your <span className="italic">core operations and delivery</span> while we handle the rest.
                             </p>
                         </div>

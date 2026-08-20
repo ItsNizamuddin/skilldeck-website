@@ -8,28 +8,39 @@ interface PartnerLogosProps {
     title?: string;
 }
 
+let globalPartnerLogosCache: { src: string; alt: string }[] | null = null;
+
 export default function PartnerLogos({
     showBorder = true,
     className = "",
     title = "Top Training Providers on Skilldeck"
 }: PartnerLogosProps) {
-    const [partnerLogos, setPartnerLogos] = useState<{ src: string; alt: string }[]>([]);
+    const [partnerLogos, setPartnerLogos] = useState<{ src: string; alt: string }[]>(() => globalPartnerLogosCache || []);
 
     useEffect(() => {
+        if (globalPartnerLogosCache && globalPartnerLogosCache.length > 0) {
+            setPartnerLogos(globalPartnerLogosCache);
+            return;
+        }
+
         const getFallbackLogos = () => [
             { src: "/logos/mainlogo.svg", alt: "SkillDeck" }
         ];
 
         const fetchPartners = async () => {
             try {
-                const res = await fetch("/api/tenants?fields=logo,legalName&limit=999");
+                const res = await fetch("/api/tenants?fields=logo,legalName&limit=50");
                 if (!res.ok) {
-                    setPartnerLogos(getFallbackLogos());
+                    const fallback = getFallbackLogos();
+                    globalPartnerLogosCache = fallback;
+                    setPartnerLogos(fallback);
                     return;
                 }
                 const contentType = res.headers.get("content-type");
                 if (!contentType || !contentType.includes("application/json")) {
-                    setPartnerLogos(getFallbackLogos());
+                    const fallback = getFallbackLogos();
+                    globalPartnerLogosCache = fallback;
+                    setPartnerLogos(fallback);
                     return;
                 }
                 const result = await res.json();
@@ -40,13 +51,19 @@ export default function PartnerLogos({
                             src: t.logo,
                             alt: t.legalName || t.name || "Training Partner"
                         }));
-                    setPartnerLogos(logos.length > 0 ? logos : getFallbackLogos());
+                    const finalLogos = logos.length > 0 ? logos : getFallbackLogos();
+                    globalPartnerLogosCache = finalLogos;
+                    setPartnerLogos(finalLogos);
                 } else {
-                    setPartnerLogos(getFallbackLogos());
+                    const fallback = getFallbackLogos();
+                    globalPartnerLogosCache = fallback;
+                    setPartnerLogos(fallback);
                 }
             } catch (error) {
                 console.error("Error fetching partner logos:", error);
-                setPartnerLogos(getFallbackLogos());
+                const fallback = getFallbackLogos();
+                globalPartnerLogosCache = fallback;
+                setPartnerLogos(fallback);
             }
         };
         fetchPartners();

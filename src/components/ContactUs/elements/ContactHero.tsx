@@ -8,13 +8,13 @@ export default function ContactHero() {
                 <div className="badge-brand mb-6">
                     Get In Touch
                 </div>
-                <h1 className="heading-hero mb-6">
+                <h1 className="text-xl md:text-2xl lg:text-5xl font-bold mb-4">
                     We&apos;d Love to
                     <span className="block mt-2 bg-[linear-gradient(125deg,rgba(92,63,250,1)_0%,rgba(203,59,149,1)_48%,rgba(254,106,27,1)_100%)] bg-clip-text text-transparent">
                         Hear From You
                     </span>
                 </h1>
-                <p className="body-large max-w-2xl mx-auto">
+                <p className="body-medium max-w-2xl mx-auto">
                     Have questions about our products? Need help getting started?
                     Our team is here to help you succeed.
                 </p>

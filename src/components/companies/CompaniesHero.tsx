@@ -26,7 +26,7 @@ export default function CompaniesHero({ totalCompanies }: CompaniesHeroProps) {
                             <p className="text-xs font-semibold text-slate-400">
                                 Discovery{" "}
                                 <span className="text-brand-primary font-bold mx-1">/</span>{" "}
-                                <span className="text-brand-primary font-bold">Training companies</span>
+                                <span className="text-brand-primary font-bold">Training Institutes</span>
                             </p>
                         </div>
 

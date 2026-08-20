@@ -83,7 +83,7 @@ const DemoSection = () => {
                                                 fill
                                                 className="object-cover transition-transform duration-500 group-hover:scale-105"
                                                 sizes="(max-width: 1024px) 100vw, 60vw"
-                                                priority
+                                                loading="lazy"
                                             />
                                             <div className="absolute inset-0 bg-slate-900/40 group-hover:bg-slate-900/20 transition-colors flex items-center justify-center">
                                                 <div className="w-16 h-16 md:w-20 md:h-20 bg-[linear-gradient(125deg,rgba(92,63,250,1)_0%,rgba(203,59,149,1)_48%,rgba(254,106,27,1)_100%)] text-white rounded-full flex items-center justify-center shadow-2xl shadow-blue-500/50 transform transition-transform group-hover:scale-110">

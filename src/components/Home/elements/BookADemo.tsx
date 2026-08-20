@@ -43,7 +43,7 @@ const BookADemo = () => {
                                 </div>
                                 <div>
                                     <h3 className="body-medium text-brand-dark font-semibold">On-Premise Presentation</h3>
-                                    <p className="body-small text-gray-600 ">Available for established training companies.</p>
+                                    <p className="body-small text-gray-600 ">Available for established training institutes.</p>
                                 </div>
                             </div>
                         </div>

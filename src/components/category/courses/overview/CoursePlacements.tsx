@@ -53,7 +53,7 @@ export default function CoursePlacements({ placements }: CoursePlacementsProps) 
                     Career Successful Stories
                 </h3>
                 <p className="text-xs text-gray-500 font-medium">
-                    Learners who transformed their careers and landed roles at leading companies.
+                    Learners who transformed their careers and landed roles at leading institutes.
                 </p>
             </div>
 

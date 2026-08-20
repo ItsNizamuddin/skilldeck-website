@@ -30,7 +30,7 @@ export default function CategoryContact() {
                     <ul className="space-y-3.5">
                         {[
                             "Global reach across 30+ countries",
-                            "Trusted by Fortune 500 companies",
+                            "Trusted by Fortune 500 institutes",
                             "Addressed 25k+ Queries",
                             "99.9% responds immediately"
                         ].map((item, i) => (

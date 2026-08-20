@@ -85,11 +85,9 @@ const PlansComparisonTableMobile: React.FC<Props> = ({
                                                     <div className="text-sm md:text-base font-bold text-gray-900 mb-0.5">
                                                         {formatPrice(price, plan.currency || 'USD')}
                                                     </div>
-                                                    {!plan.name.toLowerCase().includes('lifetime') && (
-                                                        <div className="text-xs text-gray-500 mb-2">
-                                                            /{billingInterval === 'YEARLY' ? 'yr' : 'mo'}
-                                                        </div>
-                                                    )}
+                                                    <div className="text-xs text-gray-500 mb-2">
+                                                        /{billingInterval === 'YEARLY' ? 'yr' : 'mo'}
+                                                    </div>
                                                 </>
                                             )}
                                             <button

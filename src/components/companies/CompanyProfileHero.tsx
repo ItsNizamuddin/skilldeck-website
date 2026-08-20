@@ -69,7 +69,7 @@ export default function CompanyProfileHero({ tenant }: Props) {
                 <Breadcrumb
                     items={[
                         { label: "Home", href: "/" },
-                        { label: "Training companies", href: "/companies" },
+                        { label: "Training Institutes", href: "/companies" },
                         { label: tenant.name },
                     ]}
                 />

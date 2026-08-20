@@ -24,7 +24,7 @@ const CategoryAndBlogsListing = ({ categories, initialBlogs, initialCategory, in
                     </div>
                 </div>
             </div>
-            <SkillDeckIntro />
+            {/* <SkillDeckIntro /> */}
         </div>
     )
 }

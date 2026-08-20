@@ -21,7 +21,7 @@ export default function PricingWrapper({
         <div className="min-h-screen bg-gradient-to-b from-slate-50 via-white to-slate-50">
 
             {/* Hero Section */}
-            <section className="pt-20 lg:pt-32 pb-4 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+            <section className="pt-20 lg:pt-32 pb-10 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
                 <div className="absolute top-20 left-0 w-[400px] h-[400px] bg-blue-100/30 rounded-full blur-3xl" />
                 <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-purple-100/20 rounded-full blur-3xl" />
 

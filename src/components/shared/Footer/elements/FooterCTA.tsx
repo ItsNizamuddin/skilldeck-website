@@ -26,7 +26,7 @@ const FooterCTA = () => {
                         Stay Ahead. Stay Focused.
                     </h2>
                     <p className="text-slate-300 text-sm md:text-base mb-6 max-w-2xl mx-auto">
-                        Skilldeck is built for trainers & training companies who want to focus on what truly matters — <span className="text-white font-semibold">delivering great training and growing their business.</span>
+                        Skilldeck is built for trainers & training institutes who want to focus on what truly matters — <span className="text-white font-semibold">delivering great training and growing their business.</span>
                     </p>
 
                     <div className="flex flex-wrap items-center justify-center gap-4 md:gap-8 mb-8 text-slate-300 text-sm">

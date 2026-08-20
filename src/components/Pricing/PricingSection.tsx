@@ -8,6 +8,7 @@ import MarketPlaceCta from '@/components/Home/elements/MarketPlaceCta';
 import { useIpLocation } from '@/hooks/useIpLocation';
 import { PricingPlan } from '@/lib/plans';
 import { BillingInterval } from './elements/utils';
+import LifetimeModal from './elements/LifetimeModal';
 
 interface Props {
     onToggleNavbar?: (hidden: boolean) => void;
@@ -20,6 +21,7 @@ export default function PricingSection({ onToggleNavbar, plans: initialPlans, sh
     const [billingInterval, setBillingInterval] = useState<BillingInterval>('MONTHLY');
     const [viewMode, setViewMode] = useState<'cards' | 'table'>('cards');
     const [plans, setPlans] = useState<PricingPlan[]>(initialPlans);
+    const [isLifetimeModalOpen, setIsLifetimeModalOpen] = useState(false);
     const tableContainerRef = useRef<HTMLDivElement>(null);
     const { data: locationData, loading: ipLoading } = useIpLocation();
 
@@ -55,16 +57,14 @@ export default function PricingSection({ onToggleNavbar, plans: initialPlans, sh
     // Calculate max savings percentage across all plans
     const maxSavingsPercentage = useMemo(() => {
         if (!plans?.length) return 0;
-        const percentages = plans
-            .filter(plan => plan.id !== 'lifetime-plan' && plan.code !== 'LIFETIME')
-            .map(plan => {
-                const monthly = plan.discountedPrice ?? plan.price ?? 0;
-                const yearly = plan.yearlyDiscountedPrice ?? plan.yearlyPrice ?? (monthly * 12);
-                if (monthly === 0) return 0;
-                const totalMonthly = monthly * 12;
-                const diff = totalMonthly - yearly;
-                return diff > 0 ? Math.round((diff / totalMonthly) * 100) : 0;
-            });
+        const percentages = plans.map(plan => {
+            const monthly = plan.discountedPrice ?? plan.price ?? 0;
+            const yearly = plan.yearlyDiscountedPrice ?? plan.yearlyPrice ?? (monthly * 12);
+            if (monthly === 0) return 0;
+            const totalMonthly = monthly * 12;
+            const diff = totalMonthly - yearly;
+            return diff > 0 ? Math.round((diff / totalMonthly) * 100) : 0;
+        });
         return percentages.length > 0 ? Math.max(...percentages, 0) : 0;
     }, [plans]);
 
@@ -106,7 +106,7 @@ export default function PricingSection({ onToggleNavbar, plans: initialPlans, sh
     };
 
     return (
-        <section className="py-10 bg-white" id="plans">
+        <section className="py-10 pt-10 md:pt-24 bg-white" id="plans">
             <div className="container mx-auto px-2 lg:px-0">
                 {showHeading && (
                     <>
@@ -121,20 +121,17 @@ export default function PricingSection({ onToggleNavbar, plans: initialPlans, sh
                                 Skilldeck is made affordable for everyone. No matter the size or stage of your business, Skilldeck fits.
                             </p>
                         </div>
-
-                        {/* Free Marketplace Signup CTA Banner */}
-                        <MarketPlaceCta />
                     </>
                 )}
 
                 {/* Controls Row - Centered Billing, Right View Mode */}
                 <div className="relative flex flex-col md:flex-row justify-center items-center mb-6 2xl:mb-10 gap-3 md:gap-6">
                     {/* Billing Interval Toggle */}
-                    <div className="bg-gray-100 p-1.5 rounded-full inline-flex items-center relative">
+                    <div className="bg-gray-100 p-1.5 rounded-full inline-flex items-center relative flex-wrap sm:flex-nowrap justify-center gap-1">
                         <button
                             onClick={() => setBillingInterval('MONTHLY')}
                             className={`
-                                relative z-10 px-8 py-2.5 2xl:px-10 2xl:py-3.5 text-sm 2xl:text-base font-semibold rounded-full transition-all duration-300
+                                relative z-10 px-6 sm:px-8 py-2.5 2xl:px-10 2xl:py-3 text-sm 2xl:text-base font-semibold rounded-full transition-all duration-300 cursor-pointer
                                 ${billingInterval === 'MONTHLY'
                                     ? 'bg-[linear-gradient(125deg,rgba(92,63,250,1)_0%,rgba(203,59,149,1)_48%,rgba(254,106,27,1)_100%)] text-white shadow-md'
                                     : 'text-gray-500 hover:text-gray-900'
@@ -146,17 +143,17 @@ export default function PricingSection({ onToggleNavbar, plans: initialPlans, sh
                         <button
                             onClick={() => setBillingInterval('YEARLY')}
                             className={`
-                                relative z-10 px-8 py-2.5 2xl:px-10 2xl:py-3.5 text-sm 2xl:text-base font-semibold rounded-full transition-all duration-300 flex items-center gap-2
+                                relative z-10 px-6 sm:px-8 py-2.5 2xl:px-10 2xl:py-3 text-sm 2xl:text-base font-semibold rounded-full transition-all duration-300 flex items-center gap-1.5 sm:gap-2 cursor-pointer
                                 ${billingInterval === 'YEARLY'
                                     ? 'bg-[linear-gradient(125deg,rgba(92,63,250,1)_0%,rgba(203,59,149,1)_48%,rgba(254,106,27,1)_100%)] text-white shadow-md'
                                     : 'text-gray-500 hover:text-gray-900'
                                 }
                             `}
                         >
-                            Annual
+                            <span>Annual</span>
                             {maxSavingsPercentage > 0 && (
                                 <span className={`
-                                    ml-1 text-[10px] 2xl:text-xs font-bold px-2 2xl:px-3 py-0.5 2xl:py-1 rounded-full uppercase tracking-wide
+                                    text-[10px] 2xl:text-xs font-bold px-2 py-0.5 rounded-full uppercase tracking-wide
                                     ${billingInterval === 'YEARLY'
                                         ? 'bg-white/25 text-white'
                                         : 'bg-green-50 text-green-600'
@@ -165,6 +162,16 @@ export default function PricingSection({ onToggleNavbar, plans: initialPlans, sh
                                     Save ~{maxSavingsPercentage}%
                                 </span>
                             )}
+                        </button>
+                        <button
+                            type="button"
+                            onClick={() => setIsLifetimeModalOpen(true)}
+                            className="relative z-10 px-5 sm:px-7 py-2.5 2xl:px-9 2xl:py-3 text-sm 2xl:text-base font-semibold rounded-full transition-all duration-300 flex items-center gap-1.5 text-slate-700 hover:text-purple-600 cursor-pointer group"
+                        >
+                            <span>Lifetime</span>
+                            <span className="text-[9px] 2xl:text-[10px] font-bold px-1.5 py-0.5 rounded-full uppercase tracking-wider bg-purple-100 text-purple-700 group-hover:bg-purple-200 transition-colors">
+                                ⚡ Deal
+                            </span>
                         </button>
                     </div>
 
@@ -209,6 +216,12 @@ export default function PricingSection({ onToggleNavbar, plans: initialPlans, sh
                     </div>
                 )}
             </div>
+
+            {/* Lifetime Access Deal Modal */}
+            <LifetimeModal
+                isOpen={isLifetimeModalOpen}
+                onClose={() => setIsLifetimeModalOpen(false)}
+            />
         </section>
     );
 }

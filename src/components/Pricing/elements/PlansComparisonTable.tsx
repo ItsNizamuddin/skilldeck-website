@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 // import { IPlan } from './types';
 import { BillingInterval } from './utils';
 import PlansComparisonTableMobile from './PlansComparisonTableMobile';
@@ -18,9 +18,16 @@ const PlansComparisonTable: React.FC<Props> = ({
     billingInterval = 'MONTHLY',
     onOpenPurchase,
 }) => {
+    // Filter out lifetime plan so tables show standard plans (Starter, Growth, Business)
+    const filteredPlans = useMemo(() => {
+        return (plans || []).filter(plan =>
+            plan.id !== 'lifetime-plan' &&
+            plan.code !== 'LIFETIME' &&
+            !plan.name?.toLowerCase().includes('lifetime')
+        );
+    }, [plans]);
 
-
-    if (!plans || plans.length === 0) {
+    if (!filteredPlans || filteredPlans.length === 0) {
         return (
             <div className="py-12 px-6 text-center bg-gray-50 rounded-2xl border-2 border-dashed border-gray-200 text-gray-500 text-base">
                 No plans available.
@@ -31,13 +38,13 @@ const PlansComparisonTable: React.FC<Props> = ({
     return (
         <div className="w-full mx-auto max-w-[1536px]">
             <PlansComparisonTableMobile
-                plans={plans}
+                plans={filteredPlans}
                 billingInterval={billingInterval}
                 onOpenPurchase={onOpenPurchase}
                 loading={loading}
             />
             <PlansComparisonTableDesktop
-                plans={plans}
+                plans={filteredPlans}
                 billingInterval={billingInterval}
                 onOpenPurchase={onOpenPurchase}
                 loading={loading}

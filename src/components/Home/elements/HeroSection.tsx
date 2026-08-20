@@ -18,7 +18,7 @@ export default function HeroSection() {
             }
             subtitle={
                 <>
-                    90% of training companies overspend on the wrong technology, bloated marketing teams,
+                    90% of training institutes overspend on the wrong technology, bloated marketing teams,
                     and fragmented tools. <span className="font-semibold text-slate-800">Skilldeck replaces 10+ tools</span> with
                     one powerful platform.
                 </>

@@ -81,40 +81,6 @@ async function getCourse(slug: string, location?: string, pageUrl?: string) {
     }
 }
 
-async function getTestimonials(courseSlug?: string, pageUrl?: string) {
-    try {
-        const query = new URLSearchParams({
-            page: '1',
-            limit: '4',
-            status: 'approved',
-            createdAt: 'desc',
-        });
-
-        if (courseSlug) {
-            query.append('courseSlug', courseSlug);
-        }
-
-        const res = await fetchFromBackend(`/testimonials`, { queryParams: query });
-        if (!res.ok) return null;
-
-        const cacheStatus = res.headers.get('x-cache');
-        if (cacheStatus && cacheStatus.toUpperCase().includes('MISS') && pageUrl) {
-            import("@/lib/cloudflare").then(({ purgeCloudflareCache }) => {
-                purgeCloudflareCache([pageUrl]).catch(err => {
-                    console.error("[Cloudflare Purge Error] in getTestimonials:", err);
-                });
-            }).catch(err => {
-                console.error("[Import Error] cloudflare:", err);
-            });
-        }
-
-        return await res.json();
-    } catch (error) {
-        console.error("Error fetching testimonials:", error);
-        return null;
-    }
-}
-
 export async function generateMetadata({ params }: { params: Promise<{ slug: string, course: string[] }> }): Promise<Metadata> {
     const { slug, course: courseParts } = await params;
 
@@ -178,11 +144,7 @@ export default async function CoursePage({
     const siteUrl = env.NEXT_PUBLIC_SITE_URL || 'https://skilldeck.net';
     const pageUrl = `${siteUrl.replace(/\/$/, '')}/${categorySlug}/${courseParts.join('/')}`;
 
-    // Parallel fetch
-    const courseData = getCourse(courseSlug, locationSlug, pageUrl);
-    const testimonialsData = getTestimonials(courseSlug, pageUrl);
-
-    const [course, testimonials] = await Promise.all([courseData, testimonialsData]);
+    const course = await getCourse(courseSlug, locationSlug, pageUrl);
 
     if (!course) {
         notFound();

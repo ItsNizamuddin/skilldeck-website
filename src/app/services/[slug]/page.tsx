@@ -6,9 +6,8 @@ import MainNav from "@/components/shared/Navbar";
 import Footer from "@/components/shared/Footer";
 import CourseRelatedLinks from "@/components/category/courses/overview/CourseRelatedLinks";
 import CourseAccordionSection from "@/components/category/courses/overview/CourseAccordionSection";
-
-import dynamic from "next/dynamic";
 import { fetchPlans } from "@/lib/plans";
+import { getServicesCategories } from "@/lib/services";
 
 // Import modular components
 import { ServiceData } from "@/components/services/types";
@@ -22,6 +21,24 @@ import ServiceStrategyComponent from "@/components/services/ServiceStrategy";
 import ServiceWhyOpt from "@/components/services/ServiceWhyOpt";
 import ServiceBusiness from "@/components/services/ServiceBusiness";
 import PricingSection from "@/components/Pricing/PricingSection";
+
+export const revalidate = 3600;
+
+export async function generateStaticParams() {
+    try {
+        const categories = await getServicesCategories();
+        const slugs = new Set<string>();
+        categories.forEach(cat => {
+            (cat.services || []).forEach(svc => {
+                if (svc.slug) slugs.add(svc.slug);
+            });
+        });
+        return Array.from(slugs).map(slug => ({ slug }));
+    } catch (error) {
+        console.error("Error generating static params for services:", error);
+        return [];
+    }
+}
 
 interface ServiceParams {
     slug: string;

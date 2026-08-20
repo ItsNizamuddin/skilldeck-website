@@ -1,10 +1,10 @@
 const milestones = [
     { year: "2020", event: "Founded with a vision to transform training company operations" },
-    { year: "2021", event: "Launched our first LMS product for training companies" },
+    { year: "2021", event: "Launched our first LMS product for training institutes" },
     { year: "2022", event: "Expanded with marketing automation and CRM solutions" },
-    { year: "2023", event: "Reached training companies across multiple geographies" },
+    { year: "2023", event: "Reached training institutes across multiple geographies" },
     { year: "2024", event: "Launched AI-powered features for enhanced automation" },
-    { year: "2025", event: "Building towards our 10,000 training companies goal" },
+    { year: "2025", event: "Building towards our 10,000 training institutes goal" },
 ];
 
 export default function AboutJourney() {

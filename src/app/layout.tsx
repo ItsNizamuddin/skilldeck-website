@@ -14,10 +14,10 @@ const roboto = Roboto({
 
 export const metadata: Metadata = {
   title: {
-    default: "Skilldeck — All-in-One Platform for Training Companies",
+    default: "Skilldeck — All-in-One Platform for Training Institutes",
     template: "%s | Skilldeck",
   },
-  description: "Automate your marketing, sales, and operations. Skilldeck replaces 10+ tools with one powerful platform for training companies.",
+  description: "Automate your marketing, sales, and operations. Skilldeck replaces 10+ tools with one powerful platform for training Institutes.",
   icons: {
     icon: [
       { url: "/favicon.ico", sizes: "any" },
@@ -34,6 +34,7 @@ import LeadModal from "@/components/Forms/LeadModal";
 import { LeadModalProvider } from "@/components/Forms/LeadModalContext";
 import GeoLocationInitializer from "@/components/logic/GeoLocationInitializer";
 import RouteProgressBar from "@/components/shared/RouteProgressBar";
+import ScrollToTopOnRefresh from "@/components/shared/ScrollToTopOnRefresh";
 import { Suspense } from "react";
 import DynamicScripts from "@/lib/DynamicScripts";
 
@@ -78,11 +79,17 @@ export default function RootLayout({
         <link rel="dns-prefetch" href="https://api.skilldeck.net" />
         <link rel="preconnect" href="https://www.gstatic.com" crossOrigin="" />
         <script
+          dangerouslySetInnerHTML={{
+            __html: `if('scrollRestoration' in history){history.scrollRestoration='manual';}`
+          }}
+        />
+        <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify([webSiteSchema, orgSchema]) }}
         />
       </head>
       <body className="min-h-full flex flex-col" suppressHydrationWarning>
+        <ScrollToTopOnRefresh />
         <DynamicScripts />
         <Suspense fallback={null}>
           <RouteProgressBar />

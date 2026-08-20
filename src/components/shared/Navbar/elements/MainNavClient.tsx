@@ -192,7 +192,7 @@ function MainNav({ isHidden, categories, servicesCategories = [] }: Props) {
                                     onClick={handleCompaniesClick}
                                 >
                                     <span className="relative inline-block py-1">
-                                        Companies
+                                        Institutes
                                     </span>
                                 </HoveredLink>
 
