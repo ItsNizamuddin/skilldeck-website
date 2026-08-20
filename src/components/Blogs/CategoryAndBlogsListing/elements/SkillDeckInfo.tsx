@@ -52,7 +52,7 @@ const SkillDeckIntro = () => {
                             <p className="text-xs  text-white/85 font-bold uppercase tracking-wider">at a Fraction of the Cost</p>
                         </div>
                         <p className="text-white/70 text-xs md:text-sm  max-w-4xl mx-auto leading-relaxed font-medium">
-                            If you&apos;re seeking powerful tech and marketing automation that delivers results, Skilldeck is your go-to solution. Specifically built for training companies, it offers everything you need in one place — from lead generation to operations — driving growth efficiently and affordably.
+                            If you&apos;re seeking powerful tech and marketing automation that delivers results, Skilldeck is your go-to solution. Specifically built for training institutes, it offers everything you need in one place — from lead generation to operations — driving growth efficiently and affordably.
                         </p>
 
                         {/* Feature Cards */}
@@ -105,7 +105,7 @@ const SkillDeckIntro = () => {
                                 Proven Impact Across Teams & Budgets
                             </h3>
                             <p className="text-gray-600 text-xs md:text-sm leading-relaxed font-medium">
-                                Companies are finding <Link href="https://skilldeck.net" target="_blank" className="text-blue-600 hover:underline font-bold">Skilldeck.net</Link> quite useful, and are expediting their process & cutting down on the resources across all departments significantly. By reducing their expenses across all departments by at least 40%.
+                                Training Institutes are finding <Link href="https://skilldeck.net" target="_blank" className="text-blue-600 hover:underline font-bold">Skilldeck.net</Link> quite useful, and are expediting their process & cutting down on the resources across all departments significantly. By reducing their expenses across all departments by at least 40%.
                             </p>
                         </div>
 

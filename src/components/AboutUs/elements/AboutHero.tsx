@@ -15,11 +15,11 @@ export default function AboutHero() {
                 <h1 className="heading-hero mb-6">
                     The Ultimate Platform for
                     <span className="block mt-2 pb-1 md:pb-3 bg-[linear-gradient(125deg,rgba(92,63,250,1)_0%,rgba(203,59,149,1)_48%,rgba(254,106,27,1)_100%)] bg-clip-text text-transparent">
-                        Training Companies
+                        Training Institutes
                     </span>
                 </h1>
                 <p className="body-large max-w-3xl mx-auto mb-8">
-                    Built exclusively for training companies and trainers to help automate monotonous tasks
+                    Built exclusively for training institutes and trainers to help automate monotonous tasks
                     implemented in various stages by different teams in the organization.
                 </p>
                 <div className="flex flex-col sm:flex-row justify-center gap-4">

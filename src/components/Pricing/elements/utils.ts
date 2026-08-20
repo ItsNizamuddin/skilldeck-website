@@ -115,10 +115,6 @@ export const computePlanAmount = (p: IPlan, interval?: BillingInterval) => {
 };
 
 export const getPlanFeatureValue = (plan: IPlan, featureKey: string): any => {
-    if (plan.name.toLowerCase().includes('lifetime')) {
-        return true;
-    }
-
     const feature = (plan.features || []).find(f => f.key === featureKey);
     if (!feature) return false;
 

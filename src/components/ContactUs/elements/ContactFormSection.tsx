@@ -26,7 +26,7 @@ export default function ContactFormSection() {
                     <div className="space-y-8">
                         <div className="bg-gradient-to-br from-slate-900 to-slate-800 rounded-2xl p-6 md:p-8 text-white shadow-lg">
                             <div className="flex items-center gap-4 mb-4">
-                                <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center">
+                                <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center">
                                     <Headphones className="w-6 h-6 text-white" />
                                 </div>
                                 <div>
@@ -34,12 +34,12 @@ export default function ContactFormSection() {
                                     <p className="body-small text-white/80">For enterprise customers</p>
                                 </div>
                             </div>
-                            <p className="body-medium text-gray-300 mb-6">
+                            <p className="body-small text-gray-300 mb-6">
                                 Get dedicated support with guaranteed response times and a personal account manager.
                             </p>
                             <Link
                                 href="/"
-                                className="inline-flex items-center gap-2 bg-white text-slate-900 px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition shadow-md"
+                                className="inline-flex items-center gap-2 bg-white text-slate-900 px-6 py-3 text-sm rounded-lg font-semibold hover:bg-gray-100 transition shadow-md"
                             >
                                 Learn About Enterprise
                                 <ArrowRight className="w-4 h-4" />

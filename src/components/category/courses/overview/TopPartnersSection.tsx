@@ -12,20 +12,34 @@ interface TopPartnersSectionProps {
     courseSlug: string;
 }
 
+let cachedTenantsList: any[] | null = null;
+
 export default function TopPartnersSection({ courseSlug }: TopPartnersSectionProps) {
-    const { schedules, loading, locationData } = useSchedules(courseSlug);
+    const { schedules, loading, locationData, tenants } = useSchedules(courseSlug);
     const [compareList, setCompareList] = useState<string[]>([]);
-    const [allTenants, setAllTenants] = useState<any[]>([]);
+    const [allTenants, setAllTenants] = useState<any[]>(() => cachedTenantsList || []);
     const [mobileIndex, setMobileIndex] = useState(0);
 
     const activeCurrency = locationData?.currency || "USD";
 
     useEffect(() => {
+        if (cachedTenantsList && cachedTenantsList.length > 0) {
+            setAllTenants(cachedTenantsList);
+            return;
+        }
+
+        if (tenants && tenants.length > 0) {
+            cachedTenantsList = tenants;
+            setAllTenants(tenants);
+            return;
+        }
+
         const doFetch = () => {
-            fetch("/api/tenants?limit=100")
+            fetch("/api/tenants?limit=50")
                 .then((res) => res.json())
                 .then((data) => {
                     if (data && data.data) {
+                        cachedTenantsList = data.data;
                         setAllTenants(data.data);
                     }
                 })
@@ -38,7 +52,7 @@ export default function TopPartnersSection({ courseSlug }: TopPartnersSectionPro
         } else {
             setTimeout(doFetch, 0);
         }
-    }, []);
+    }, [tenants]);
 
     // Map raw tenants to cleaner institute profiles
     const institutesList = useMemo(() => {
@@ -210,7 +224,7 @@ export default function TopPartnersSection({ courseSlug }: TopPartnersSectionPro
                         Training Partners
                     </span>
                     <h2 className="text-xl md:text-2xl font-extrabold text-slate-800 tracking-tight">
-                        Top Training Companies <span className="bg-[linear-gradient(125deg,rgba(92,63,250,1)_0%,rgba(203,59,149,1)_48%,rgba(254,106,27,1)_100%)] bg-clip-text text-transparent">Worldwide</span>
+                        Top Training Institutes <span className="bg-[linear-gradient(125deg,rgba(92,63,250,1)_0%,rgba(203,59,149,1)_48%,rgba(254,106,27,1)_100%)] bg-clip-text text-transparent">Worldwide</span>
                     </h2>
                     <p className="text-sm text-slate-500 max-w-2xl font-medium">
                         Compare top training providers and choose the best one for your learning journey.

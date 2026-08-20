@@ -22,7 +22,7 @@ const logos = [
 ];
 
 const stats = [
-    { icon: Users, value: "500+", label: "Companies Trust Us" },
+    { icon: Users, value: "500+", label: "Institutes Trust Us" },
     { icon: Building2, value: "30+", label: "Enterprise Clients" },
     { icon: Sparkles, value: "5+", label: "Years Experience" },
 ];
@@ -102,7 +102,7 @@ const ProvenExperience = () => {
                 <div className="text-center mt-6 md:mt-8 space-y-2">
                     <p className="body-medium">
                         And{" "}
-                        <span className="text-brand-primary font-semibold">30+ other training companies</span>
+                        <span className="text-brand-primary font-semibold">30+ other training institutes</span>
                     </p>
                     <p className="body-small">
                         From technology to marketing to automation — Skilldeck is built on{" "}

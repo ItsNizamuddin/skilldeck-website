@@ -136,7 +136,7 @@ export const PhoneInput: React.FC<PhoneInputProps> = ({
                         onClick={() => !disabled && setIsOpen(!isOpen)}
                         disabled={disabled}
                         className={cn(
-                            'flex items-center gap-2 px-3 py-2 bg-white border rounded-xl transition-colors h-[38px] md:h-[42px]',
+                            'flex items-center gap-2 px-3 py-2 bg-white border rounded-xl transition-all duration-200 cursor-pointer',
                             'focus:outline-none focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary',
                             hasError && 'border-red-500',
                             !hasError && 'border-gray-200 hover:border-gray-300',
@@ -151,14 +151,14 @@ export const PhoneInput: React.FC<PhoneInputProps> = ({
                                 code={selectedCountry.code}
                                 width={20}
                                 height={15}
-                                className="w-5 h-4 object-cover shadow-sm rounded-sm"
+                                className="w-5 h-3.5 object-cover shadow-xs rounded-xs shrink-0"
                             />
                         )}
-                        <span className="text-xs md:text-sm text-gray-700 font-medium">{selectedCountry.dialCode}</span>
+                        <span className="text-xs 2xl:text-sm text-gray-700 font-medium">{selectedCountry.dialCode}</span>
                         <ChevronDown
                             className={cn(
-                                'w-3.5 h-3.5 text-gray-500 transition-transform',
-                                isOpen && 'rotate-180'
+                                'w-3.5 h-3.5 text-gray-400 transition-transform',
+                                isOpen && 'rotate-180 text-brand-primary'
                             )}
                         />
                     </button>
@@ -171,7 +171,7 @@ export const PhoneInput: React.FC<PhoneInputProps> = ({
                                     type="button"
                                     onClick={() => handleCountrySelect(country)}
                                     className={cn(
-                                        'w-full px-3 py-2.5 text-left flex items-center gap-3 hover:bg-gray-50 transition-colors',
+                                        'w-full px-3 py-2 text-left flex items-center gap-3 hover:bg-gray-50 transition-colors cursor-pointer',
                                         country.code === selectedCountry.code && 'bg-brand-50'
                                     )}
                                 >
@@ -182,7 +182,7 @@ export const PhoneInput: React.FC<PhoneInputProps> = ({
                                             code={country.code}
                                             width={20}
                                             height={15}
-                                            className="w-5 h-3.5 object-cover shadow-sm rounded-sm flex-shrink-0"
+                                            className="w-4 h-3 object-cover shadow-xs rounded-xs flex-shrink-0"
                                         />
                                     )}
                                     <span className="text-xs font-medium text-gray-700 truncate flex-1">{country.name}</span>
@@ -205,7 +205,7 @@ export const PhoneInput: React.FC<PhoneInputProps> = ({
                         disabled={disabled}
                         placeholder="Phone number"
                         className={cn(
-                            'w-full px-4 py-2 md:py-2.5 text-xs md:text-sm  bg-red border rounded-xl text-gray-900 placeholder:text-gray-400 placeholder:text-sm transition-colors h-[38px] md:h-[42px]',
+                            'w-full px-4 py-2 text-xs 2xl:text-sm bg-white border rounded-xl text-gray-900 placeholder:text-gray-400 transition-all duration-200',
                             'focus:outline-none focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary',
                             hasError && 'border-red-500 focus:ring-red-500 focus:border-red-500',
                             !hasError && 'border-gray-200 hover:border-gray-300',

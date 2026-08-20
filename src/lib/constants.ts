@@ -1,6 +1,6 @@
 export const SITE_CONFIG = {
   name: "SkillDeck",
-  description: "World's 1st Fully Automated Plug & Play Platform For Training Companies",
+  description: "World's 1st Fully Automated Plug & Play Platform For Training Institutes",
   url: process.env.NEXT_PUBLIC_SITE_URL || "https://skilldeck.net",
   ogImage: "https://skilldeck.net/og-image.png",
   links: {

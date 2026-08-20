@@ -7,6 +7,9 @@ export interface LeadModalConfig {
     formTitle?: string;
     formDescription?: string;
     formId?: number | string;
+    badgeText?: string;
+    sidebarTitle?: string;
+    sidebarDescription?: string;
 
     // Configuration
     config?: {

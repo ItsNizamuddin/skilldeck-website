@@ -39,8 +39,8 @@ const FormInput: React.FC<FormInputProps> = ({ name, placeholder, value, onChang
             value={value}
             onChange={onChange}
             className={`
-                w-full py-2 md:py-2.5 rounded-xl border border-gray-200 
-                bg-white text-gray-900 placeholder:text-gray-400 text-xs md:text-sm 2xl:text-base
+                w-full py-2 rounded-xl border border-gray-200 
+                bg-white text-gray-900 placeholder:text-gray-400 text-xs 2xl:text-sm
                 focus:outline-none focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary
                 hover:border-gray-300 transition-all duration-200
                 ${icon ? 'pl-10 pr-4' : 'px-4'}
@@ -73,8 +73,8 @@ const FormTextarea: React.FC<FormTextareaProps> = ({ name, placeholder, value, o
             onChange={onChange}
             rows={rows}
             className={`
-                w-full py-2 md:py-2.5 rounded-xl border border-gray-200 
-                bg-white text-gray-900 placeholder:text-gray-400 text-xs md:text-sm 2xl:text-base
+                w-full py-2 rounded-xl border border-gray-200 
+                bg-white text-gray-900 placeholder:text-gray-400 text-xs 2xl:text-sm
                 focus:outline-none focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary
                 hover:border-gray-300 transition-all duration-200 resize-none
                 ${icon ? 'pl-10 pr-4' : 'px-4'}
@@ -92,7 +92,7 @@ interface FormCheckboxProps {
 const FormCheckbox: React.FC<FormCheckboxProps> = ({ checked, onChange, label }) => (
     <label className="flex items-center gap-3 cursor-pointer group" onClick={onChange}>
         <div className={`
-            w-5 h-5 rounded-md border-2 flex items-center justify-center transition-all duration-200
+            w-4 h-4 rounded-md border-2 flex items-center justify-center transition-all duration-200
             ${checked
                 ? 'bg-[#2563eb] border-transparent '
                 : 'border-gray-300 group-hover:border-brand-400 bg-white'
@@ -196,14 +196,6 @@ const GenericForm: React.FC<GenericFormProps> = ({
     // Normalize form type
     const formType = propFormType === 1 || propFormType === 'enquiry' ? 'enquiry' :
         propFormType === 'list-company' ? 'list-company' : 'corporate';
-
-    const handleCourseChange = (slug: string, title?: string) => {
-        setFormData(prev => ({
-            ...prev,
-            courseSlug: slug,
-            selectedCourse: title || ''
-        }));
-    };
     const [showThankyou, setShowThankyou] = useState(false);
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const [error, setError] = useState<string | null>(null);
@@ -464,7 +456,7 @@ const GenericForm: React.FC<GenericFormProps> = ({
                         </div>
                     )}
                     {/* Personal Information Section */}
-                    <div className="grid grid-cols-2 gap-2 2xl:gap-4 mb-2 2xl:mb-4">
+                    <div className="grid grid-cols-2 gap-2 2xl:gap-4 mb-2">
                         <FormInput
                             name="firstname"
                             placeholder="Full Name"
@@ -630,19 +622,19 @@ const GenericForm: React.FC<GenericFormProps> = ({
                     {/* Message - Enquiry and List Company Only */}
                     {(formType === 'enquiry' || formType === 'list-company') && (
                         <>
-                            <div className="mb-2 2xl:mb-4">
+                            <div className="">
                                 <FormTextarea
                                     name="message"
                                     placeholder="How can we help you? Share your questions or requirements..."
                                     value={formData.message}
                                     onChange={handleChange}
-                                    rows={4}
+                                    rows={3}
                                     icon={<MessageSquare className="text-brand-primary w-4 h-4" />}
                                 />
                             </div>
 
                             {formType === 'enquiry' && (
-                                <div className="mb-2 2xl:mb-4 p-2 2xl:p-4 bg-brand-primary/10 rounded-xl border border-brand-primary/20">
+                                <div className="p-2 bg-brand-primary/10 rounded-sm border border-brand-primary/20">
                                     <FormCheckbox
                                         checked={formData.demo}
                                         onChange={() => setFormData(prev => ({ ...prev, demo: !prev.demo }))}
@@ -662,7 +654,7 @@ const GenericForm: React.FC<GenericFormProps> = ({
                                     onVerify={(token) => setTurnstileToken(token)}
                                     onError={() => setTurnstileToken(null)}
                                     onExpire={() => setTurnstileToken(null)}
-                                    className="flex justify-center sm:justify-start min-h-[65px]"
+                                    className="flex justify-center sm:justify-start min-h-[45px]"
                                 />
                             </div>
                         )}
@@ -672,7 +664,7 @@ const GenericForm: React.FC<GenericFormProps> = ({
                             type="submit"
                             disabled={isSubmitting}
                             className={`
-                                flex-1 w-full text-sm md:text-base py-3 lg:py-3.5 bg-[linear-gradient(125deg,rgba(92,63,250,1)_0%,rgba(203,59,149,1)_48%,rgba(254,106,27,1)_100%)] text-white rounded-xl font-semibold
+                                flex-1 w-full text-xs md:text-sm py-2 bg-[linear-gradient(125deg,rgba(92,63,250,1)_0%,rgba(203,59,149,1)_48%,rgba(254,106,27,1)_100%)] text-white rounded-xl font-semibold
                                 flex items-center justify-center gap-2
                                 cursor-pointer
                                 shadow-lg shadow-brand-primary/20

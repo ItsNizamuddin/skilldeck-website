@@ -7,7 +7,7 @@ export default function AboutCta() {
                 <div className="bg-[linear-gradient(125deg,rgba(92,63,250,1)_0%,rgba(203,59,149,1)_48%,rgba(254,106,27,1)_100%)] rounded-3xl p-8 lg:p-12 text-center text-white shadow-xl shadow-brand-primary/10">
                     <h2 className="text-2xl lg:text-4xl font-extrabold tracking-tight mb-4">Ready to Transform Your Training Business?</h2>
                     <p className="text-sm lg:text-base text-white/80 mb-8 max-w-xl mx-auto">
-                        Join thousands of training companies already using Skilldeck to automate their operations.
+                        Join thousands of training institutes already using Skilldeck to automate their operations.
                     </p>
                     <div className="flex flex-col sm:flex-row justify-center gap-4">
                         <Link

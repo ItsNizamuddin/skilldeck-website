@@ -173,7 +173,7 @@ const GameChanger = () => {
 
                     <div className="text-center mt-4">
                         <p className="body-medium text-slate-400">
-                            And <span className="text-brand-primary font-semibold">30+ other training companies</span>
+                            And <span className="text-brand-primary font-semibold">30+ other training institutes</span>
                         </p>
                     </div>
 

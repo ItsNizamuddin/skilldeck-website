@@ -2,7 +2,7 @@ import { Calendar } from 'lucide-react';
 
 const milestones = [
     { year: '2019', title: 'Company Founded', description: 'Started with a vision to simplify training business operations' },
-    { year: '2020', title: 'First 100 Clients', description: 'Achieved our first milestone of serving 100 training companies' },
+    { year: '2020', title: 'First 100 Clients', description: 'Achieved our first milestone of serving 100 training institutes' },
     { year: '2021', title: 'Platform Expansion', description: 'Launched LMS, CRM, and marketing automation modules' },
     { year: '2022', title: '10,000+ Users', description: 'Reached 10,000 active users across our platform' },
     { year: '2023', title: 'Global Reach', description: 'Expanded to serve clients in 50+ countries' },

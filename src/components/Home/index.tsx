@@ -2,7 +2,6 @@ import { PricingPlan } from "@/lib/plans";
 import React from "react";
 import dynamic from 'next/dynamic';
 import FAQ from "../shared/FAQ";
-import BookADemo from "./elements/BookADemo";
 import BuiltForTrainers from "./elements/BuiltForTrainers";
 import GameChanger from "./elements/GameChanger";
 import HeroSection from "./elements/HeroSection";
@@ -21,13 +20,13 @@ const DemoSection = dynamic(() => import('./elements/DemoSection'), {
     ssr: true
 });
 
-const PricingSection = dynamic(() => import('../Pricing/PricingSection'), {
-    loading: () => <div className="h-96 w-full animate-pulse bg-white" />,
+const RecentProjects = dynamic(() => import('./elements/RecentProjects'), {
+    loading: () => <div className="h-96 w-full animate-pulse bg-slate-50" />,
     ssr: true
 });
 
-const RecentProjects = dynamic(() => import('./elements/RecentProjects'), {
-    loading: () => <div className="h-96 w-full animate-pulse bg-slate-50" />,
+const BookADemo = dynamic(() => import('./elements/BookADemo'), {
+    loading: () => <div className="h-96 w-full animate-pulse bg-white" />,
     ssr: true
 });
 
@@ -41,7 +40,7 @@ const Home = ({ plans = [], faqs = [] }: HomeProps) => {
         <div className="flex flex-col gap-0 overflow-hidden w-full">
             <HeroSection />
 
-            <WhatYouGet />
+            <WhatYouGet plans={plans} />
 
             <DemoSection />
 
@@ -54,8 +53,6 @@ const Home = ({ plans = [], faqs = [] }: HomeProps) => {
             <GameChanger />
 
             <BuiltForTrainers />
-
-            <PricingSection plans={plans} />
 
             <RecentProjects />
 

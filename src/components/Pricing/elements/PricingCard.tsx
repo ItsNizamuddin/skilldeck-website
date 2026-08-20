@@ -24,9 +24,7 @@ const PricingCard: React.FC<Props> = ({
     // Calculate price based on selected billing interval
     const displayPrice = computePlanAmount(plan, billingInterval) || 0;
 
-
-
-    const { isHighlighted, isLifetime, icon, colorTheme } = plan.uiMetadata || { isHighlighted: false, isLifetime: false, icon: 'crown', colorTheme: 'default' };
+    const { isHighlighted, icon, colorTheme } = plan.uiMetadata || { isHighlighted: false, icon: 'crown', colorTheme: 'default' };
 
     // Calculate yearly breakdown info
     const monthlyPrice = (plan.discountedPrice ?? plan.price) as number;
@@ -39,7 +37,6 @@ const PricingCard: React.FC<Props> = ({
     const savingsPercentage = yearlySavings > 0 ? Math.round((yearlySavings / monthlyIfPaidYearly) * 100) : 0;
 
     // Card Styles Logic since we are using colorTheme from metadata now
-
     let cardBgClass = 'bg-white text-gray-900 border border-gray-200 shadow-sm';
     let textColorClass = 'text-gray-900';
     let subTextColorClass = 'text-gray-500';
@@ -55,21 +52,6 @@ const PricingCard: React.FC<Props> = ({
         buttonClass = 'bg-[linear-gradient(125deg,rgba(92,63,250,1)_0%,rgba(203,59,149,1)_48%,rgba(254,106,27,1)_100%)] text-white font-bold hover:brightness-110 hover:-translate-y-[1px] transition-all duration-300 shadow-lg shadow-[#5c3ffa]/20';
         checkIconClass = 'text-[#5c3ffa]';
         iconBgClass = 'bg-[#5c3ffa]/10 text-[#5c3ffa]';
-    } else if (colorTheme === 'slate') {
-        if (isLifetime) {
-            // Lifetime — simple clean dark charcoal, no flashy gradient
-            cardBgClass = 'bg-gray-900 text-white border border-gray-700/50 shadow-2xl';
-            checkIconClass = 'text-emerald-400';
-            iconBgClass = 'bg-white/10 text-white';
-            buttonClass = 'bg-white text-gray-900 font-bold hover:bg-gray-100 hover:-translate-y-[1px] transition-all duration-300 shadow-sm';
-        } else {
-            cardBgClass = 'bg-gradient-to-br from-slate-900 to-slate-800 text-white border-0 shadow-2xl';
-            checkIconClass = 'text-emerald-400';
-            iconBgClass = 'bg-white/10 text-white';
-            buttonClass = 'bg-white text-slate-950 hover:bg-slate-50 hover:-translate-y-[1px] transition-all duration-300';
-        }
-        textColorClass = 'text-white';
-        subTextColorClass = 'text-gray-400';
     } else if (colorTheme === 'purple') {
         // Business — clean white card with indigo accent, visually distinct from plain Starter
         cardBgClass = 'bg-white text-gray-900 border-2 border-indigo-100 shadow-xl shadow-indigo-100/60';
@@ -80,15 +62,13 @@ const PricingCard: React.FC<Props> = ({
         iconBgClass = 'bg-indigo-50 text-indigo-600';
     }
 
-    // Unified dark background flag — only true for actual dark-background cards
-    const isDark = isLifetime || colorTheme === 'slate';
+    const isDark = false;
 
     // Icon Selection
     const renderIcon = () => {
-        if (icon === 'rocket') return <Rocket className={`w-5 h-5 ${isDark ? 'text-white' : 'text-brand-600'}`} />;
-        if (icon === 'building') return <Building2 className={`w-5 h-5 ${isDark ? 'text-white' : 'text-purple-600'}`} />;
-        if (icon === 'infinity') return <Infinity className="w-5 h-5 text-white" />;
-        return <Crown className={`w-5 h-5 ${isDark ? 'text-white' : 'text-brand-600'}`} />;
+        if (icon === 'rocket') return <Rocket className="w-5 h-5 text-brand-600" />;
+        if (icon === 'building') return <Building2 className="w-5 h-5 text-purple-600" />;
+        return <Crown className="w-5 h-5 text-brand-600" />;
     };
 
     // Customize Icon BG per plan if not dark-themed
@@ -130,7 +110,7 @@ const PricingCard: React.FC<Props> = ({
                 </div>
             )}
 
-            {!isLifetime && savingsPercentage > 0 && billingInterval === 'YEARLY' && (
+            {savingsPercentage > 0 && billingInterval === 'YEARLY' && (
                 <div className="absolute top-0 right-0.5 bg-green-500 text-white text-[10px] md:text-xs font-bold px-2 md:px-2 py-1 md:py-1.5 rounded-bl-xl rounded-tr-xl z-20">
                     Save {savingsPercentage}%
                 </div>
@@ -213,7 +193,7 @@ const PricingCard: React.FC<Props> = ({
                     <div className="h-7 flex items-baseline justify-start">
                         {loading ? (
                             <div className={`animate-pulse rounded-lg h-8 w-32 ${isDark ? 'bg-white/20' : 'bg-slate-200'}`} />
-                        ) : !isLifetime ? (
+                        ) : (
                             <>
                                 <span className={`text-xl font-bold ${textColorClass}`}>
                                     {formatPrice(displayPrice, plan.currency || 'USD')}
@@ -222,18 +202,13 @@ const PricingCard: React.FC<Props> = ({
                                     /{billingInterval === 'YEARLY' ? 'year' : 'mo'}
                                 </span>
                             </>
-                        ) : (
-                            <span className={`text-2xl font-bold ${textColorClass}`}>
-                                Custom
-                            </span>
                         )}
                     </div>
-                    {billingInterval === 'YEARLY' && !isLifetime && (
-
+                    {billingInterval === 'YEARLY' && (
                         <div className="h-3">
                             {loading ? (
                                 <div className={`animate-pulse rounded-md h-4 w-40 mt-1 ${isDark ? 'bg-white/10' : 'bg-slate-100'}`} />
-                            ) : billingInterval === 'YEARLY' && monthlyEquivalent && !isLifetime ? (
+                            ) : billingInterval === 'YEARLY' && monthlyEquivalent ? (
                                 <p className={`text-xs 2xl:text-sm ${subTextColorClass}`}>
                                     {formatPrice(monthlyEquivalent, plan.currency || 'USD')}/mo billed annually
                                 </p>
@@ -244,37 +219,26 @@ const PricingCard: React.FC<Props> = ({
                 </div>
 
                 {/* Action Button */}
-                {isLifetime ? (
-                    <button
-                        // onClick={() => triggerForm('lifetime_plan_enquiry')}
-                        className={`w-full py-3 rounded-xl font-bold text-xs md:text-xs mb-4 transition-colors shadow-sm ${buttonClass}`}
-                    >
-                        Contact Sales
-                    </button>
-                ) : (
-                    <button
-                        onClick={() => onPurchase?.(plan.id)}
-                        className={`w-full py-3 rounded-xl font-bold text-xs md:text-xs mb-4 transition-colors shadow-sm ${buttonClass}`}
-                    >
-                        Start Free Trial
-                    </button>
-                )}
+                <button
+                    onClick={() => onPurchase?.(plan.id)}
+                    className={`w-full py-3 rounded-xl font-bold text-xs md:text-xs mb-4 transition-colors shadow-sm cursor-pointer ${buttonClass}`}
+                >
+                    Start Free Trial
+                </button>
 
                 {/* Divider */}
                 <div className={`w-full h-px mb-4 ${isDark ? 'bg-white/20' : 'bg-gray-100'}`} />
             </div>
 
             {/* SCROLLABLE FEATURES SECTION */}
-            {!isLifetime && (
-                <button
-                    onClick={() => setIsExpanded(!isExpanded)}
-                    className="md:hidden w-full py-2.5 rounded-xl border border-gray-200 font-bold text-xs text-gray-700 bg-white hover:bg-gray-50 transition-colors shadow-sm mb-4"
-                >
-                    {isExpanded ? 'Hide features' : 'Show features'}
-                </button>
-            )}
+            <button
+                onClick={() => setIsExpanded(!isExpanded)}
+                className="md:hidden w-full py-2.5 rounded-xl border border-gray-200 font-bold text-xs text-gray-700 bg-white hover:bg-gray-50 transition-colors shadow-sm mb-4 cursor-pointer"
+            >
+                {isExpanded ? 'Hide features' : 'Show features'}
+            </button>
 
-            <div className={`flex-1 min-h-0 relative group/list ${(isExpanded || isLifetime) ? 'block' : 'hidden'} md:block`}>
+            <div className={`flex-1 min-h-0 relative group/list ${isExpanded ? 'block' : 'hidden'} md:block`}>
                 <div
                     ref={scrollRef}
                     onScroll={checkScroll}
@@ -291,7 +255,7 @@ const PricingCard: React.FC<Props> = ({
                                     {['seats', 'storage', 'locations', 'courses'].map(key => {
                                         const val = (plan.limits as any)[key] ?? (plan.limits as any)[key === 'storage' ? 'storageGB' : ''];
                                         const config = getResourceConfig(key);
-                                        const isUnlimited = isLifetime || val === undefined || val === null || Number(val) === -1 || (key === 'storage' && Number(val) === 0);
+                                        const isUnlimited = val === undefined || val === null || Number(val) === -1 || (key === 'storage' && Number(val) === 0);
 
                                         let priceKey = `${key.replace(/s$/, '')}UnitPrice`;
                                         let yearlyPriceKey = `yearly${key.replace(/s$/, '').charAt(0).toUpperCase() + key.replace(/s$/, '').slice(1)}UnitPrice`;
@@ -302,7 +266,7 @@ const PricingCard: React.FC<Props> = ({
                                         else if (key === 'courses') { priceKey = 'courseUnitPrice'; yearlyPriceKey = 'yearlyCourseUnitPrice'; }
 
                                         let overageText = '';
-                                        if (!isLifetime && !isUnlimited) {
+                                        if (!isUnlimited) {
                                             const priceText = formatOveragePrice(plan, { priceKey, yearlyPriceKey }, billingInterval);
                                             if (priceText) overageText = priceText;
                                         }
@@ -332,9 +296,9 @@ const PricingCard: React.FC<Props> = ({
                         )}
 
                         <div>
-                            <h4 className={`text-[10px] font-bold uppercase tracking-widest mb-3 ${!isLifetime && plan.isLmsEnabled === false
+                            <h4 className={`text-[10px] font-bold uppercase tracking-widest mb-3 ${plan.isLmsEnabled === false
                                 ? 'text-gray-400 opacity-60'
-                                : (isDark ? 'text-white/80' : 'text-blue-500')
+                                : 'text-blue-500'
                                 }`}>
                                 LMS / Training Resources
                             </h4>
@@ -342,7 +306,7 @@ const PricingCard: React.FC<Props> = ({
                                 {['lmsCourses', 'students', 'instructors', 'certificates'].map(key => {
                                     const config = getResourceConfig(key);
                                     const val = plan.isLmsEnabled !== false ? (plan.limits as any)[key] : undefined;
-                                    const isLmsDisabled = !isLifetime && plan.isLmsEnabled === false;
+                                    const isLmsDisabled = plan.isLmsEnabled === false;
 
                                     let priceKey = `${key.replace(/s$/, '')}UnitPrice`;
                                     let yearlyPriceKey = `yearly${key.replace(/s$/, '').charAt(0).toUpperCase() + key.replace(/s$/, '').slice(1)}UnitPrice`;
@@ -352,7 +316,7 @@ const PricingCard: React.FC<Props> = ({
                                     else if (key === 'instructors') { priceKey = 'instructorUnitPrice'; yearlyPriceKey = 'yearlyInstructorUnitPrice'; }
                                     else if (key === 'certificates') { priceKey = 'certificateUnitPrice'; yearlyPriceKey = 'yearlyCertificateUnitPrice'; }
 
-                                    const isUnlimited = isLifetime || val === null || Number(val) === -1;
+                                    const isUnlimited = val === null || Number(val) === -1;
                                     let overageText = '';
                                     if (!isLmsDisabled && !isUnlimited) {
                                         const priceText = formatOveragePrice(plan, { priceKey, yearlyPriceKey }, billingInterval);
@@ -363,26 +327,26 @@ const PricingCard: React.FC<Props> = ({
 
                                     return (
                                         <div key={key} className={`h-[42px] w-full flex items-center justify-between rounded-xl px-3 border ${isLmsDisabled
-                                            ? (isDark ? 'bg-white/5 border-white/10 opacity-60' : 'bg-gray-50/40 border-gray-100/50 opacity-60')
-                                            : (isDark ? 'bg-white/10 border-white/20' : 'bg-blue-50/30 border-blue-100/50')
+                                            ? 'bg-gray-50/40 border-gray-100/50 opacity-60'
+                                            : 'bg-blue-50/30 border-blue-100/50'
                                             }`}>
                                             <div className="flex items-center gap-2.5 min-w-0 pr-2">
                                                 <div className={`shrink-0 p-1.5 rounded-lg shadow-sm ${isLmsDisabled
-                                                    ? (isDark ? 'bg-white/10 text-white/50' : 'bg-white text-gray-400')
-                                                    : (isDark ? 'bg-white/20 text-white' : 'bg-white text-blue-500')
+                                                    ? 'bg-white text-gray-400'
+                                                    : 'bg-white text-blue-500'
                                                     }`}>
                                                     {config.icon}
                                                 </div>
-                                                <span className={`text-xs font-semibold truncate ${isDark ? 'text-white' : 'text-gray-700'}`}>
+                                                <span className="text-xs font-semibold truncate text-gray-700">
                                                     {isLmsDisabled ? (
-                                                        <span className={isDark ? 'text-white/50' : 'text-gray-400 font-medium'}>Not Included</span>
+                                                        <span className="text-gray-400 font-medium">Not Included</span>
                                                     ) : (
                                                         <>{displayValue}</>
-                                                    )} <span className={`font-medium ${isDark ? 'text-white/70' : 'text-gray-500'}`}>{config.label}</span>
+                                                    )} <span className="font-medium text-gray-500">{config.label}</span>
                                                 </span>
                                             </div>
                                             {overageText && (
-                                                <div className={`shrink-0 text-[10px] font-bold tracking-tight ${isDark ? 'text-white/90' : 'text-blue-600'}`}>
+                                                <div className="shrink-0 text-[10px] font-bold tracking-tight text-blue-600">
                                                     {overageText}
                                                 </div>
                                             )}
@@ -392,24 +356,12 @@ const PricingCard: React.FC<Props> = ({
                             </div>
                         </div>
 
-                        {isLifetime ? (
-                            <div className="mt-6">
-                                <h4 className={`text-xs font-bold uppercase tracking-wider mb-3 text-white/80`}>
-                                    Included Features
-                                </h4>
-                                <div className="flex items-center gap-3">
-                                    <Check className={`w-4 h-4 text-emerald-400`} strokeWidth={3} />
-                                    <span className={`text-sm font-medium text-white`}>
-                                        Everything Included
-                                    </span>
-                                </div>
-                            </div>
-                        ) : plan.displayFeatures && plan.displayFeatures.length > 0 ? (
+                        {plan.displayFeatures && plan.displayFeatures.length > 0 ? (
                             plan.displayFeatures.map((group: any, idx: number) => {
                                 const category = group.category;
                                 return (
                                     <div key={idx} className="mt-6 first:mt-4">
-                                        <h4 className={`text-xs font-bold uppercase tracking-wider mb-3 flex items-center gap-1.5 ${isDark ? 'text-white/80' : 'text-gray-600'}`}>
+                                        <h4 className="text-xs font-bold uppercase tracking-wider mb-3 flex items-center gap-1.5 text-gray-600">
                                             {category}
                                         </h4>
                                         <div className="mb-4 last:mb-0 space-y-2.5">
@@ -418,7 +370,7 @@ const PricingCard: React.FC<Props> = ({
                                                     <div className="mt-0.5 shrink-0">
                                                         <Check className={`w-4 h-4 ${checkIconClass}`} strokeWidth={3} />
                                                     </div>
-                                                    <span className={`text-sm font-medium leading-tight pt-0.5 ${isDark ? 'text-white' : 'text-gray-600'}`}>
+                                                    <span className="text-sm font-medium leading-tight pt-0.5 text-gray-600">
                                                         {item}
                                                     </span>
                                                 </div>
@@ -437,23 +389,18 @@ const PricingCard: React.FC<Props> = ({
             </div>
 
             <div className="hidden md:block mt-auto pt-4 flex-none z-10">
-                {isLifetime ? (
-                    <></>
-                ) : (
-                    <button
-                        onClick={() => onPurchase?.(plan.id)}
-                        className={`w-full py-3 rounded-xl font-bold text-xs md:text-xs mb-4 transition-colors shadow-sm ${buttonClass}`}
-                    >
-                        Start Free Trial
-                    </button>
-                )}
+                <button
+                    onClick={() => onPurchase?.(plan.id)}
+                    className={`w-full py-3 rounded-xl font-bold text-xs md:text-xs mb-4 transition-colors shadow-sm cursor-pointer ${buttonClass}`}
+                >
+                    Start Free Trial
+                </button>
             </div>
         </div>
     );
 
     return (
         <div className="relative h-full flex flex-col group/card-container transition-all duration-300 hover:-translate-y-1">
-            {/* Stacked Effect for Lifetime */}
             {colorTheme === 'blue' ? (
                 <div className="p-[2px] rounded-2xl bg-[linear-gradient(125deg,rgba(92,63,250,1)_0%,rgba(203,59,149,1)_48%,rgba(254,106,27,1)_100%)] shadow-xl shadow-[#5c3ffa]/15 h-full">
                     {cardInnerContent}

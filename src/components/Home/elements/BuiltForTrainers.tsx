@@ -48,7 +48,7 @@ const BuiltForTrainers = () => {
                         <span className="bg-[linear-gradient(125deg,rgba(92,63,250,1)_0%,rgba(203,59,149,1)_48%,rgba(254,106,27,1)_100%)] bg-clip-text text-transparent">
                             Trainers &{" "}
                             <br className="sm:hidden" />
-                            Training Companies
+                            Training Institutes
                         </span>
                     </h2>
 

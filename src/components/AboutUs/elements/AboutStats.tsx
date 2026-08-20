@@ -1,5 +1,5 @@
 const stats = [
-    { value: "10K+", label: "Target Companies" },
+    { value: "10K+", label: "Target Institutes" },
     { value: "100+", label: "Built-in Features" },
     { value: "99.9%", label: "Uptime" },
     { value: "24/7", label: "Support" },

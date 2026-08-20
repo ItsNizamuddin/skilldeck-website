@@ -3,7 +3,6 @@ import { IPlan, PlanStatus, PlanInterval } from "@/types/interface-lib";
 export interface PricingPlan extends IPlan {
     uiMetadata: {
         isHighlighted: boolean;
-        isLifetime: boolean;
         colorTheme: "blue" | "purple" | "slate" | "default";
         icon: "rocket" | "crown" | "infinity" | "building";
         badge?: string;
@@ -11,41 +10,10 @@ export interface PricingPlan extends IPlan {
     };
 }
 
-export const STATIC_LIFETIME_PLAN: PricingPlan = {
-    id: "lifetime-plan",
-    _id: "lifetime-plan",
-    code: "LIFETIME",
-    status: PlanStatus.ACTIVE,
-    createdAt: "2024-01-01T00:00:00.000Z",
-    updatedAt: "2024-01-01T00:00:00.000Z",
-    name: "Lifetime Access",
-    description: "Pay once, own it forever. Best value for long-term power users.",
-    price: 19999,
-    discountedPrice: 14999,
-    yearlyPrice: 14999,
-    yearlyDiscountedPrice: 14999,
-    currency: "USD",
-    interval: PlanInterval.YEARLY,
-    features: [],
-    limits: {
-        seats: 0,
-        storageGB: 0,
-        locations: 0,
-        courses: 0
-    },
-    uiMetadata: {
-        isHighlighted: false,
-        isLifetime: true,
-        colorTheme: "slate",
-        icon: "infinity",
-    }
-};
-
 const enrichPlan = (plan: IPlan, index?: number): PricingPlan => {
     const name = plan.name.toLowerCase();
     const isEnterprise = name.includes("enterprise");
-    const isStarter = name.includes("starter");  // no longer matches 'business'
-    let isLifetime = name.includes("lifetime");
+    const isStarter = name.includes("starter");
 
     let colorTheme: PricingPlan["uiMetadata"]["colorTheme"] = "default";
     let icon: PricingPlan["uiMetadata"]["icon"] = "crown";
@@ -68,10 +36,6 @@ const enrichPlan = (plan: IPlan, index?: number): PricingPlan => {
         if (!isHighlighted) {
             colorTheme = "blue";
         }
-    } else if (isLifetime) {
-        colorTheme = "slate";
-        icon = "infinity";
-        isLifetime = true;
     } else if (isStarter) {
         if (!isHighlighted) {
             colorTheme = "default";
@@ -83,7 +47,6 @@ const enrichPlan = (plan: IPlan, index?: number): PricingPlan => {
         ...plan,
         uiMetadata: {
             isHighlighted,
-            isLifetime,
             colorTheme,
             icon,
             badge,
@@ -108,7 +71,7 @@ export const fetchPlans = async (currency?: string): Promise<PricingPlan[]> => {
 
         if (!response.ok) {
             console.error(`Failed to fetch plans: ${response.statusText}`);
-            return [STATIC_LIFETIME_PLAN];
+            return [];
         }
         const data = await response.json();
         const plansData = Array.isArray(data) ? data : (data.data || []);
@@ -118,15 +81,11 @@ export const fetchPlans = async (currency?: string): Promise<PricingPlan[]> => {
             id: p.id || p._id || `plan-${index}`
         }));
 
-        const uniquePlans = sanitizedPlans.filter((p: any) =>
-            p.code !== STATIC_LIFETIME_PLAN.code && p.id !== STATIC_LIFETIME_PLAN.id
-        );
+        const enrichedPlans = sanitizedPlans.map((p: any, i: number) => enrichPlan(p, i));
 
-        const enrichedPlans = uniquePlans.map((p: any, i: number) => enrichPlan(p, i));
-
-        return [...enrichedPlans, STATIC_LIFETIME_PLAN];
+        return enrichedPlans;
     } catch (error: any) {
         console.error("Error fetching plans:", error);
-        return [STATIC_LIFETIME_PLAN];
+        return [];
     }
 };

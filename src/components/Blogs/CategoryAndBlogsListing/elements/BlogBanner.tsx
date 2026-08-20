@@ -27,7 +27,7 @@ const BlogBanner = () => {
 
                     {/* Summary text */}
                     <p className='text-slate-500 text-xs md:text-sm 2xl:text-base max-w-3xl leading-relaxed font-medium'>
-                        Skilldeck is a leading marketing automation and plug-and-play platform for training companies, offering zero tech headache and a global presence.
+                        Skilldeck is a leading marketing automation and plug-and-play platform for training institutes, offering zero tech headache and a global presence.
                     </p>
 
                     {/* Breadcrumbs */}
