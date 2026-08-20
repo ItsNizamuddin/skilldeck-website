@@ -4,7 +4,7 @@ This is a Next.js project representing the Skilldeck website frontend, designed 
 
 ## Getting Started
 
-### Prerequisites
+## Prerequisites
 
 Ensure you have Node.js installed (v18+).
 
