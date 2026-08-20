@@ -83,6 +83,12 @@ export default async function Page() {
         }
     ];
 
+    const validPrices = plans
+        .map(p => Number(p.discountedPrice ?? p.price ?? 0))
+        .filter(price => price > 0);
+    const lowPrice = validPrices.length > 0 ? Math.min(...validPrices) : 0;
+    const highPrice = validPrices.length > 0 ? Math.max(...validPrices) : 0;
+
     const softwareAppSchema = {
         "@context": "https://schema.org",
         "@type": "SoftwareApplication",
@@ -96,17 +102,26 @@ export default async function Page() {
         "publisher": {
             "@id": "https://skilldeck.net/#organization"
         },
-        "offers": plans && plans.length > 0 ? plans.map(plan => ({
-            "@type": "Offer",
-            "name": plan.name,
-            "price": String(plan.discountedPrice ?? plan.price ?? 0),
-            "priceCurrency": plan.currency || "INR",
-            "url": "https://skilldeck.net/pricing"
-        })) : {
-            "@type": "Offer",
-            "price": "0",
+        "offers": {
+            "@type": "AggregateOffer",
+            "lowPrice": String(lowPrice),
+            "highPrice": String(highPrice),
             "priceCurrency": "INR",
-            "url": "https://skilldeck.net/pricing"
+            "offerCount": String(plans.length || 1),
+            "offers": plans && plans.length > 0 ? plans.map(plan => ({
+                "@type": "Offer",
+                "name": plan.name,
+                "price": String(plan.discountedPrice ?? plan.price ?? 0),
+                "priceCurrency": plan.currency || "INR",
+                "url": "https://skilldeck.net/pricing"
+            })) : [
+                {
+                    "@type": "Offer",
+                    "price": "0",
+                    "priceCurrency": "INR",
+                    "url": "https://skilldeck.net/pricing"
+                }
+            ]
         },
         "aggregateRating": {
             "@type": "AggregateRating",
@@ -114,22 +129,7 @@ export default async function Page() {
             "reviewCount": "1250",
             "bestRating": "5",
             "worstRating": "1"
-        },
-        "review": [
-            {
-                "@type": "Review",
-                "author": {
-                    "@type": "Person",
-                    "name": "Ananya Sharma"
-                },
-                "reviewRating": {
-                    "@type": "Rating",
-                    "ratingValue": "5",
-                    "bestRating": "5"
-                },
-                "reviewBody": "SkillDeck has completely transformed how we manage our training institute. The automation is seamless and saved us hundreds of hours."
-            }
-        ]
+        }
     };
 
     const faqSchema = {
