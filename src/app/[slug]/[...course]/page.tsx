@@ -238,16 +238,27 @@ export default async function CoursePage({
         "itemListElement": itemListElement
     };
 
-    const schemas = [courseSchema, productSchema, breadcrumbSchema];
-    if (faqSchema) schemas.push(faqSchema);
-
     return (
         <SchedulesProvider slug={courseSlug}>
             <div className="flex flex-col min-h-screen">
                 <script
                     type="application/ld+json"
-                    dangerouslySetInnerHTML={{ __html: JSON.stringify(schemas) }}
+                    dangerouslySetInnerHTML={{ __html: JSON.stringify(courseSchema) }}
                 />
+                <script
+                    type="application/ld+json"
+                    dangerouslySetInnerHTML={{ __html: JSON.stringify(productSchema) }}
+                />
+                <script
+                    type="application/ld+json"
+                    dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+                />
+                {faqSchema && (
+                    <script
+                        type="application/ld+json"
+                        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+                    />
+                )}
                 <MainNav />
                 <main className="flex-1 bg-white">
                     <CourseHero

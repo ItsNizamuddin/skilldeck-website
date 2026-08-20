@@ -122,46 +122,46 @@ export default async function ServicePage({ params }: { params: Promise<ServiceP
     }
 
     // JSON-LD Schemas
-    const schemas = [
-        {
-            "@context": "https://schema.org",
-            "@type": "Service",
-            "name": service.name,
-            "description": service.metaDescription || service.name,
-            "provider": {
-                "@type": "Organization",
-                "name": "SkillDeck",
-                "sameAs": "https://www.skilldeck.net"
-            }
-        },
-        {
-            "@context": "https://schema.org",
-            "@type": "BreadcrumbList",
-            "itemListElement": [
-                {
-                    "@type": "ListItem",
-                    "position": 1,
-                    "name": "Home",
-                    "item": siteUrl
-                },
-                {
-                    "@type": "ListItem",
-                    "position": 2,
-                    "name": "Services",
-                    "item": `${siteUrl}/services`
-                },
-                {
-                    "@type": "ListItem",
-                    "position": 3,
-                    "name": service.name,
-                    "item": pageUrl
-                }
-            ]
+    const serviceSchema = {
+        "@context": "https://schema.org",
+        "@type": "Service",
+        "name": service.name,
+        "description": service.metaDescription || service.name,
+        "provider": {
+            "@type": "Organization",
+            "name": "SkillDeck",
+            "sameAs": "https://www.skilldeck.net"
         }
-    ];
+    };
 
+    const breadcrumbSchema = {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            {
+                "@type": "ListItem",
+                "position": 1,
+                "name": "Home",
+                "item": siteUrl
+            },
+            {
+                "@type": "ListItem",
+                "position": 2,
+                "name": "Services",
+                "item": `${siteUrl}/services`
+            },
+            {
+                "@type": "ListItem",
+                "position": 3,
+                "name": service.name,
+                "item": pageUrl
+            }
+        ]
+    };
+
+    let serviceFaqSchema: any = null;
     if (service.faqs?.accordions && service.faqs.accordions.length > 0) {
-        schemas.push({
+        serviceFaqSchema = {
             "@context": "https://schema.org",
             "@type": "FAQPage",
             "name": `FAQ for ${service.name}`,
@@ -173,15 +173,25 @@ export default async function ServicePage({ params }: { params: Promise<ServiceP
                     "text": faq.description?.replace(/<[^>]*>?/gm, '')
                 }
             }))
-        } as any);
+        };
     }
 
     return (
         <div className="flex flex-col min-h-screen bg-slate-50/50">
             <script
                 type="application/ld+json"
-                dangerouslySetInnerHTML={{ __html: JSON.stringify(schemas) }}
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceSchema) }}
             />
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+            />
+            {serviceFaqSchema && (
+                <script
+                    type="application/ld+json"
+                    dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceFaqSchema) }}
+                />
+            )}
             <MainNav />
 
             <main className="flex-1">
