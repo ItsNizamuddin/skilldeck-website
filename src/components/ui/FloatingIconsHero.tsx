@@ -1,14 +1,8 @@
-"use client";
-
 import { Button } from "@/components/ui/Button";
 import { cn } from "@/lib/utils";
 import { ArrowRight } from "lucide-react";
 import * as React from "react";
-import dynamic from "next/dynamic";
-const FloatingIconsWrapper = dynamic(() => import("./FloatingIconsWrapper"), {
-    ssr: false,
-    loading: () => null,
-});
+import FloatingIconsWrapper from "./FloatingIconsWrapper";
 
 export interface FloatingIconsHeroProps {
     title: React.ReactNode;

@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
 import { Roboto } from "next/font/google";
 import "./globals.css";
-import "./sprites.css";
-import "./typo.css";
 
 const roboto = Roboto({
   weight: ["400", "700"],
@@ -73,11 +71,8 @@ export default function RootLayout({
       <head>
         <link rel="icon" href="/favicon.ico" sizes="any" />
         <link rel="icon" href="/logos/mainlogo.svg" type="image/svg+xml" />
-        <link rel="apple-touch-icon" href="/favicon.ico" />
-        <link rel="preconnect" href="https://api64.ipify.org" />
-        <link rel="preconnect" href="https://api.skilldeck.net" crossOrigin="" />
         <link rel="dns-prefetch" href="https://api.skilldeck.net" />
-        <link rel="preconnect" href="https://www.gstatic.com" crossOrigin="" />
+        <link rel="dns-prefetch" href="https://api64.ipify.org" />
         <script
           dangerouslySetInnerHTML={{
             __html: `if('scrollRestoration' in history){history.scrollRestoration='manual';}`

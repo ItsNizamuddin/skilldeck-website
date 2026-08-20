@@ -202,22 +202,9 @@ export default function TopPartnersSection({ courseSlug }: TopPartnersSectionPro
         return classes[index % classes.length];
     };
 
-    if (loading && partnersData.length === 0) {
-        return (
-            <div className="w-full py-8 space-y-6">
-                <div className="h-8 w-48 bg-slate-100 rounded animate-pulse" />
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-                    {[1, 2, 3, 4].map((n) => (
-                        <div key={n} className="h-64 bg-slate-50 border border-slate-100 rounded-3xl animate-pulse" />
-                    ))}
-                </div>
-            </div>
-        );
-    }
-
     return (
         <div className="w-full space-y-8 py-6" id="training-partners">
-            {/* Header section */}
+            {/* Header section — always rendered statically to prevent CLS layout shift */}
             <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
                 <div className="space-y-2">
                     <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[9px] font-black tracking-wider uppercase bg-purple-50 border border-purple-100 text-[#5544CC]">
@@ -230,93 +217,95 @@ export default function TopPartnersSection({ courseSlug }: TopPartnersSectionPro
                         Compare top training providers and choose the best one for your learning journey.
                     </p>
                 </div>
-                {/* {schedules && schedules.length > 0 && partnersData.length > 4 && (
-                    <button
-                        onClick={handleScrollToSchedules}
-                        className="text-xs font-bold text-[#5544CC] hover:underline inline-flex items-center gap-1 cursor-pointer"
-                    >
-                        View All Batches <ArrowRight className="w-3.5 h-3.5" />
-                    </button>
-                )} */}
             </div>
 
-            {/* Desktop View: Grid */}
-            <div className="hidden md:grid md:grid-cols-4 gap-6">
-                {partnersData.slice(0, 4).map((partner, index) => (
-                    <PartnerCompanyCard
-                        key={partner.id}
-                        partner={partner}
-                        index={index}
-                        isCompared={compareList.includes(partner.id)}
-                        onCompareToggle={handleCompareToggle}
-                        onScrollToSchedules={handleScrollToSchedules}
-                        rankColorClass={getRankColorClass(index)}
-                        borderHoverClass={getBorderHoverClass(index)}
-                    />
-                ))}
-            </div>
-
-            {/* Mobile View: Single card with Next/Prev navigation */}
-            {partnersData.length > 0 && (
-                <div className="block md:hidden space-y-4">
-                    <div className="transition-all duration-300">
-                        {partnersData.slice(0, 4).map((partner, index) => {
-                            if (index !== mobileIndex) return null;
-                            return (
-                                <PartnerCompanyCard
-                                    key={partner.id}
-                                    partner={partner}
-                                    index={index}
-                                    isCompared={compareList.includes(partner.id)}
-                                    onCompareToggle={handleCompareToggle}
-                                    onScrollToSchedules={handleScrollToSchedules}
-                                    rankColorClass={getRankColorClass(index)}
-                                    borderHoverClass={getBorderHoverClass(index)}
-                                />
-                            );
-                        })}
-                    </div>
-
-                    {/* Carousel navigation controls */}
-                    <div className="flex items-center justify-between px-2 pt-2 bg-slate-50/50 rounded-2xl border border-slate-100 p-3">
-                        <button
-                            type="button"
-                            disabled={mobileIndex === 0}
-                            onClick={() => setMobileIndex(prev => Math.max(0, prev - 1))}
-                            className="flex items-center justify-center w-9 h-9 rounded-xl border border-slate-200 bg-white text-slate-600 disabled:opacity-40 disabled:cursor-not-allowed active:scale-95 transition-all"
-                            aria-label="Previous provider"
-                        >
-                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7" />
-                            </svg>
-                        </button>
-
-                        {/* Bullet indicators */}
-                        <div className="flex items-center gap-1.5">
-                            {partnersData.slice(0, 4).map((_, index) => (
-                                <button
-                                    key={index}
-                                    onClick={() => setMobileIndex(index)}
-                                    className={`w-2 h-2 rounded-full transition-all duration-300 ${index === mobileIndex ? "bg-[#5544CC] w-5" : "bg-slate-300"
-                                        }`}
-                                    aria-label={`Go to slide ${index + 1}`}
-                                />
-                            ))}
-                        </div>
-
-                        <button
-                            type="button"
-                            disabled={mobileIndex === Math.min(partnersData.length, 4) - 1}
-                            onClick={() => setMobileIndex(prev => Math.min(Math.min(partnersData.length, 4) - 1, prev + 1))}
-                            className="flex items-center justify-center w-9 h-9 rounded-xl border border-slate-200 bg-white text-slate-600 disabled:opacity-40 disabled:cursor-not-allowed active:scale-95 transition-all"
-                            aria-label="Next provider"
-                        >
-                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
-                            </svg>
-                        </button>
-                    </div>
+            {loading && partnersData.length === 0 ? (
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+                    {[1, 2, 3, 4].map((n) => (
+                        <div key={n} className="h-64 bg-slate-50 border border-slate-100 rounded-3xl animate-pulse" />
+                    ))}
                 </div>
+            ) : (
+                <>
+                    {/* Desktop View: Grid */}
+                    <div className="hidden md:grid md:grid-cols-4 gap-6">
+                        {partnersData.slice(0, 4).map((partner, index) => (
+                            <PartnerCompanyCard
+                                key={partner.id}
+                                partner={partner}
+                                index={index}
+                                isCompared={compareList.includes(partner.id)}
+                                onCompareToggle={handleCompareToggle}
+                                onScrollToSchedules={handleScrollToSchedules}
+                                rankColorClass={getRankColorClass(index)}
+                                borderHoverClass={getBorderHoverClass(index)}
+                            />
+                        ))}
+                    </div>
+
+                    {/* Mobile View: Single card with Next/Prev navigation */}
+                    {partnersData.length > 0 && (
+                        <div className="block md:hidden space-y-4">
+                            <div className="transition-all duration-300">
+                                {partnersData.slice(0, 4).map((partner, index) => {
+                                    if (index !== mobileIndex) return null;
+                                    return (
+                                        <PartnerCompanyCard
+                                            key={partner.id}
+                                            partner={partner}
+                                            index={index}
+                                            isCompared={compareList.includes(partner.id)}
+                                            onCompareToggle={handleCompareToggle}
+                                            onScrollToSchedules={handleScrollToSchedules}
+                                            rankColorClass={getRankColorClass(index)}
+                                            borderHoverClass={getBorderHoverClass(index)}
+                                        />
+                                    );
+                                })}
+                            </div>
+
+                            {/* Carousel navigation controls */}
+                            <div className="flex items-center justify-between px-2 pt-2 bg-slate-50/50 rounded-2xl border border-slate-100 p-3">
+                                <button
+                                    type="button"
+                                    disabled={mobileIndex === 0}
+                                    onClick={() => setMobileIndex(prev => Math.max(0, prev - 1))}
+                                    className="flex items-center justify-center w-9 h-9 rounded-xl border border-slate-200 bg-white text-slate-600 disabled:opacity-40 disabled:cursor-not-allowed active:scale-95 transition-all"
+                                    aria-label="Previous provider"
+                                >
+                                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7" />
+                                    </svg>
+                                </button>
+
+                                {/* Bullet indicators */}
+                                <div className="flex items-center gap-1.5">
+                                    {partnersData.slice(0, 4).map((_, index) => (
+                                        <button
+                                            key={index}
+                                            onClick={() => setMobileIndex(index)}
+                                            className={`w-2 h-2 rounded-full transition-all duration-300 ${index === mobileIndex ? "bg-[#5544CC] w-5" : "bg-slate-300"
+                                                }`}
+                                            aria-label={`Go to slide ${index + 1}`}
+                                        />
+                                    ))}
+                                </div>
+
+                                <button
+                                    type="button"
+                                    disabled={mobileIndex === Math.min(partnersData.length, 4) - 1}
+                                    onClick={() => setMobileIndex(prev => Math.min(Math.min(partnersData.length, 4) - 1, prev + 1))}
+                                    className="flex items-center justify-center w-9 h-9 rounded-xl border border-slate-200 bg-white text-slate-600 disabled:opacity-40 disabled:cursor-not-allowed active:scale-95 transition-all"
+                                    aria-label="Next provider"
+                                >
+                                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                    )}
+                </>
             )}
 
             {/* Detailed Schedules Section */}

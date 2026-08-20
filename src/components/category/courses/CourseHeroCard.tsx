@@ -23,16 +23,16 @@ export default function CourseHeroCard({
     reviewCount = 1284,
     onCallbackClick,
 }: CourseHeroCardProps) {
-    const [isMounted, setIsMounted] = useState(false);
+    const [sessionCurrency, setSessionCurrency] = useState<string>("USD");
 
     useEffect(() => {
-        setIsMounted(true);
+        if (typeof window !== "undefined") {
+            const stored = sessionStorage.getItem("currency");
+            if (stored) setSessionCurrency(stored);
+        }
     }, []);
 
     if (!schedule) return null;
-
-    // Pricing matching session storage currency
-    const sessionCurrency = (isMounted && typeof window !== "undefined" ? sessionStorage.getItem("currency") : null) || "USD";
 
     // Find pricing matching sessionCurrency, or USD pricing, or first pricing
     const pricing = schedule.pricing?.find(
@@ -48,10 +48,6 @@ export default function CourseHeroCard({
     const discountPct = hasDiscount
         ? Math.round(((marketPrice - sellingPrice) / marketPrice) * 100)
         : 0;
-
-    if (!isMounted) {
-        return <CourseCardSkeleton />;
-    }
 
     return (
         <div className="bg-white rounded-2xl p-4 space-y-2">
@@ -100,8 +96,7 @@ export default function CourseHeroCard({
                         width={352}
                         height={188}
                         className="w-full h-auto object-cover max-h-[188px] rounded-lg"
-                        priority
-                        fetchPriority="high"
+                        loading="eager"
                     />
                 </div>
             )}
@@ -115,54 +110,41 @@ export default function CourseHeroCard({
                     <div>
                         <div className="text-[10px] text-gray-400 font-medium">Start date</div>
                         <div className="text-xs font-semibold text-[#0F172A]">
-                            {!isMounted ? (
-                                <span className="h-3 w-16 bg-slate-100 rounded animate-pulse inline-block" />
-                            ) : (
-                                (schedule as any).isFlexibleSchedule ? (
-                                    (schedule as any).commencementDate ? (
-                                        formatDate((schedule as any).commencementDate)
-                                    ) : (
-                                        "Flexible Dates / Students Choice"
-                                    )
+                            {(schedule as any).isFlexibleSchedule ? (
+                                (schedule as any).commencementDate ? (
+                                    formatDate((schedule as any).commencementDate)
                                 ) : (
-                                    formatDate(schedule.startsAt)
+                                    "Flexible Dates / Students Choice"
                                 )
+                            ) : (
+                                formatDate(schedule.startsAt)
                             )}
                         </div>
                     </div>
                 </div>
                 <div className="w-0.5 h-8 bg-slate-200" />
                 <div>
-                    {!isMounted ? (
-                        <div className="space-y-1.5 pt-1.5">
-                            <div className="h-3 w-16 bg-slate-100 rounded animate-pulse" />
-                            <div className="h-5 w-24 bg-slate-200 rounded animate-pulse" />
+                    <div className="flex items-center gap-1.5 mb-0.5">
+                        <span className="text-[10px] text-gray-400 font-medium">Programme fee</span>
+                        {hasDiscount && (
+                            <span className="text-[9px] font-bold text-emerald-600 bg-emerald-50 border border-emerald-100 px-1.5 py-0.5 rounded-full">
+                                Save {discountPct}%
+                            </span>
+                        )}
+                    </div>
+                    {sellingPrice > 0 ? (
+                        <div className="flex items-baseline gap-1.5 flex-wrap">
+                            <span className="text-sm font-bold text-[#0F172A]">
+                                {formatPrice(sellingPrice, symbol)}
+                            </span>
+                            {hasDiscount && (
+                                <span className="text-xs text-gray-400 line-through">
+                                    {formatPrice(marketPrice, symbol)}
+                                </span>
+                            )}
                         </div>
                     ) : (
-                        <>
-                            <div className="flex items-center gap-1.5 mb-0.5">
-                                <span className="text-[10px] text-gray-400 font-medium">Programme fee</span>
-                                {hasDiscount && (
-                                    <span className="text-[9px] font-bold text-emerald-600 bg-emerald-50 border border-emerald-100 px-1.5 py-0.5 rounded-full">
-                                        Save {discountPct}%
-                                    </span>
-                                )}
-                            </div>
-                            {sellingPrice > 0 ? (
-                                <div className="flex items-baseline gap-1.5 flex-wrap">
-                                    <span className="text-sm font-bold text-[#0F172A]">
-                                        {formatPrice(sellingPrice, symbol)}
-                                    </span>
-                                    {hasDiscount && (
-                                        <span className="text-xs text-gray-400 line-through">
-                                            {formatPrice(marketPrice, symbol)}
-                                        </span>
-                                    )}
-                                </div>
-                            ) : (
-                                <span className="text-sm font-bold text-gray-400">Contact for fee</span>
-                            )}
-                        </>
+                        <span className="text-sm font-bold text-gray-400">Contact for fee</span>
                     )}
                 </div>
             </div>
