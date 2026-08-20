@@ -47,7 +47,10 @@ export default function RootLayout({
     "@id": "https://skilldeck.net/#website",
     "name": "SkillDeck",
     "alternateName": ["Skilldeck", "SkillDeck SaaS", "skilldeck.net"],
-    "url": "https://skilldeck.net/"
+    "url": "https://skilldeck.net/",
+    "publisher": {
+      "@id": "https://skilldeck.net/#organization"
+    }
   };
 
   const orgSchema = {
@@ -56,7 +59,10 @@ export default function RootLayout({
     "@id": "https://skilldeck.net/#organization",
     "name": "SkillDeck",
     "url": "https://skilldeck.net",
-    "logo": "https://skilldeck.net/logos/mainlogo.svg",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://skilldeck.net/logos/mainlogo.svg"
+    },
     "sameAs": [
       "https://www.linkedin.com/company/skilldeck-software/",
     ]
