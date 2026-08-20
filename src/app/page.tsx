@@ -26,7 +26,7 @@ export const metadata: Metadata = {
 export const revalidate = 3600;
 
 export default async function Page() {
-    const plans = await fetchPlans("USD");
+    const plans = await fetchPlans("INR");
 
     const HOME_FAQS = [
         {
@@ -83,83 +83,70 @@ export default async function Page() {
         }
     ];
 
-    const organizationSchema = {
+    const softwareAppSchema = {
         "@context": "https://schema.org",
-        "@type": "Organization",
-        "@id": "https://skilldeck.net/#organization",
+        "@type": "SoftwareApplication",
+        "@id": "https://skilldeck.net/#software",
         "name": "SkillDeck",
+        "applicationCategory": "BusinessApplication",
+        "operatingSystem": "Web-based, Cloud, All Operating Systems",
         "url": "https://skilldeck.net/",
-        "logo": {
-            "@type": "ImageObject",
-            "url": "https://skilldeck.net/logos/mainlogo.svg",
-            "width": 600,
-            "height": 60
-        },
         "image": "https://skilldeck.net/logos/mainlogo.svg",
-        "description": "World's 1st Fully Automated Plug & Play Platform For Training Institutes. Automate your marketing, sales, operations and various other functional departments.",
-        "address": {
-            "@type": "PostalAddress",
-            "streetAddress": "HSR Layout",
-            "addressLocality": "Bangalore",
-            "addressRegion": "Karnataka",
-            "postalCode": "560102",
-            "addressCountry": "IN"
+        "description": "World's 1st Fully Automated Plug & Play Platform For Training Institutes. Automate your marketing, sales, operations, LMS, CRM, websites, and business functional departments.",
+        "publisher": {
+            "@id": "https://skilldeck.net/#organization"
         },
-        "contactPoint": {
-            "@type": "ContactPoint",
-            "telephone": "+91-8296494941",
-            "contactType": "customer service",
-            "areaServed": "Global",
-            "availableLanguage": ["English", "Hindi", "Kannada", "Telugu"]
+        "offers": plans && plans.length > 0 ? plans.map(plan => ({
+            "@type": "Offer",
+            "name": plan.name,
+            "price": String(plan.discountedPrice ?? plan.price ?? 0),
+            "priceCurrency": plan.currency || "INR",
+            "url": "https://skilldeck.net/pricing"
+        })) : {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "INR",
+            "url": "https://skilldeck.net/pricing"
         },
-        "sameAs": [
-            "https://www.linkedin.com/company/skilldeck-software/",
-        ],
         "aggregateRating": {
             "@type": "AggregateRating",
-            "ratingValue": "5",
+            "ratingValue": "4.9",
             "reviewCount": "1250",
             "bestRating": "5",
             "worstRating": "1"
-        }
+        },
+        "review": [
+            {
+                "@type": "Review",
+                "author": {
+                    "@type": "Person",
+                    "name": "Ananya Sharma"
+                },
+                "reviewRating": {
+                    "@type": "Rating",
+                    "ratingValue": "5",
+                    "bestRating": "5"
+                },
+                "reviewBody": "SkillDeck has completely transformed how we manage our training institute. The automation is seamless and saved us hundreds of hours."
+            }
+        ]
     };
 
     const faqSchema = {
         "@context": "https://schema.org",
         "@type": "FAQPage",
+        "@id": "https://skilldeck.net/#faq",
         "mainEntity": HOME_FAQS.map(faq => ({
             "@type": "Question",
             "name": faq.title,
             "acceptedAnswer": {
                 "@type": "Answer",
-                "text": faq.value.replace(/<br\/>/g, " ")
+                "text": faq.value.replace(/<br\s*[\/]?>/gi, " ").replace(/<[^>]+>/g, "").trim()
             }
         }))
     };
 
-    const reviewSchema = {
-        "@context": "https://schema.org",
-        "@type": "Review",
-        "itemReviewed": {
-            "@type": "Organization",
-            "name": "SkillDeck"
-        },
-        "author": {
-            "@type": "Person",
-            "name": "Ananya Sharma"
-        },
-        "reviewRating": {
-            "@type": "Rating",
-            "ratingValue": "5"
-        },
-        "reviewBody": "SkillDeck has completely transformed how we manage our training institute. The automation is seamless and saved us hundreds of hours.",
-        "publisher": {
-            "@type": "Organization",
-            "name": "SkillDeck"
-        }
-    };
-
-    const combinedSchemas = [organizationSchema, faqSchema, reviewSchema];
+    const combinedSchemas = [softwareAppSchema, faqSchema];
 
     return (
         <>
