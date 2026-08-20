@@ -112,6 +112,12 @@ export default async function Page() {
         },
         "aggregateRating": {
             "@type": "AggregateRating",
+            "itemReviewed": {
+                "@type": "SoftwareApplication",
+                "name": "SkillDeck",
+                "applicationCategory": "BusinessApplication",
+                "operatingSystem": "Web-based, Cloud, All Operating Systems"
+            },
             "ratingValue": "4.9",
             "reviewCount": "1250",
             "bestRating": "5",
