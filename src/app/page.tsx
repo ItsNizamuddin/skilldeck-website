@@ -101,20 +101,14 @@ export default async function Page() {
         "publisher": {
             "@id": "https://skilldeck.net/#organization"
         },
-        "offers": {
-            "@type": "Offer",
-            "price": String(lowPrice || 5450),
-            "priceCurrency": "INR",
-            "url": "https://skilldeck.net/pricing"
-        },
-        "aggregateRating": {
-            "@type": "AggregateRating",
-            "ratingValue": "4.9",
-            "ratingCount": 1250,
-            "reviewCount": 1250,
-            "bestRating": "5",
-            "worstRating": "1"
-        }
+        ...(lowPrice > 0 && {
+            "offers": {
+                "@type": "Offer",
+                "price": lowPrice,
+                "priceCurrency": "INR",
+                "url": "https://skilldeck.net/pricing"
+            }
+        })
     };
 
     const faqSchema = {
