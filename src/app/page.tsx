@@ -131,13 +131,15 @@ export default async function Page() {
         }))
     };
 
-    const combinedSchemas = [softwareAppSchema, faqSchema];
-
     return (
         <>
             <script
                 type="application/ld+json"
-                dangerouslySetInnerHTML={{ __html: JSON.stringify(combinedSchemas) }}
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareAppSchema) }}
+            />
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
             />
             <MainNav />
 
