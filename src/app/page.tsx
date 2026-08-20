@@ -87,7 +87,6 @@ export default async function Page() {
         .map(p => Number(p.discountedPrice ?? p.price ?? 0))
         .filter(price => price > 0);
     const lowPrice = validPrices.length > 0 ? Math.min(...validPrices) : 0;
-    const highPrice = validPrices.length > 0 ? Math.max(...validPrices) : 0;
 
     const softwareAppSchema = {
         "@context": "https://schema.org",
@@ -95,7 +94,7 @@ export default async function Page() {
         "@id": "https://skilldeck.net/#software",
         "name": "SkillDeck",
         "applicationCategory": "BusinessApplication",
-        "operatingSystem": "Web-based, Cloud, All Operating Systems",
+        "operatingSystem": "All",
         "url": "https://skilldeck.net/",
         "image": "https://skilldeck.net/logos/mainlogo.svg",
         "description": "World's 1st Fully Automated Plug & Play Platform For Training Institutes. Automate your marketing, sales, operations, LMS, CRM, websites, and business functional departments.",
@@ -103,23 +102,16 @@ export default async function Page() {
             "@id": "https://skilldeck.net/#organization"
         },
         "offers": {
-            "@type": "AggregateOffer",
-            "lowPrice": String(lowPrice),
-            "highPrice": String(highPrice),
+            "@type": "Offer",
+            "price": String(lowPrice || 5450),
             "priceCurrency": "INR",
-            "offerCount": String(plans.length || 1),
             "url": "https://skilldeck.net/pricing"
         },
         "aggregateRating": {
             "@type": "AggregateRating",
-            "itemReviewed": {
-                "@type": "SoftwareApplication",
-                "name": "SkillDeck",
-                "applicationCategory": "BusinessApplication",
-                "operatingSystem": "Web-based, Cloud, All Operating Systems"
-            },
             "ratingValue": "4.9",
-            "reviewCount": "1250",
+            "ratingCount": 1250,
+            "reviewCount": 1250,
             "bestRating": "5",
             "worstRating": "1"
         }
