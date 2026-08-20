@@ -1,5 +1,7 @@
 @import "tailwindcss";
-/* comment */
+@import "./typo.css";
+@import "./sprites.css";
+
 :root {
   --background: #ffffff;
   --foreground: #171717;
