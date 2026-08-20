@@ -108,20 +108,7 @@ export default async function Page() {
             "highPrice": String(highPrice),
             "priceCurrency": "INR",
             "offerCount": String(plans.length || 1),
-            "offers": plans && plans.length > 0 ? plans.map(plan => ({
-                "@type": "Offer",
-                "name": plan.name,
-                "price": String(plan.discountedPrice ?? plan.price ?? 0),
-                "priceCurrency": plan.currency || "INR",
-                "url": "https://skilldeck.net/pricing"
-            })) : [
-                {
-                    "@type": "Offer",
-                    "price": "0",
-                    "priceCurrency": "INR",
-                    "url": "https://skilldeck.net/pricing"
-                }
-            ]
+            "url": "https://skilldeck.net/pricing"
         },
         "aggregateRating": {
             "@type": "AggregateRating",
