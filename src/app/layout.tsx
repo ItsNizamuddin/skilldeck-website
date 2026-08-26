@@ -47,7 +47,10 @@ export default function RootLayout({
     "@id": "https://skilldeck.net/#website",
     "name": "SkillDeck",
     "alternateName": ["Skilldeck", "SkillDeck SaaS", "skilldeck.net"],
-    "url": "https://skilldeck.net/"
+    "url": "https://skilldeck.net/",
+    "publisher": {
+      "@id": "https://skilldeck.net/#organization"
+    }
   };
 
   const orgSchema = {
@@ -56,7 +59,10 @@ export default function RootLayout({
     "@id": "https://skilldeck.net/#organization",
     "name": "SkillDeck",
     "url": "https://skilldeck.net",
-    "logo": "https://skilldeck.net/logos/mainlogo.svg",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://skilldeck.net/logos/mainlogo.svg"
+    },
     "sameAs": [
       "https://www.linkedin.com/company/skilldeck-software/",
     ]
@@ -80,7 +86,11 @@ export default function RootLayout({
         />
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify([webSiteSchema, orgSchema]) }}
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(webSiteSchema) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(orgSchema) }}
         />
       </head>
       <body className="min-h-full flex flex-col" suppressHydrationWarning>

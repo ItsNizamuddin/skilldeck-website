@@ -1,5 +1,4 @@
 import { PricingPlan } from "@/lib/plans";
-import React from "react";
 import dynamic from 'next/dynamic';
 import FAQ from "../shared/FAQ";
 import BuiltForTrainers from "./elements/BuiltForTrainers";
