@@ -13,6 +13,7 @@ import Ui2BottomContent from "./Ui2BottomContent";
 import Ui2ChapterDots, { Ui2ChapterItem } from "./Ui2ChapterDots";
 import Ui2MobileCta from "./Ui2MobileCta";
 import { webchatServiceData } from "@/components/demo-ui/data";
+import DemoHero from "../demo-ui/DemoHero";
 
 export default function Ui2Root() {
     const data = webchatServiceData;
@@ -38,7 +39,8 @@ export default function Ui2Root() {
 
     return (
         <>
-            <Ui2Hero data={data} />
+            {/* <Ui2Hero data={data} /> */}
+            <DemoHero data={data} />
             <Ui2Impact stats={data.servicestats} />
             <Ui2ChapterDots items={chapters} />
 

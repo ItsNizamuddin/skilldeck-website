@@ -1,10 +1,10 @@
 import { Briefcase, CreditCard, Users, Wrench } from "lucide-react";
 import Image from "next/image";
 import HdGradientText from "./HdGradientText";
-import disappointingResultsImage from "../../../public/heroSection/resultsremaindisappointing.png";
-import wastedBudgetImage from "../../../public/heroSection/wastedbudget.png";
-import risingCostsImage from "../../../public/heroSection/risingcosts.png";
-import lostRevenueImage from "../../../public/heroSection/lostrevenue.png";
+import disappointingResultsImage from "../../../public/home-demo/resultsremaindisappointing.png";
+import wastedBudgetImage from "../../../public/home-demo/wastedbudget.png";
+import risingCostsImage from "../../../public/home-demo/risingcosts.png";
+import lostRevenueImage from "../../../public/home-demo/lostrevenue.png";
 
 const costItems = [
     {
