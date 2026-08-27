@@ -36,7 +36,7 @@ export default function PartnerAdvertiseWidget({ showAd, onClose }: PartnerAdver
             <div
                 className="border border-purple-900/40 rounded-2xl p-2.5 flex flex-col gap-2 relative overflow-hidden min-h-[100px]"
                 style={{
-                    backgroundImage: `url('/heroSection/feature-your-ad.png'), linear-gradient(135deg, #1a1245 0%, #110d35 100%)`,
+                    backgroundImage: `url('/heroSection/feature-your-ad.webp'), linear-gradient(135deg, #1a1245 0%, #110d35 100%)`,
                     backgroundSize: '90px, cover',
                     backgroundPosition: 'right 8px center, center',
                     backgroundRepeat: 'no-repeat, no-repeat',
@@ -65,7 +65,7 @@ export default function PartnerAdvertiseWidget({ showAd, onClose }: PartnerAdver
             <div
                 className="border border-blue-900/40 rounded-2xl p-2.5 flex flex-col gap-2 relative overflow-hidden min-h-[100px]"
                 style={{
-                    backgroundImage: `url('/heroSection/list-your-course.png'), linear-gradient(135deg, #0d1e3a 0%, #091529 100%)`,
+                    backgroundImage: `url('/heroSection/list-your-course.webp'), linear-gradient(135deg, #0d1e3a 0%, #091529 100%)`,
                     backgroundSize: '90px, cover',
                     backgroundPosition: 'right 8px center, center',
                     backgroundRepeat: 'no-repeat, no-repeat',

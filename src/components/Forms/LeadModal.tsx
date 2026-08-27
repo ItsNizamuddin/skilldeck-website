@@ -3,7 +3,7 @@
 import { MailIcon, PhoneCall, Sparkles, X } from 'lucide-react';
 import Image from 'next/image';
 import { useEffect } from 'react';
-import img from '../../../public/heroSection/woman_laptop.png';
+import img from '../../../public/heroSection/woman_laptop.webp';
 import InteractiveDotBackground from '../ui/InteractiveDotBackground';
 import GenericForm from './GenericForm';
 import { useLeadModal } from './LeadModalContext';

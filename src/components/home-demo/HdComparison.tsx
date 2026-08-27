@@ -2,8 +2,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, Check, Rocket, X } from "lucide-react";
 import HdGradientText from "./HdGradientText";
-import withoutImage from "../../../public/home-demo/without-skilldeck.png";
-import withImage from "../../../public/home-demo/with-skilldeck.png";
+import withoutImage from "../../../public/home-demo/without-skilldeck.webp";
+import withImage from "../../../public/home-demo/with-skilldeck.webp";
 
 const withoutSkilldeck = [
     "10+ different software subscriptions",

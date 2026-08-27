@@ -136,6 +136,7 @@ const Body = ({ singleArticle }: any) => {
                                 <Image
                                     src={typeof author.photo === 'string' ? author.photo : author.photo.src || defaultImg}
                                     fill
+                                    sizes="32px"
                                     className="object-cover"
                                     alt={author.name}
                                 />

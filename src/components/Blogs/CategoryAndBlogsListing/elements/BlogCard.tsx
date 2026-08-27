@@ -116,6 +116,7 @@ const BlogCard: React.FC<BlogCardProps> = ({ blog, priority = false }) => {
                             <Image
                                 src={author.photo}
                                 fill
+                                sizes="24px"
                                 className="rounded-full object-cover border border-slate-100 shadow-sm"
                                 alt={author.name}
                             />

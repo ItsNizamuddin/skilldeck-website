@@ -5,7 +5,7 @@ import { X, Sparkles, Zap, ShieldCheck, ArrowRight, ArrowLeft, CheckCircle2, Bui
 import InteractiveDotBackground from "@/components/ui/InteractiveDotBackground";
 import GenericForm from "@/components/Forms/GenericForm";
 import Image from "next/image";
-import img from "../../../../public/heroSection/woman_laptop.png";
+import img from "../../../../public/heroSection/woman_laptop.webp";
 
 interface LifetimeModalProps {
     isOpen: boolean;
