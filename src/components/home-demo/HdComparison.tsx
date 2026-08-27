@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, Check, Rocket, Sparkles, X } from "lucide-react";
+import { ArrowRight, Check, Rocket, X } from "lucide-react";
 import HdGradientText from "./HdGradientText";
 import withoutImage from "../../../public/home-demo/without-skilldeck.png";
 import withImage from "../../../public/home-demo/with-skilldeck.png";
@@ -25,7 +25,7 @@ const withSkilldeck = [
 
 export default function HdComparison() {
     return (
-        <section className="py-16 md:py-24 bg-slate-50">
+        <section className="section-y bg-slate-50">
             <div className="container mx-auto px-4 lg:px-0">
                 <div className="text-center max-w-2xl mx-auto mb-12">
                     <span className="badge-brand mb-5">Before &amp; After</span>
@@ -38,74 +38,81 @@ export default function HdComparison() {
                     </p>
                 </div>
 
-                <div className="relative max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 rounded-[28px] overflow-hidden bg-white border border-slate-200 shadow-xl shadow-slate-900/5">
+                <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-6">
                     {/* Without */}
-                    <div className="p-6 md:p-8 lg:p-10 bg-[linear-gradient(150deg,#fdf2f3_0%,#ffffff_62%)] border-b md:border-b-0 md:border-r border-slate-200">
-                        <div className="flex items-center gap-3 mb-6">
-                            <span className="w-11 h-11 rounded-2xl bg-red-50 border border-red-100 flex items-center justify-center shrink-0">
+                    <div className="flex flex-col rounded-3xl overflow-hidden bg-white border border-slate-200 shadow-lg shadow-slate-900/5">
+                        <div className="flex items-center gap-3.5 p-6 md:p-7">
+                            <span className="w-11 h-11 rounded-full bg-red-50 border border-red-100 flex items-center justify-center shrink-0">
                                 <X className="w-5 h-5 text-red-500" strokeWidth={3} aria-hidden="true" />
                             </span>
-                            <h3 className="heading-card">Without Skilldeck</h3>
+                            <div>
+                                <h3 className="heading-card">Without Skilldeck</h3>
+                                <p className="text-xs 2xl:text-sm text-brand-muted mt-0.5">
+                                    Complex. Disconnected. Costly.
+                                </p>
+                            </div>
                         </div>
 
-                        <div className="grid grid-cols-1 sm:grid-cols-[minmax(0,0.8fr)_minmax(0,1fr)] gap-5 lg:gap-4 items-center">
-                            <Image
-                                src={withoutImage}
-                                alt="Overwhelmed training business owner juggling disconnected LMS, CRM, email, analytics and support tools"
-                                className="w-full max-w-[260px] sm:max-w-none mx-auto h-auto mix-blend-multiply"
-                                sizes="(max-width: 640px) 260px, (max-width: 1024px) 30vw, 280px"
-                                placeholder="blur"
-                            />
-                            <ul className="space-y-2.5">
-                                {withoutSkilldeck.map((item) => (
-                                    <li
-                                        key={item}
-                                        className="flex items-center gap-3 rounded-xl bg-white border border-red-100 px-3.5 py-2.5 text-sm 2xl:text-base text-brand-muted shadow-sm shadow-red-500/5"
-                                    >
-                                        <X className="w-4 h-4 text-red-400 shrink-0" strokeWidth={3} aria-hidden="true" />
-                                        {item}
-                                    </li>
-                                ))}
-                            </ul>
-                        </div>
+                        <div className="border-t border-slate-100" />
+
+                        <ul className="flex-1 p-6 md:p-7 space-y-2.5">
+                            {withoutSkilldeck.map((item) => (
+                                <li
+                                    key={item}
+                                    className="flex items-center gap-3 rounded-xl bg-white border border-red-100 px-3.5 py-2.5 text-sm 2xl:text-base text-brand-muted shadow-sm shadow-red-500/5"
+                                >
+                                    <X className="w-4 h-4 text-red-400 shrink-0" strokeWidth={3} aria-hidden="true" />
+                                    {item}
+                                </li>
+                            ))}
+                        </ul>
+
+                        <Image
+                            src={withoutImage}
+                            alt="Disconnected LMS, CRM, email and analytics tools scattered across a tangle of manual handoffs"
+                            className="w-full h-auto"
+                            sizes="(max-width: 768px) 100vw, 45vw"
+                            placeholder="blur"
+                        />
                     </div>
 
                     {/* With */}
-                    <div className="p-6 md:p-8 lg:p-10 bg-[linear-gradient(210deg,#f6f4ff_0%,#ffffff_62%)]">
-                        <div className="flex items-center gap-3 mb-6">
-                            <span className="w-11 h-11 rounded-2xl flex items-center justify-center shrink-0 bg-[linear-gradient(125deg,rgba(92,63,250,1)_0%,rgba(203,59,149,1)_48%,rgba(254,106,27,1)_100%)]">
-                                <Sparkles className="w-5 h-5 text-white" aria-hidden="true" />
+                    <div className="flex flex-col rounded-3xl overflow-hidden bg-white border border-slate-200 shadow-lg shadow-slate-900/5">
+                        <div className="flex items-center gap-3.5 p-6 md:p-7">
+                            <span className="w-11 h-11 rounded-full bg-brand-primary flex items-center justify-center shrink-0">
+                                <Check className="w-5 h-5 text-white" strokeWidth={3} aria-hidden="true" />
                             </span>
-                            <h3 className="heading-card">With Skilldeck</h3>
+                            <div>
+                                <h3 className="heading-card">With Skilldeck</h3>
+                                <p className="text-xs 2xl:text-sm text-brand-muted mt-0.5">
+                                    Simple. Unified. Profitable.
+                                </p>
+                            </div>
                         </div>
 
-                        <div className="grid grid-cols-1 sm:grid-cols-[minmax(0,1fr)_minmax(0,0.8fr)] gap-5 lg:gap-4 items-center">
-                            <ul className="space-y-2.5">
-                                {withSkilldeck.map((item) => (
-                                    <li
-                                        key={item}
-                                        className="flex items-center gap-3 rounded-xl bg-white border border-brand-primary/15 px-3.5 py-2.5 text-sm 2xl:text-base text-brand-muted shadow-sm shadow-brand-primary/5"
-                                    >
-                                        <span className="shrink-0 w-4.5 h-4.5 rounded-full bg-brand-primary flex items-center justify-center">
-                                            <Check className="w-3 h-3 text-white" strokeWidth={3.5} aria-hidden="true" />
-                                        </span>
-                                        {item}
-                                    </li>
-                                ))}
-                            </ul>
-                            <Image
-                                src={withImage}
-                                alt="Training business owner running everything from a single Skilldeck dashboard"
-                                className="w-full max-w-[260px] sm:max-w-none mx-auto h-auto mix-blend-multiply"
-                                sizes="(max-width: 640px) 260px, (max-width: 1024px) 30vw, 280px"
-                                placeholder="blur"
-                            />
-                        </div>
-                    </div>
+                        <div className="border-t border-slate-100" />
 
-                    {/* Center VS badge */}
-                    <div className="hidden md:flex absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-14 h-14 rounded-full bg-white border-4 border-slate-50 shadow-lg items-center justify-center z-20">
-                        <span className="text-xs font-black text-brand-dark tracking-tight">VS</span>
+                        <ul className="flex-1 p-6 md:p-7 space-y-2.5">
+                            {withSkilldeck.map((item) => (
+                                <li
+                                    key={item}
+                                    className="flex items-center gap-3 rounded-xl bg-white border border-brand-primary/15 px-3.5 py-2.5 text-sm 2xl:text-base text-brand-muted shadow-sm shadow-brand-primary/5"
+                                >
+                                    <span className="shrink-0 w-4.5 h-4.5 rounded-full bg-brand-primary flex items-center justify-center">
+                                        <Check className="w-3 h-3 text-white" strokeWidth={3.5} aria-hidden="true" />
+                                    </span>
+                                    {item}
+                                </li>
+                            ))}
+                        </ul>
+
+                        <Image
+                            src={withImage}
+                            alt="A single Skilldeck dashboard showing analytics, reporting and revenue in one place"
+                            className="w-full h-auto"
+                            sizes="(max-width: 768px) 100vw, 45vw"
+                            placeholder="blur"
+                        />
                     </div>
                 </div>
 

@@ -17,7 +17,7 @@ export default function ServiceWhyChooseUs({
     const title = whyservice.title || `Why optimize ${serviceName}?`;
 
     return (
-        <section id="why" className="scroll-mt-24 py-16 md:py-24">
+        <section id="why" className="scroll-mt-24 section-y">
             <div className="container mx-auto px-2 lg:px-0">
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16">
                     <div className="lg:col-span-5">

@@ -64,7 +64,7 @@ const outcomes = [
 
 export default function HdPayingFor() {
     return (
-        <section className="py-16 md:py-24 bg-slate-50">
+        <section className="section-y bg-slate-50">
             <div className="container mx-auto px-4 lg:px-0">
                 {/* Header — mirrors the Problem section's centred rhythm */}
                 <div className="text-center max-w-3xl mx-auto mb-12">

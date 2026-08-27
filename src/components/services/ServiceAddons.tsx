@@ -25,7 +25,7 @@ export default function ServiceAddons({ addons = {} }: ServiceAddonsProps) {
     if (cards.length === 0 && contentPoints.length === 0 && highlightPoints.length === 0) return null;
 
     return (
-        <section id="addons" className="scroll-mt-24 py-16 md:py-24 bg-brand-dark">
+        <section id="addons" className="scroll-mt-24 section-y bg-brand-dark">
             <div className="container mx-auto px-2 lg:px-0 space-y-12">
                 <ServiceSectionIntro
                     numeral="07"

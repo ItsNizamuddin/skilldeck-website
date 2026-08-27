@@ -106,7 +106,7 @@ export default function PricingSection({ onToggleNavbar, plans: initialPlans, sh
     };
 
     return (
-        <section className="py-10 pt-10 md:pt-24 bg-white" id="plans">
+        <section className="section-y bg-white" id="plans">
             <div className="container mx-auto px-2 lg:px-0">
                 {showHeading && (
                     <>

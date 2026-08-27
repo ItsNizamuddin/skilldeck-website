@@ -34,7 +34,7 @@ const stats = [
 
 export default function HdWhySkilldeck() {
     return (
-        <section className="relative overflow-hidden bg-[#05060f] py-16 md:py-24">
+        <section id="why-skilldeck" className="scroll-mt-24 relative overflow-hidden bg-[#05060f] section-y">
             <InteractiveDotBackground dotColor="#2a2f45" gap={20} />
             <div aria-hidden="true" className="absolute top-0 left-1/4 w-96 h-96 bg-brand-primary/10 rounded-full blur-3xl pointer-events-none" />
             <div aria-hidden="true" className="absolute bottom-0 right-1/4 w-80 h-80 bg-brand-secondary/10 rounded-full blur-3xl pointer-events-none" />

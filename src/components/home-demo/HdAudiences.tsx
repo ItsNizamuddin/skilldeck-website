@@ -30,7 +30,7 @@ const audiences = [
 
 export default function HdAudiences() {
     return (
-        <section className="py-16 md:py-24 bg-white" id="platform">
+        <section className="section-y bg-white" id="platform">
             <div className="container mx-auto px-4 lg:px-0">
                 <div className="text-center max-w-2xl mx-auto mb-12">
                     <span className="badge-brand mb-5">Not a Generic SaaS</span>

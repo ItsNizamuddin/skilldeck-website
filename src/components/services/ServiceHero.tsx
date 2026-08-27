@@ -74,7 +74,7 @@ export default function ServiceHero({
     };
 
     return (
-        <section id="overview" className="relative bg-white pt-24 md:pt-28 pb-10 lg:pt-32 lg:pb-6 overflow-hidden scroll-mt-20">
+        <section id="overview" className="relative bg-white pt-24 md:pt-28 lg:pt-32 pb-12 md:pb-16 2xl:pb-20 overflow-hidden scroll-mt-20">
             {/* Subtle right-side background tint, matching course hero language */}
             <div
                 aria-hidden="true"

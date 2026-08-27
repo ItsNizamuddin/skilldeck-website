@@ -21,7 +21,7 @@ export default function ServiceFaq({ faqs, serviceName }: ServiceFaqProps) {
     if (items.length === 0) return null;
 
     return (
-        <section id="faq" className="scroll-mt-24 py-16 md:py-24">
+        <section id="faq" className="scroll-mt-24 section-y">
             <div className="container mx-auto px-2 lg:px-0">
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16">
                     <div className="lg:col-span-4 space-y-6">

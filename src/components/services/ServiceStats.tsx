@@ -12,7 +12,7 @@ export default function ServiceStats({ stats = [] }: ServiceStatsProps) {
     if (items.length === 0) return null;
 
     return (
-        <section className="py-14 md:py-16 border-b border-slate-100">
+        <section className="section-y border-b border-slate-100">
             <div className="container mx-auto px-2 lg:px-0">
                 <div className="grid grid-cols-2 md:grid-cols-4 divide-x divide-y md:divide-y-0 divide-slate-100">
                     {items.map((stat, i) => (

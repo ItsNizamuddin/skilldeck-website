@@ -13,7 +13,7 @@ export default function ServiceBenefits({ benefits = {} }: ServiceBenefitsProps)
     if (points.length === 0) return null;
 
     return (
-        <section id="benefits" className="scroll-mt-24 py-16 md:py-24 bg-slate-50/70">
+        <section id="benefits" className="scroll-mt-24 section-y bg-slate-50/70">
             <div className="container mx-auto px-2 lg:px-0 space-y-10">
                 <ServiceSectionIntro
                     numeral="02"

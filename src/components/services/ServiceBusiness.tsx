@@ -14,7 +14,7 @@ export default function ServiceBusiness({ business = {} }: ServiceBusinessProps)
     if (points.length === 0 && stats.length === 0) return null;
 
     return (
-        <section id="expertise" className="scroll-mt-24 py-16 md:py-24 bg-slate-50/70">
+        <section id="expertise" className="scroll-mt-24 section-y bg-slate-50/70">
             <div className="container mx-auto px-2 lg:px-0 space-y-12">
                 <ServiceSectionIntro
                     numeral="06"

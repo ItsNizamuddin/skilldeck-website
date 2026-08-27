@@ -27,7 +27,7 @@ export default function ServiceStrategyComponent({ strategy = {} }: ServiceStrat
     const title = strategy.title || "Smart Strategies That Scale";
 
     return (
-        <section id="strategy" className="scroll-mt-24 py-16 md:py-24 bg-slate-50/70 relative overflow-hidden">
+        <section id="strategy" className="scroll-mt-24 section-y bg-slate-50/70 relative overflow-hidden">
             <div
                 aria-hidden="true"
                 className="absolute -top-32 -right-32 w-80 h-80 rounded-full blur-3xl opacity-10 pointer-events-none"

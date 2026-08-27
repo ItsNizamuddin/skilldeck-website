@@ -64,7 +64,7 @@ const modules = [
 
 export default function HdBentoFeatures() {
     return (
-        <section id="features" className="scroll-mt-24 py-16 md:py-24 bg-white">
+        <section id="features" className="scroll-mt-24 section-y bg-white">
             <div className="container mx-auto px-4 lg:px-0">
                 {/* Centered header — matches the rest of the site's section rhythm */}
                 <div className="text-center max-w-2xl mx-auto mb-12">

@@ -22,7 +22,7 @@ export default function ServiceApproach({ approach = {}, media }: ServiceApproac
     if (steps.length === 0 && kpiCategories.length === 0 && tools.length === 0) return null;
 
     return (
-        <section id="approach" className="scroll-mt-24 py-16 md:py-24">
+        <section id="approach" className="scroll-mt-24 section-y">
             <div className="container mx-auto px-2 lg:px-0 space-y-14">
                 <ServiceSectionIntro
                     numeral="03"
