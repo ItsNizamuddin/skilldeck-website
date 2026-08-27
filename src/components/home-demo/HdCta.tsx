@@ -21,7 +21,7 @@ export default function HdCta() {
     const { openModal } = useLeadModal();
 
     return (
-        <section className="py-16 md:py-24 bg-white">
+        <section className="section-y bg-white">
             <div className="container mx-auto px-4 lg:px-0">
                 <div className="relative overflow-hidden rounded-[32px] bg-[#05060f] px-6 py-14 md:px-16 md:py-20">
                     <div aria-hidden="true" className="absolute -top-24 -left-24 w-80 h-80 rounded-full bg-brand-primary/25 blur-[110px]" />
@@ -58,7 +58,7 @@ export default function HdCta() {
                             <Button
                                 onClick={() =>
                                     openModal({
-                                        source: "home-demo-cta",
+                                        source: "home-cta",
                                         formTitle: "Book a Demo with Skilldeck",
                                     })
                                 }

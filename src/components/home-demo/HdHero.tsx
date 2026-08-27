@@ -1,8 +1,8 @@
 "use client";
 
+import Link from "next/link";
 import { ArrowRight, Building2, Gauge, Users2 } from "lucide-react";
 import { Button } from "@/components/ui/Button";
-import { useLeadModal } from "@/components/Forms/LeadModalContext";
 import HdGradientText from "./HdGradientText";
 import HdToolsConverge from "./HdToolsConverge";
 
@@ -13,10 +13,8 @@ const trustStats = [
 ];
 
 export default function HdHero() {
-    const { openModal } = useLeadModal();
-
     return (
-        <section className="relative overflow-hidden bg-white pt-28 pb-16 md:pt-36 md:pb-24">
+        <section className="relative overflow-hidden bg-white pt-28 md:pt-36 pb-12 md:pb-16 2xl:pb-20">
             {/* Soft brand wash — light, not a dark slab */}
             <div aria-hidden="true" className="absolute inset-0 pointer-events-none">
                 <div className="absolute -top-40 -left-32 w-[30rem] h-[30rem] rounded-full bg-brand-primary/[0.07] blur-[110px]" />
@@ -35,38 +33,44 @@ export default function HdHero() {
                             <HdGradientText>Zero Chaos.</HdGradientText>
                         </h1>
 
-                        <p className="text-base md:text-lg text-brand-muted max-w-xl leading-relaxed mb-8">
+                        <p className="text-base md:text-lg text-brand-muted max-w-xl leading-relaxed mb-4">
                             90% of training institutes overspend on the wrong technology, bloated marketing teams,
-                            and fragmented tools.{" "}
+                            and fragmented tools.
+                        </p>
+
+                        <p className="text-base md:text-lg text-brand-muted max-w-xl leading-relaxed mb-8">
                             <span className="text-brand-dark font-semibold">Skilldeck replaces 10+ tools</span> with
                             one powerful platform — and runs your business at up to{" "}
                             <span className="text-brand-dark font-semibold">90% lower cost</span>.
                         </p>
 
-                        <div className="flex flex-wrap items-center gap-3 mb-10">
+                        {/* Full-width stacked on phones, side by side from sm up */}
+                        <div className="flex flex-col sm:flex-row sm:flex-wrap sm:items-center gap-3 mb-10">
                             <Button
-                                onClick={() =>
-                                    openModal({
-                                        source: "home-demo-hero",
-                                        formTitle: "Experience the Skilldeck Platform",
-                                    })
-                                }
+                                as={Link}
+                                href="/register"
                                 variant="primary"
                                 size="lg"
-                                className="rounded-xl font-bold"
+                                className="rounded-xl font-bold w-full sm:w-auto"
                             >
                                 Experience the Platform Free
                                 <ArrowRight className="w-4 h-4" />
                             </Button>
-                            <Button as="a" href="#features" variant="outline-primary" size="lg" className="rounded-xl">
+                            <Button
+                                as="a"
+                                href="#features"
+                                variant="outline-primary"
+                                size="lg"
+                                className="rounded-xl w-full sm:w-auto"
+                            >
                                 Explore Features
                             </Button>
                         </div>
 
                         {/* Trust stats */}
-                        <div className="flex flex-wrap items-center gap-x-10 gap-y-4 pt-7 border-t border-slate-200">
+                        <div className="grid grid-cols-3 gap-3 sm:flex sm:flex-wrap sm:items-center sm:gap-x-10 sm:gap-y-4 pt-7 border-t border-slate-200">
                             {trustStats.map((stat) => (
-                                <div key={stat.label} className="flex items-center gap-2.5">
+                                <div key={stat.label} className="flex flex-col items-center text-center gap-1 sm:flex-row sm:items-center sm:text-left sm:gap-2.5">
                                     <stat.icon className="w-4 h-4 text-brand-primary shrink-0" aria-hidden="true" />
                                     <div className="leading-tight">
                                         <div className="text-base font-extrabold text-brand-dark">{stat.value}</div>

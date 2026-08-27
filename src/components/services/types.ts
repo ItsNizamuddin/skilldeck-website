@@ -15,12 +15,36 @@ export interface ServiceBannerStat {
     value: string;
 }
 
+export interface ServiceReview {
+    count?: string;
+    ratings?: string;
+    icon?: string;
+}
+
 export interface ServiceBanner {
     h1?: string;
     tagline?: string;
     description?: string;
     media?: ServiceMedia;
     stats?: ServiceBannerStat[];
+    reviews?: ServiceReview[];
+}
+
+export interface ServiceCard {
+    tagline?: string;
+    title?: string;
+    slug?: string;
+    icon?: string;
+    thumbnail?: string;
+    content?: string;
+    ratings?: string;
+    clients?: string;
+    points?: string[];
+}
+
+export interface ServiceCategoryRef {
+    name?: string;
+    slug?: string;
 }
 
 export interface ServiceWhyPoint {
@@ -45,6 +69,7 @@ export interface ServiceBenefitPoint {
 export interface ServiceBenefitsData {
     tagline?: string;
     title?: string;
+    description?: string;
     points?: ServiceBenefitPoint[];
 }
 
@@ -110,6 +135,19 @@ export interface ServiceHighlight {
     title?: string;
     description?: string;
     points?: ServiceHighlightPoint[];
+    cta?: string;
+}
+
+export interface ServiceAddonContentPoint {
+    icon?: string;
+    point: string;
+}
+
+export interface ServiceAddonContent {
+    tagline?: string;
+    title?: string;
+    description?: string;
+    points?: ServiceAddonContentPoint[];
 }
 
 export interface ServiceAddonsData {
@@ -117,6 +155,7 @@ export interface ServiceAddonsData {
     title?: string;
     description?: string;
     cards?: ServiceAddonCard[];
+    content?: ServiceAddonContent;
     highlight?: ServiceHighlight;
     cta?: {
         title: string;
@@ -148,17 +187,13 @@ export interface ServiceData {
     description?: string;
     metaTitle?: string;
     metaDescription?: string;
-    keywords?: string;
+    keywords?: string | string[];
+    ogImage?: string;
     metaRobots?: any;
     ogTitle?: string;
     ogDescription?: string;
-    servicecard?: {
-        tagline?: string;
-        title?: string;
-        icon?: string;
-        thumbnail?: string;
-        clients?: string;
-    };
+    serviceCategory?: ServiceCategoryRef;
+    servicecard?: ServiceCard;
     banner?: ServiceBanner;
     servicestats?: ServiceStatItem[];
     whyservice?: ServiceWhyChooseUsData;
@@ -194,7 +229,8 @@ export interface ServiceStrategy {
     points?: ServiceStrategyPoint[];
     stats?: ServiceStrategyStat[];
     cta?: string;
-    media?: any;
+    /** Either a bare URL string or a media object; may point at an image or a video. */
+    media?: string | ServiceMedia;
 }
 
 export interface ServiceLeadMagnet {

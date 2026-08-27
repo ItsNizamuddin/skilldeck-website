@@ -1,32 +1,47 @@
+import dynamic from "next/dynamic";
 import { PricingPlan } from "@/lib/plans";
-import dynamic from 'next/dynamic';
 import FAQ from "../shared/FAQ";
-import BuiltForTrainers from "./elements/BuiltForTrainers";
-import GameChanger from "./elements/GameChanger";
-import HeroSection from "./elements/HeroSection";
+import PartnerLogos from "../shared/PartnerLogos";
+
+import HdHero from "../home-demo/HdHero";
+import HdProblem from "../home-demo/HdProblem";
+import HdPayingFor from "../home-demo/HdPayingFor";
+import HdComparison from "../home-demo/HdComparison";
+import HdBentoFeatures from "../home-demo/HdBentoFeatures";
+
+import AllFeaturesMarquee from "./elements/AllFeaturesMarquee";
+import MarketplacePromotion from "./elements/MarketplacePromotion";
 import ProvenExperience from "./elements/ProvenExperience";
-import SkilldSolution from "./elements/SkilldSolution";
-import TheProblem from "./elements/TheProblem";
 
 // Lazy-load heavy components below the fold for mobile performance (maintains SSR for SEO)
-const WhatYouGet = dynamic(() => import('./elements/WhatYouGet'), {
+const HdDemo = dynamic(() => import("../home-demo/HdDemo"), {
     loading: () => <div className="h-96 w-full animate-pulse bg-slate-50" />,
-    ssr: true
+    ssr: true,
 });
 
-const DemoSection = dynamic(() => import('./elements/DemoSection'), {
+const HdWhySkilldeck = dynamic(() => import("../home-demo/HdWhySkilldeck"), {
     loading: () => <div className="h-96 w-full animate-pulse bg-slate-900" />,
-    ssr: true
+    ssr: true,
 });
 
-const RecentProjects = dynamic(() => import('./elements/RecentProjects'), {
-    loading: () => <div className="h-96 w-full animate-pulse bg-slate-50" />,
-    ssr: true
-});
-
-const BookADemo = dynamic(() => import('./elements/BookADemo'), {
+const HdAudiences = dynamic(() => import("../home-demo/HdAudiences"), {
     loading: () => <div className="h-96 w-full animate-pulse bg-white" />,
-    ssr: true
+    ssr: true,
+});
+
+const HdShowcase = dynamic(() => import("../home-demo/HdShowcase"), {
+    loading: () => <div className="h-96 w-full animate-pulse bg-slate-50" />,
+    ssr: true,
+});
+
+const HdPricing = dynamic(() => import("../home-demo/HdPricing"), {
+    loading: () => <div className="h-96 w-full animate-pulse bg-white" />,
+    ssr: true,
+});
+
+const HdCta = dynamic(() => import("../home-demo/HdCta"), {
+    loading: () => <div className="h-96 w-full animate-pulse bg-white" />,
+    ssr: true,
 });
 
 interface HomeProps {
@@ -36,33 +51,62 @@ interface HomeProps {
 
 const Home = ({ plans = [], faqs = [] }: HomeProps) => {
     return (
-        <div className="flex flex-col gap-0 overflow-hidden w-full">
-            <HeroSection />
+        <div className="flex flex-col overflow-hidden w-full">
+            {/* 1 — Hook */}
+            <HdHero />
 
-            <WhatYouGet plans={plans} />
+            {/* 2 — Social proof immediately under the fold */}
+            <div className="bg-white pb-10">
+                <div className="container mx-auto px-4 lg:px-0">
+                    <PartnerLogos showBorder={false} />
+                </div>
+            </div>
 
-            <DemoSection />
+            {/* 3 — Problem, then the cost breakdown it leads into */}
+            <HdProblem />
+            <HdPayingFor />
 
-            <TheProblem />
+            {/* 4 — Solution framing: without vs. with */}
+            <HdComparison />
 
-            <SkilldSolution />
+            {/* 5 — The full feature surface, then the module breakdown */}
+            <AllFeaturesMarquee />
+            <HdBentoFeatures />
 
+            {/* 6 — See it working */}
+            <HdDemo />
+
+            {/* 7 — Why us, then the track record behind it */}
+            <HdWhySkilldeck />
             <ProvenExperience />
 
-            <GameChanger />
+            {/* 8 — Who it's for */}
+            <HdAudiences />
 
-            <BuiltForTrainers />
+            {/* 9 — What you can build */}
+            <HdShowcase />
 
-            <RecentProjects />
+            {/* 10 — Marketplace */}
+            <section className="py-16 md:py-24 bg-white">
+                <div className="container mx-auto px-4 lg:px-0">
+                    <MarketplacePromotion />
+                </div>
+            </section>
 
-            <BookADemo />
+            {/* 11 — Offer */}
+            <HdPricing plans={plans} />
 
-            {faqs && faqs.length > 0 && (
-                <div className="pt-10" id="faqs">
-                    <FAQ items={faqs} />
+            {/* 12 — Convert */}
+            <HdCta />
+
+            {/* 13 — Objection handling */}
+            {faqs.length > 0 && (
+                <div className="py-16 md:py-24 bg-slate-50" id="faqs">
+                    <div className="container mx-auto px-2 lg:px-0">
+                        <FAQ items={faqs} />
+                    </div>
                 </div>
             )}
-
         </div>
     );
 };

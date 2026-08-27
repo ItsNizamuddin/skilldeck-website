@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import ctaImage from "../../../../public/ui-elemants/cta.png";
+import ctaImage from "../../../../public/ui-elemants/cta.webp";
 
 const MarketPlaceCta = () => {
     return (

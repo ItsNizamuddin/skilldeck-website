@@ -201,7 +201,7 @@ export default function DemoHero({ data }: DemoHeroProps) {
                 </div>
 
                 {/* Full-width dark gradient stats strip */}
-                {bannerStats.length > 0 && (
+                {/* {bannerStats.length > 0 && (
                     <div className="mt-8 lg:mt-0 bg-[linear-gradient(135deg,rgba(36,23,100,1)_0%,rgba(1,11,48,1)_100%)] rounded-2xl p-4 md:p-8 flex flex-wrap items-center justify-around gap-4 shadow-xl">
                         {bannerStats.map((stat, i) => (
                             <div key={i} className="flex-1 md:min-w-[180px] flex items-center justify-center gap-3">
@@ -212,7 +212,7 @@ export default function DemoHero({ data }: DemoHeroProps) {
                             </div>
                         ))}
                     </div>
-                )}
+                )} */}
             </div>
         </section>
     );

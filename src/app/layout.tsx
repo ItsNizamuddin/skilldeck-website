@@ -35,6 +35,7 @@ import RouteProgressBar from "@/components/shared/RouteProgressBar";
 import ScrollToTopOnRefresh from "@/components/shared/ScrollToTopOnRefresh";
 import { Suspense } from "react";
 import DynamicScripts from "@/lib/DynamicScripts";
+import Script from "next/script";
 
 export default function RootLayout({
   children,
@@ -80,11 +81,6 @@ export default function RootLayout({
         <link rel="dns-prefetch" href="https://api.skilldeck.net" />
         <link rel="dns-prefetch" href="https://api64.ipify.org" />
         <script
-          dangerouslySetInnerHTML={{
-            __html: `if('scrollRestoration' in history){history.scrollRestoration='manual';}`
-          }}
-        />
-        <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(webSiteSchema) }}
         />
@@ -94,6 +90,11 @@ export default function RootLayout({
         />
       </head>
       <body className="min-h-full flex flex-col" suppressHydrationWarning>
+        {/* Disable native scroll restoration before hydration so back/forward
+            navigation does not fight ScrollToTopOnRefresh. */}
+        <Script id="scroll-restoration" strategy="beforeInteractive">
+          {`if('scrollRestoration' in history){history.scrollRestoration='manual';}`}
+        </Script>
         <ScrollToTopOnRefresh />
         <DynamicScripts />
         <Suspense fallback={null}>

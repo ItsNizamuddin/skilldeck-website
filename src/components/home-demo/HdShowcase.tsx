@@ -77,7 +77,7 @@ export default function HdShowcase() {
     };
 
     return (
-        <section className="py-16 md:py-24 bg-slate-50">
+        <section className="section-y bg-slate-50">
             <div className="container mx-auto px-4 lg:px-0">
                 <div className="flex flex-wrap items-end justify-between gap-6 mb-10">
                     <div className="max-w-xl">
@@ -147,7 +147,7 @@ export default function HdShowcase() {
                                     type="button"
                                     onClick={() =>
                                         openModal({
-                                            source: "home-demo-showcase",
+                                            source: "home-showcase",
                                             formTitle: `Get In Touch — ${project.title}`,
                                         })
                                     }

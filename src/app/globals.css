@@ -152,6 +152,18 @@ html, .custom-scrollbar {
   @apply text-xs 2xl:text-sm text-brand-muted leading-relaxed;
 }
 
+/* Vertical rhythm between page sections. One token so adjacent sections stack to a
+   predictable gap instead of each shipping its own padding. */
+@utility section-y {
+  @apply py-12 md:py-16 2xl:py-20;
+}
+
+/* Half-height rhythm for connector strips (logo rails, thin callouts) that sit
+   between two full sections. */
+@utility section-y-sm {
+  @apply py-8 md:py-10;
+}
+
 @utility badge-brand {
   @apply inline-flex items-center justify-center bg-brand-primary/10 text-brand-primary px-4 py-1.5 rounded-full text-xs 2xl:text-sm font-medium tracking-wide;
 }

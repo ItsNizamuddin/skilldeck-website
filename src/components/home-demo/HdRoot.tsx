@@ -31,7 +31,7 @@ export default function HdRoot({ plans, faqs }: HdRootProps) {
             <HdHero />
 
             {/* 2 — Social proof immediately under the fold */}
-            <div className="bg-white pb-10">
+            <div className="bg-white section-y-sm pt-0">
                 <div className="container mx-auto px-4 lg:px-0">
                     <PartnerLogos showBorder={false} />
                 </div>
@@ -61,7 +61,7 @@ export default function HdRoot({ plans, faqs }: HdRootProps) {
             <HdShowcase />
 
             {/* 10 — Marketplace */}
-            <section className="py-16 md:py-24 bg-white">
+            <section className="section-y bg-white">
                 <div className="container mx-auto px-4 lg:px-0">
                     <MarketplacePromotion />
                 </div>
@@ -75,7 +75,7 @@ export default function HdRoot({ plans, faqs }: HdRootProps) {
 
             {/* 13 — Objection handling */}
             {faqs.length > 0 && (
-                <div className="py-16 md:py-24 bg-slate-50" id="faqs">
+                <div className="section-y bg-slate-50" id="faqs">
                     <div className="container mx-auto px-2 lg:px-0">
                         <FAQ items={faqs} />
                     </div>

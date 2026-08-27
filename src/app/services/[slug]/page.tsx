@@ -20,6 +20,9 @@ import ServiceAddons from "@/components/services/ServiceAddons";
 import ServiceStrategyComponent from "@/components/services/ServiceStrategy";
 import ServiceWhyOpt from "@/components/services/ServiceWhyOpt";
 import ServiceBusiness from "@/components/services/ServiceBusiness";
+import ServiceFaq from "@/components/services/ServiceFaq";
+import ServiceChapterDots, { ServiceChapterItem } from "@/components/services/ServiceChapterDots";
+import ServiceMobileCta from "@/components/services/ServiceMobileCta";
 import PricingSection from "@/components/Pricing/PricingSection";
 
 export const revalidate = 3600;
@@ -88,6 +91,8 @@ export async function generateMetadata({ params }: { params: Promise<ServicePara
         };
     }
 
+    const ogImage = service.ogImage || service.banner?.media?.url || service.servicecard?.thumbnail;
+
     return {
         title: service.metaTitle || `${service.name} | SkillDeck`,
         description: service.metaDescription,
@@ -102,7 +107,20 @@ export async function generateMetadata({ params }: { params: Promise<ServicePara
         openGraph: {
             title: service.ogTitle || service.metaTitle || service.name,
             description: service.ogDescription || service.metaDescription,
+            url: pageUrl,
+            type: "website",
+            ...(ogImage ? { images: [{ url: ogImage, alt: service.banner?.media?.alt || service.name }] } : {}),
         },
+        ...(ogImage
+            ? {
+                twitter: {
+                    card: "summary_large_image" as const,
+                    title: service.ogTitle || service.metaTitle || service.name,
+                    description: service.ogDescription || service.metaDescription,
+                    images: [ogImage],
+                },
+            }
+            : {}),
     };
 }
 
@@ -176,8 +194,36 @@ export default async function ServicePage({ params }: { params: Promise<ServiceP
         };
     }
 
+    // Section presence — drives the chapter rail on the right edge
+    const hasWhy = Boolean(service.whyservice?.title) || (service.whyservice?.points || []).length > 0;
+    const hasBenefits = (service.benefits?.points || []).length > 0;
+    const hasApproach =
+        (service.approach?.steps || []).length > 0 ||
+        (service.approach?.kpis?.kpiCategory || []).length > 0 ||
+        (service.approach?.tools?.content || []).length > 0;
+    const hasStrategy = (service.strategy?.points || []).length > 0 || (service.strategy?.stats || []).length > 0;
+    const hasWhyOpt = (service.whyopt?.points || []).length > 0 || (service.whyopt?.stats || []).length > 0;
+    const hasBusiness = (service.business?.points || []).length > 0 || (service.business?.stats || []).length > 0;
+    const hasAddons =
+        (service.addons?.cards || []).length > 0 ||
+        (service.addons?.content?.points || []).length > 0 ||
+        (service.addons?.highlight?.points || []).length > 0;
+    const hasFaq = (service.faqs?.accordions || []).some((f) => f?.title);
+
+    const chapters: ServiceChapterItem[] = [
+        ...(hasWhy ? [{ id: "why", label: "The Reality" }] : []),
+        ...(hasBenefits ? [{ id: "benefits", label: "The Outcome" }] : []),
+        ...(hasApproach ? [{ id: "approach", label: "How We Work" }] : []),
+        ...(hasStrategy ? [{ id: "strategy", label: "Strategy" }] : []),
+        ...(hasWhyOpt ? [{ id: "credentials", label: "Why SkillDeck" }] : []),
+        ...(hasBusiness ? [{ id: "expertise", label: "Our Expertise" }] : []),
+        ...(hasAddons ? [{ id: "addons", label: "Add-Ons" }] : []),
+        { id: "plans", label: "Plans" },
+        ...(hasFaq ? [{ id: "faq", label: "FAQ" }] : []),
+    ];
+
     return (
-        <div className="flex flex-col min-h-screen bg-slate-50/50">
+        <div className="flex flex-col min-h-screen bg-white">
             <script
                 type="application/ld+json"
                 dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceSchema) }}
@@ -200,94 +246,70 @@ export default async function ServicePage({ params }: { params: Promise<ServiceP
                     banner={service.banner}
                     servicestats={service.servicestats}
                     serviceName={service.name}
+                    servicecard={service.servicecard}
+                    serviceCategory={service.serviceCategory}
                     fallbackTagline={service.servicecard?.tagline}
                     description={service.description}
                     brochureUrl={service.leadmagnet?.[0]?.broucher?.url}
                     clientsCount={service.servicecard?.clients}
-                    primaryCtaText={"Start Free Trial"}
-                    secondaryCtaText={"Get Quote"}
-                    heroStats={service.business?.stats}
                 />
 
                 {/* Service Stats Row */}
                 <ServiceStats stats={service.servicestats} />
 
-                {/* Why Choose Us */}
+                {/* Chapter rail */}
+                <ServiceChapterDots items={chapters} />
+
+                {/* 01 — Why Choose Us */}
                 <ServiceWhyChooseUs
                     whyservice={service.whyservice}
                     serviceName={service.name}
                 />
 
-                {/* Benefits */}
+                {/* 02 — Benefits */}
                 <ServiceBenefits benefits={service.benefits} />
 
-                {/* Strategy Section */}
-                <ServiceStrategyComponent strategy={service.strategy} />
-
-                {/* Why Opt / Choose Us Additional Details */}
-                <ServiceWhyOpt whyopt={service.whyopt} />
-
-                {/* Business / Our Expertise Section */}
-                <ServiceBusiness business={service.business} />
-
-                {/* Our Approach / Framework */}
-                <ServiceApproach approach={service.approach} />
-
-                {/* Highlight & Addons Section */}
-                <ServiceAddons addons={service.addons} />
+                {/* 03 — Our Approach / Framework */}
+                <ServiceApproach approach={service.approach} media={service.strategy?.media} />
 
                 {/* Pricing Plans Section */}
                 <PricingSection plans={plans} />
 
-                {/* FAQ Accordion Section */}
-                {service.faqs?.accordions && service.faqs.accordions.length > 0 && (
-                    <section className="py-10 md:py-16 bg-white border-t border-slate-100">
-                        <div className="container mx-auto px-2 lg:px-0 max-w-4xl space-y-6 lg:space-y-12">
-                            <div className="text-center space-y-2">
-                                <span className="text-xs font-bold uppercase tracking-widest text-indigo-600">
-                                    {service.faqs.tagline || "Got Questions?"}
-                                </span>
-                                <h2 className="text-xl md:text-3xl font-extrabold text-slate-900">
-                                    {service.faqs.title || "Frequently Asked Questions"}
-                                </h2>
-                                {service.faqs.description && (
-                                    <p className="text-xs text-slate-500">{service.faqs.description}</p>
-                                )}
-                            </div>
+                {/* 04 — Strategy Section */}
+                <ServiceStrategyComponent strategy={service.strategy} />
 
-                            <div className="space-y-4">
-                                {service.faqs.accordions.map((faq: any, index: number) => (
-                                    <CourseAccordionSection
-                                        key={index}
-                                        title={faq.title}
-                                        value={faq.description}
-                                    />
-                                ))}
-                            </div>
-                        </div>
-                    </section>
-                )}
+                {/* 05 — Why Opt / Core Value Proposition */}
+                <ServiceWhyOpt whyopt={service.whyopt} />
+
+                {/* 06 — Business / Our Expertise Section */}
+                <ServiceBusiness business={service.business} />
+
+                {/* 07 — Highlight & Addons Section */}
+                <ServiceAddons addons={service.addons} />
+
+                {/* 08 — FAQ Accordion Section */}
+                <ServiceFaq faqs={service.faqs} serviceName={service.name} />
 
                 {/* Bottom and Internal Sections */}
-                <div className="container mx-auto px-2 lg:px-0 pb-16 space-y-12 mt-12">
-                    {(service.bottomSection?.value || service.internalSection?.value) && (
-                        <div className="space-y-6">
-                            {service.internalSection?.value && (
-                                <CourseRelatedLinks
-                                    title={service.internalSection.title || ""}
-                                    value={service.internalSection.value || ""}
-                                />
-                            )}
-                            {service.bottomSection?.value && (
-                                <CourseAccordionSection
-                                    title={service.bottomSection.title || ""}
-                                    value={service.bottomSection.value || ""}
-                                />
-                            )}
-                        </div>
-                    )}
-                </div>
+                {(service.bottomSection?.value || service.internalSection?.value) && (
+                    <div className="container mx-auto px-2 lg:px-0 pb-12 md:pb-16 2xl:pb-20 space-y-6">
+                        {service.internalSection?.value && (
+                            <CourseRelatedLinks
+                                title={service.internalSection.title || ""}
+                                value={service.internalSection.value || ""}
+                            />
+                        )}
+                        {service.bottomSection?.value && (
+                            <CourseAccordionSection
+                                title={service.bottomSection.title || ""}
+                                value={service.bottomSection.value || ""}
+                            />
+                        )}
+                    </div>
+                )}
             </main>
+
+            <ServiceMobileCta serviceName={service.name} />
 
             <Footer />
         </div>

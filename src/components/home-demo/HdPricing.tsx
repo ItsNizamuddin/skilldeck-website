@@ -7,7 +7,7 @@ interface HdPricingProps {
 
 export default function HdPricing({ plans }: HdPricingProps) {
     return (
-        <section id="pricing" className="scroll-mt-24 py-16 md:py-24 bg-white">
+        <section id="pricing" className="scroll-mt-24 section-y bg-white">
             <PricingSection plans={plans} />
         </section>
     );

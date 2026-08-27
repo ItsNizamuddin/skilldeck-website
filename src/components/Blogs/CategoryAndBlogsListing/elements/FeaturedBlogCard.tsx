@@ -58,6 +58,7 @@ const FeaturedBlogCard: React.FC<FeaturedBlogCardProps> = ({ blog }) => {
                 <Image
                     src={getThumbnailUrl(blog.thumbnail)}
                     fill
+                    sizes="(max-width: 1024px) 100vw, 58vw"
                     priority
                     className="object-cover group-hover:scale-101.5 transition-transform duration-1000 ease-in-out"
                     alt={blog.title}
@@ -113,6 +114,7 @@ const FeaturedBlogCard: React.FC<FeaturedBlogCardProps> = ({ blog }) => {
                                 <Image
                                     src={(author.photo as string) || defaultImg}
                                     fill
+                                    sizes="40px"
                                     className="rounded-full object-cover border border-slate-100 shadow-sm"
                                     alt={author.name}
                                 />

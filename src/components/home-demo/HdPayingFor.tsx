@@ -1,10 +1,10 @@
 import { Briefcase, CreditCard, Users, Wrench } from "lucide-react";
 import Image from "next/image";
 import HdGradientText from "./HdGradientText";
-import disappointingResultsImage from "../../../public/heroSection/resultsremaindisappointing.png";
-import wastedBudgetImage from "../../../public/heroSection/wastedbudget.png";
-import risingCostsImage from "../../../public/heroSection/risingcosts.png";
-import lostRevenueImage from "../../../public/heroSection/lostrevenue.png";
+import disappointingResultsImage from "../../../public/home-demo/resultsremaindisappointing.webp";
+import wastedBudgetImage from "../../../public/home-demo/wastedbudget.webp";
+import risingCostsImage from "../../../public/home-demo/risingcosts.webp";
+import lostRevenueImage from "../../../public/home-demo/lostrevenue.webp";
 
 const costItems = [
     {
@@ -64,7 +64,7 @@ const outcomes = [
 
 export default function HdPayingFor() {
     return (
-        <section className="py-16 md:py-24 bg-slate-50">
+        <section className="section-y bg-slate-50">
             <div className="container mx-auto px-4 lg:px-0">
                 {/* Header — mirrors the Problem section's centred rhythm */}
                 <div className="text-center max-w-3xl mx-auto mb-12">
