@@ -1,75 +1,135 @@
+"use client";
+
 import React from "react";
+import { ArrowUpRight } from "lucide-react";
 import { ServiceAddonsData } from "./types";
 import ServiceItemIcon from "./ServiceItemIcon";
-import InteractiveDotBackground from "@/components/ui/InteractiveDotBackground";
+import ServiceSectionIntro from "./ServiceSectionIntro";
+import ServiceCtaBanner from "./ServiceCtaBanner";
+import { Button } from "@/components/ui/Button";
+import { useLeadModal } from "@/components/Forms/LeadModalContext";
 
 interface ServiceAddonsProps {
     addons?: ServiceAddonsData;
 }
 
+/** Premium dark upsell showcase — visually set apart from the rest of the page for contrast. */
 export default function ServiceAddons({ addons = {} }: ServiceAddonsProps) {
-    if (!addons.cards || addons.cards.length === 0) return null;
+    const { openModal } = useLeadModal();
 
+    const cards = (addons.cards || []).filter((c) => c?.title);
+    const contentPoints = (addons.content?.points || []).filter((p) => p?.point);
     const highlight = addons.highlight || {};
+    const highlightPoints = (highlight.points || []).filter((p) => p?.value);
+
+    if (cards.length === 0 && contentPoints.length === 0 && highlightPoints.length === 0) return null;
 
     return (
-        <section className="py-10 md:py-16">
-            <div className=" px-2 lg:px-0 space-y-16">
-                <div className="container mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-                    <div className="lg:col-span-6 space-y-4">
-                        <span className="text-xs font-bold uppercase tracking-widest text-indigo-600">
-                            {addons.tagline || "Specialized Add-ons"}
-                        </span>
-                        <h2 className="text-xl md:text-3xl font-extrabold text-slate-900">
-                            {addons.title || "Premium Capabilities & Integrations"}
-                        </h2>
-                        {addons.description && (
-                            <p className="text-slate-500 text-xs md:text-sm leading-relaxed">{addons.description}</p>
-                        )}
-                    </div>
+        <section id="addons" className="scroll-mt-24 py-16 md:py-24 bg-brand-dark">
+            <div className="container mx-auto px-2 lg:px-0 space-y-12">
+                <ServiceSectionIntro
+                    numeral="07"
+                    kicker={addons.tagline || "Add-On Advantages"}
+                    title={addons.title || "Premium Capabilities & Integrations"}
+                    description={addons.description}
+                    dark
+                />
 
-                    <div className="lg:col-span-6 grid grid-cols-2 gap-4">
-                        {addons.cards.map((card, i) => (
-                            <div key={i} className="bg-white p-3 lg:p-5 rounded-xl lg:rounded-2xl border border-slate-100 shadow-sm space-y-3">
-                                <div className="w-9 h-9 rounded-lg bg-indigo-50 flex items-center justify-center">
-                                    <ServiceItemIcon iconString={card.icon} className="w-4.5 h-4.5 text-indigo-600" defaultIcon="Plus" />
-                                </div>
-                                <h3 className="font-bold text-xs text-slate-900">{card.title}</h3>
-                                <p className="text-[11px] text-slate-500 leading-relaxed">{card.description}</p>
+                {cards.length > 0 && (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                        {cards.map((card, i) => (
+                            <div
+                                key={i}
+                                className="rounded-2xl bg-white/5 border border-white/10 p-5 space-y-3 hover:bg-white/10 hover:border-brand-secondary/40 transition-all duration-300"
+                            >
+                                <ServiceItemIcon iconString={card.icon} className="w-6 h-6 text-brand-secondary" defaultIcon="Plus" />
+                                <h4 className="text-sm font-bold text-white leading-snug">{card.title}</h4>
+                                {card.description && <p className="text-xs text-white/50 leading-relaxed">{card.description}</p>}
                             </div>
                         ))}
                     </div>
-                </div>
+                )}
 
-                {/* Highlight Sub-section */}
-                {highlight.points && highlight.points.length > 0 && (
-                    <div className="relative overflow-hidden p-4 lg:py-10 bg-slate-900 border border-slate-800 shadow-xl">
-                        <InteractiveDotBackground dotColor="rgba(255, 255, 255, 0.08)" gap={16} radius={1.2} />
-                        <div className="absolute top-0 left-1/4 w-96 h-96 bg-blue-600/10 rounded-full blur-3xl pointer-events-none" />
-                        <div className="absolute bottom-0 right-1/4 w-80 h-80 bg-violet-600/10 rounded-full blur-3xl pointer-events-none" />
-                        <div className="container mx-auto  grid grid-cols-1 lg:grid-cols-12 gap-12 items-center rounded-none md:rounded-3xl">
-                            <div className="relative z-10 lg:col-span-5 space-y-4">
-                                <span className="text-xs font-bold uppercase tracking-widest text-brand-primary">{highlight.tagline}</span>
-                                <h3 className="text-xl font-extrabold text-white">{highlight.title}</h3>
-                                {highlight.description && (
-                                    <p className="text-xs text-slate-300 leading-relaxed">{highlight.description}</p>
+                {contentPoints.length > 0 && (
+                    <div className="space-y-4">
+                        {(addons.content?.tagline || addons.content?.title || addons.content?.description) && (
+                            <div className="space-y-2 max-w-2xl">
+                                {addons.content?.tagline && (
+                                    <span className="text-[11px] font-bold uppercase tracking-widest text-brand-secondary">
+                                        {addons.content.tagline}
+                                    </span>
+                                )}
+                                {addons.content?.title && (
+                                    <h3 className="text-lg font-bold text-white">{addons.content.title}</h3>
+                                )}
+                                {addons.content?.description && (
+                                    <p className="text-xs text-white/50 leading-relaxed">{addons.content.description}</p>
                                 )}
                             </div>
-                            <div className="relative z-10 lg:col-span-7 space-y-4">
-                                {highlight.points.map((p, i) => (
-                                    <div key={i} className="flex gap-4 p-3 lg:p-4 rounded-xl hover:bg-slate-850 hover:border-brand-primary/40 transition-all border border-slate-700/50 bg-slate-800/40 backdrop-blur-xs">
-                                        <div className="w-9 h-9 rounded-lg bg-brand-primary/20 flex items-center justify-center shrink-0">
-                                            <ServiceItemIcon iconString={p.icon} className="w-4.5 h-4.5 text-white" defaultIcon="Layers" />
-                                        </div>
-                                        <div>
-                                            <h4 className="font-bold text-xs text-white">{p.value}</h4>
-                                            <p className="text-[11px] text-slate-300 mt-1 leading-relaxed">{p.descp}</p>
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
+                        )}
+                        <div className="flex flex-wrap gap-2.5">
+                            {contentPoints.map((point, i) => (
+                                <span
+                                    key={i}
+                                    className="inline-flex items-center gap-1.5 bg-white/5 border border-white/10 rounded-full px-3.5 py-2 text-xs font-semibold text-white/80"
+                                >
+                                    <ServiceItemIcon iconString={point.icon} className="w-3.5 h-3.5 text-brand-secondary" defaultIcon="Check" />
+                                    {point.point}
+                                </span>
+                            ))}
                         </div>
                     </div>
+                )}
+
+                {highlightPoints.length > 0 && (
+                    <div className="rounded-3xl bg-white/5 border border-white/10 p-6 md:p-8 space-y-6">
+                        {(highlight.tagline || highlight.title) && (
+                            <div className="space-y-2 max-w-xl">
+                                {highlight.tagline && (
+                                    <span className="text-[11px] font-bold uppercase tracking-widest text-brand-secondary">
+                                        {highlight.tagline}
+                                    </span>
+                                )}
+                                {highlight.title && (
+                                    <h3 className="text-lg md:text-xl font-bold text-white">{highlight.title}</h3>
+                                )}
+                                {highlight.description && (
+                                    <p className="text-xs text-white/50 leading-relaxed">{highlight.description}</p>
+                                )}
+                            </div>
+                        )}
+                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                            {highlightPoints.map((point, i) => (
+                                <div key={i} className="space-y-1.5">
+                                    <div className="flex items-center gap-2">
+                                        <ServiceItemIcon iconString={point.icon} className="w-4 h-4 text-brand-secondary" defaultIcon="Layers" />
+                                        <h5 className="text-sm font-bold text-white">{point.value}</h5>
+                                    </div>
+                                    {point.descp && <p className="text-xs text-white/50 leading-relaxed pl-6">{point.descp}</p>}
+                                </div>
+                            ))}
+                        </div>
+                        {highlight.cta && (
+                            <Button
+                                onClick={() => openModal({ source: "service-addons-highlight", formTitle: highlight.cta })}
+                                variant="primary"
+                                className="rounded-full font-bold"
+                            >
+                                {highlight.cta}
+                                <ArrowUpRight className="w-4 h-4" />
+                            </Button>
+                        )}
+                    </div>
+                )}
+
+                {addons.cta?.title && (
+                    <ServiceCtaBanner
+                        title={addons.cta.title}
+                        description={addons.cta.descp}
+                        buttonLabel="Download Now"
+                        source="service-addons"
+                        dark
+                    />
                 )}
             </div>
         </section>

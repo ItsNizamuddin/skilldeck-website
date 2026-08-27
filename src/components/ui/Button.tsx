@@ -47,7 +47,9 @@ export const Button: React.FC<ButtonProps> = ({
           className={cn(
             "bg-white hover:bg-transparent",
             "text-brand-primary hover:text-white",
-            "transition-all duration-200 rounded-[10px]",
+            // Follow the wrapper's radius so a caller-supplied rounding
+            // (e.g. `rounded-full`) does not leave the gradient ring broken.
+            "transition-all duration-200 rounded-[inherit]",
             "flex items-center justify-center gap-2 w-full h-full font-semibold",
             sizes[size]
           )}

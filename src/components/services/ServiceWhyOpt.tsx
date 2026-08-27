@@ -1,80 +1,70 @@
 import React from "react";
 import { ServiceStrategy } from "./types";
-import ServiceIconWrapper from "./ServiceIconWrapper";
+import ServiceItemIcon from "./ServiceItemIcon";
+import ServiceSectionIntro from "./ServiceSectionIntro";
 
 interface ServiceWhyOptProps {
     whyopt?: ServiceStrategy;
 }
 
+/** "How we partner" credentials chapter — clean icon list plus a dark stats band. */
 export default function ServiceWhyOpt({ whyopt = {} }: ServiceWhyOptProps) {
-    if (!whyopt.points && !whyopt.stats) return null;
+    const points = (whyopt.points || []).filter((p) => p?.title);
+    const stats = (whyopt.stats || []).filter((s) => s?.value);
+    if (points.length === 0 && stats.length === 0) return null;
 
     return (
-        <section className="py-10 md:py-16 bg-slate-50 border-b border-slate-100">
-            <div className="container mx-auto px-2 lg:px-0 space-y-16">
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-                    {/* Left stats counters grid */}
-                    <div className="lg:col-span-5 order-last lg:order-first">
-                        {whyopt.stats && whyopt.stats.length > 0 && (
-                            <div className="grid grid-cols-2 gap-6">
-                                {whyopt.stats.map((stat, i) => (
-                                    <div key={i} className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm space-y-3">
-                                        <div className="space-y-1">
-                                            <div className="flex items-center gap-2">
-                                                <ServiceIconWrapper
-                                                    iconString={stat.icon}
-                                                    className="w-10 h-10 rounded-lg"
-                                                    iconClassName="w-5 h-5"
-                                                    defaultIcon="ShieldAlert"
-                                                    fallbackBgClass="bg-blue-50 text-blue-600"
-                                                />
-                                                <div className="text-lg lg:text-xl 2xl:text-2xl font-bold text-slate-900 leading-none">{stat.value}</div>
-                                            </div>
-                                            <div className="text-xs font-bold text-slate-800 leading-tight">{stat.description}</div>
-                                            {stat.tagline && <p className="text-xs font-bold text-slate-800 leading-tight">{stat.tagline}</p>}
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
-                        )}
-                    </div>
+        <section id="credentials" className="scroll-mt-24 py-16 md:py-24">
+            <div className="container mx-auto px-2 lg:px-0 space-y-12">
+                <ServiceSectionIntro
+                    numeral="05"
+                    kicker={whyopt.tagline || "Why SkillDeck"}
+                    title={whyopt.title || "Core Value Proposition"}
+                    description={whyopt.description}
+                />
 
-                    {/* Right details */}
-                    <div className="lg:col-span-7 space-y-2">
-                        <span className="text-[11px] font-bold uppercase tracking-widest text-blue-600">
-                            {whyopt.tagline || "Why Choose Us"}
-                        </span>
-                        <h2 className="text-xl md:text-3xl font-extrabold text-slate-900 leading-tight">
-                            {whyopt.title || "Core Value Proposition"}
-                        </h2>
-                        {whyopt.description && (
-                            <div
-                                className="text-slate-600 text-sm md:text-sm leading-relaxed prose max-w-none"
-                                dangerouslySetInnerHTML={{ __html: whyopt.description }}
-                            />
-                        )}
-
-                        {whyopt.points && whyopt.points.length > 0 && (
-                            <div className="space-y-4 pt-2">
-                                {whyopt.points.map((point, i) => (
-                                    <div key={i} className="flex gap-4 p-4 rounded-2xl border border-slate-100 bg-white shadow-sm hover:shadow-md transition-shadow">
-                                        <ServiceIconWrapper
-                                            iconString={point.icon}
-                                            className="w-10 h-10 rounded-lg"
-                                            iconClassName="w-5 h-5"
-                                            defaultIcon="Check"
-                                            fallbackBgClass="bg-indigo-50 text-indigo-600"
-                                        />
-                                        <div>
-                                            <h4 className="font-extrabold text-sm text-slate-900 leading-snug">{point.title}</h4>
-                                            {point.description && <p className="text-xs text-slate-500 mt-1 leading-relaxed">{point.description}</p>}
-                                        </div>
+                {points.length > 0 && (
+                    <div className="space-y-5">
+                        <p className="text-[11px] font-bold uppercase tracking-widest text-brand-muted">How We Partner</p>
+                        <ul className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-4">
+                            {points.map((point, i) => (
+                                <li key={i} className="flex items-start gap-3">
+                                    <ServiceItemIcon
+                                        iconString={point.icon}
+                                        className="w-5 h-5 text-brand-primary mt-0.5 shrink-0"
+                                        defaultIcon="Check"
+                                    />
+                                    <div>
+                                        <p className="text-sm font-bold text-brand-dark">{point.title}</p>
+                                        {point.description && (
+                                            <p className="text-xs text-brand-muted leading-relaxed mt-0.5">{point.description}</p>
+                                        )}
                                     </div>
-                                ))}
-                            </div>
-                        )}
+                                </li>
+                            ))}
+                        </ul>
                     </div>
-                </div>
+                )}
+
+                {stats.length > 0 && (
+                    <div className="rounded-3xl bg-brand-dark p-6 md:p-8">
+                        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+                            {stats.map((stat, i) => (
+                                <div key={i} className="flex items-center gap-3">
+                                    <ServiceItemIcon
+                                        iconString={stat.icon}
+                                        className="w-5 h-5 text-brand-secondary shrink-0"
+                                        defaultIcon="ShieldAlert"
+                                    />
+                                    <div className="min-w-0">
+                                        <p className="text-lg font-black text-white leading-none">{stat.value}</p>
+                                        <p className="text-[11px] text-white/50 font-medium mt-1">{stat.description || stat.tagline}</p>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                )}
             </div>
         </section>
     );

@@ -1,117 +1,127 @@
 import React from "react";
 import Image from "next/image";
-import { ServiceApproachData } from "./types";
+import { ServiceApproachData, ServiceMedia } from "./types";
 import ServiceIconWrapper from "./ServiceIconWrapper";
 import ServiceItemIcon from "./ServiceItemIcon";
+import ServiceSectionIntro from "./ServiceSectionIntro";
+import ServiceCtaBanner from "./ServiceCtaBanner";
+import ServiceApproachMedia from "./ServiceApproachMedia";
 
 interface ServiceApproachProps {
     approach?: ServiceApproachData;
+    /** Optional clip shown beside the section body — sourced from `strategy.media`. */
+    media?: string | ServiceMedia;
 }
 
-export default function ServiceApproach({ approach = {} }: ServiceApproachProps) {
-    if (!approach.steps || approach.steps.length === 0) return null;
+/** Vertical connected-step timeline + inline KPI chips + a clean tools row. */
+export default function ServiceApproach({ approach = {}, media }: ServiceApproachProps) {
+    const steps = (approach.steps || []).filter((s) => s?.title);
+    const kpiCategories = (approach.kpis?.kpiCategory || []).filter((c) => (c.content || []).length > 0);
+    const tools = (approach.tools?.content || []).filter((t) => t?.tagline || t?.icon);
+
+    if (steps.length === 0 && kpiCategories.length === 0 && tools.length === 0) return null;
 
     return (
-        <section className="py-10 md:py-16 bg-white border-y border-slate-100">
-            <div className="container mx-auto px-4 space-y-12">
-                <div className="text-center max-w-2xl mx-auto space-y-2">
-                    <span className="text-xs font-bold uppercase tracking-widest text-indigo-600">
-                        {approach.tagline || "Execution Model"}
-                    </span>
-                    <h2 className="text-xl md:text-3xl font-extrabold text-slate-900">
-                        {approach.title || "How We Work & Optimize Outcomes"}
-                    </h2>
-                    {approach.description && (
-                        <p className="text-xs text-slate-500 leading-relaxed">{approach.description}</p>
-                    )}
-                </div>
+        <section id="approach" className="scroll-mt-24 py-16 md:py-24">
+            <div className="container mx-auto px-2 lg:px-0 space-y-14">
+                <ServiceSectionIntro
+                    numeral="03"
+                    kicker={approach.tagline || "How We Work"}
+                    title={approach.title || "How We Work & Optimize Outcomes"}
+                    description={approach.description}
+                />
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 relative">
-                    {approach.steps.map((step, i) => (
-                        <div key={i} className="relative bg-slate-50/50 p-6 rounded-2xl border border-slate-100 hover:bg-slate-50 transition-all space-y-4">
-                            <div className="absolute top-4 right-4 text-3xl font-black text-slate-200">
-                                {String(i + 1).padStart(2, '0')}
-                            </div>
-                            <ServiceIconWrapper
-                                iconString={step.icon}
-                                className="w-10 h-10 rounded-lg"
-                                iconClassName="w-5 h-5"
-                                defaultIcon="Compass"
-                                fallbackBgClass="bg-indigo-50 text-indigo-600"
-                            />
-                            <div className="space-y-1.5">
-                                <h3 className="font-bold text-sm text-slate-900">{step.title}</h3>
-                                <p className="text-xs text-slate-500 leading-relaxed">{step.description}</p>
-                            </div>
-                        </div>
-                    ))}
-                </div>
-
-                {/* KPIs Categories */}
-                {approach.kpis?.kpiCategory && approach.kpis.kpiCategory.length > 0 && (
-                    <div className="mt-12 pt-12 border-t border-slate-100">
-                        <div className="text-center mb-8">
-                            <span className="inline-block px-3 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700">
-                                {approach.kpis.badge || "Key Performance Indicators"}
-                            </span>
-                        </div>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                            {approach.kpis.kpiCategory.map((cat, idx) => (
-                                <div key={idx} className="p-6 rounded-2xl border border-slate-100 bg-slate-50/30">
-                                    <h3 className="font-extrabold text-sm text-slate-900 border-b border-slate-200 pb-3 mb-4">
-                                        {cat.name}
-                                    </h3>
-                                    <div className="space-y-3">
-                                        {cat.content && cat.content.map((item, i) => (
-                                            <div key={i} className="flex items-center gap-3 bg-white p-3 rounded-xl border border-slate-100 shadow-sm">
-                                                <ServiceItemIcon iconString={item.icon} className="w-4 h-4 text-emerald-500 shrink-0" defaultIcon="BadgeCheck" />
-                                                <span className="text-xs font-semibold text-slate-800">{item.value}</span>
+                {/* The media cell is `align-self: start` + sticky, so it tracks the
+                    whole body column — timeline, KPIs and tools — not just the steps. */}
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-start">
+                    <div className={`space-y-14 ${media ? "lg:col-span-7" : "lg:col-span-12"}`}>
+                        {steps.length > 0 && (
+                            <div className="relative">
+                                <div className="absolute left-6 top-4 bottom-4 w-px bg-gradient-to-b from-brand-primary/40 via-brand-primary/20 to-transparent" />
+                                <div className="space-y-10">
+                                    {steps.map((step, i) => (
+                                        <div key={i} className="relative flex items-start gap-6">
+                                            <div className="relative z-10 w-12 h-12 rounded-full bg-white border-2 border-brand-primary/30 flex items-center justify-center shrink-0 font-black text-brand-primary">
+                                                {String(i + 1).padStart(2, "0")}
                                             </div>
-                                        ))}
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                )}
-
-                {/* Tools Section */}
-                {approach.tools?.content && approach.tools.content.length > 0 && (
-                    <div className="mt-12 pt-12 border-t border-slate-100 space-y-6">
-                        <div className="text-center space-y-2">
-                            <span className="text-[11px] font-bold text-indigo-600 uppercase tracking-widest">{approach.tools.badge || "Tools"}</span>
-                            {approach.tools.description && (
-                                <p className="text-xs text-slate-500 max-w-xl mx-auto">{approach.tools.description}</p>
-                            )}
-                        </div>
-                        <div className="relative overflow-hidden w-full">
-                            {/* Gradient Fades */}
-                            <div className="absolute left-0 top-0 bottom-0 w-16 bg-gradient-to-r from-white via-white/80 to-transparent z-10 pointer-events-none" />
-                            <div className="absolute right-0 top-0 bottom-0 w-16 bg-gradient-to-l from-white via-white/80 to-transparent z-10 pointer-events-none" />
-
-                            <div className="flex overflow-hidden py-2">
-                                <div className="flex animate-scroll gap-6 items-center shrink-0 min-w-full">
-                                    {/* Render twice for seamless infinite loop */}
-                                    {[...approach.tools.content, ...approach.tools.content, ...approach.tools.content].map((tool, i) => (
-                                        <div key={i} className="flex items-center gap-2 bg-slate-50 px-4 py-2 rounded-xl border border-slate-100 shadow-sm hover:bg-slate-100 transition-all shrink-0">
-                                            {tool.icon && (
-                                                <div className="relative w-5 h-5 overflow-hidden rounded-md shrink-0">
-                                                    <Image
-                                                        src={tool.icon}
-                                                        alt={tool.tagline || "tool"}
-                                                        fill
-                                                        className="object-contain"
-                                                    />
+                                            <div className="pt-2 space-y-1.5">
+                                                <div className="flex items-center gap-2">
+                                                    <ServiceItemIcon iconString={step.icon} className="w-4 h-4 text-brand-secondary" defaultIcon="Compass" />
+                                                    <h3 className="text-base font-bold text-brand-dark">{step.title}</h3>
                                                 </div>
-                                            )}
-                                            <span className="text-xs font-bold text-slate-800 whitespace-nowrap">{tool.tagline}</span>
+                                                {step.description && <p className="body-small max-w-lg">{step.description}</p>}
+                                            </div>
                                         </div>
                                     ))}
                                 </div>
                             </div>
-                        </div>
+                        )}
+
+                        {kpiCategories.length > 0 && (
+                            <div className="space-y-4">
+                                <span className="badge-brand inline-flex">{approach.kpis?.badge || "Key Performance Indicators"}</span>
+                                <div className="flex flex-wrap gap-x-10 gap-y-5">
+                                    {kpiCategories.map((category, i) => (
+                                        <div key={i} className="space-y-2.5">
+                                            <p className="text-[11px] font-bold uppercase tracking-widest text-brand-muted">{category.name}</p>
+                                            <div className="flex flex-wrap gap-2">
+                                                {(category.content || []).map((kpi, j) => (
+                                                    <span
+                                                        key={j}
+                                                        className="inline-flex items-center gap-1.5 bg-white border border-slate-200 rounded-full px-3 py-1.5 text-xs font-semibold text-brand-dark shadow-sm hover:border-brand-primary/30 hover:shadow transition-all duration-200"
+                                                    >
+                                                        <ServiceItemIcon iconString={kpi.icon} className="w-3.5 h-3.5 text-brand-primary" defaultIcon="BadgeCheck" />
+                                                        {kpi.value}
+                                                    </span>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+
+                        {tools.length > 0 && (
+                            <div className="space-y-5">
+                                {approach.tools?.badge && (
+                                    <p className="text-[11px] font-bold uppercase tracking-widest text-brand-secondary">{approach.tools.badge}</p>
+                                )}
+                                {approach.tools?.description && <p className="body-medium max-w-2xl">{approach.tools.description}</p>}
+                                <div className="flex flex-wrap items-center gap-3">
+                                    {tools.map((tool, i) => (
+                                        <div
+                                            key={i}
+                                            className="flex items-center gap-2.5 bg-white border border-slate-200 rounded-xl pl-3 pr-4 py-2.5 shadow-sm hover:border-brand-primary/30 hover:shadow-md transition-all duration-200"
+                                        >
+                                            {tool.icon ? (
+                                                <div className="relative w-6 h-6 shrink-0">
+                                                    <Image src={tool.icon} alt={tool.tagline || "Tool"} fill sizes="24px" className="object-contain" />
+                                                </div>
+                                            ) : (
+                                                <ServiceIconWrapper iconString={undefined} className="w-6 h-6 rounded-md" iconClassName="w-3.5 h-3.5" />
+                                            )}
+                                            <span className="text-sm font-semibold text-brand-dark">{tool.tagline}</span>
+                                        </div>
+                                    ))}
+                                </div>
+                                {approach.tools?.cta?.title && (
+                                    <ServiceCtaBanner
+                                        title={approach.tools.cta.title}
+                                        description={approach.tools.cta.descp}
+                                        buttonLabel="Talk To Our Team"
+                                        source="service-approach-tools"
+                                    />
+                                )}
+                            </div>
+                        )}
                     </div>
-                )}
+
+                    {media && (
+                        <div className="order-first lg:order-none lg:col-span-5 lg:sticky lg:top-28">
+                            <ServiceApproachMedia media={media} fallbackLabel={approach.title || "Our Approach"} />
+                        </div>
+                    )}
+                </div>
             </div>
         </section>
     );
