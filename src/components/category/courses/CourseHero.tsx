@@ -176,7 +176,7 @@ export default function CourseHero({ course, courseSlug, locationSlug }: CourseH
                             </Button>
                             <Button
                                 as="a"
-                                href={`/compare?type=companies&course=${encodeURIComponent(courseSlug)}`}
+                                href="#schedule-comparison"
                                 variant="outline"
                                 size="lg"
                                 className="h-12 px-3 md:px-6 rounded-xl border border-gray-300 text-gray-700 font-semibold text-sm hover:border-gray-500 hover:bg-gray-50 transition-all hover:text-gray-900 gap-2"

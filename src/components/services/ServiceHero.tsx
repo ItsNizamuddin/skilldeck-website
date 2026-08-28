@@ -50,13 +50,11 @@ export default function ServiceHero({
     const media = banner.media?.url;
     const clients = clientsCount || servicecard.clients;
 
-    // Every point is rendered so crawlers see the full list; the overflow is
-    // hidden with CSS rather than sliced out of the DOM.
-    const colBreak = Math.ceil(points.length / 2);
-    const col1 = points.slice(0, colBreak);
-    const col2 = points.slice(colBreak);
+    const visiblePoints = isExpanded ? points : points.slice(0, 4);
+    const colBreak = Math.ceil(visiblePoints.length / 2);
+    const col1 = visiblePoints.slice(0, colBreak);
+    const col2 = visiblePoints.slice(colBreak);
     const hiddenCount = points.length - 4;
-    const isHidden = (index: number) => !isExpanded && index >= 4;
 
     // No /services index or per-category route exists yet, so the ancestors
     // render as plain text rather than links to 404s.
@@ -130,10 +128,10 @@ export default function ServiceHero({
                             <div className="border w-full md:w-fit border-gray-200 rounded-xl p-3 bg-white">
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-x-16 gap-y-2">
                                     {col1.map((point, i) => (
-                                        <CheckItem key={`c1-${i}`} text={point} hidden={isHidden(points.indexOf(point))} />
+                                        <CheckItem key={`c1-${i}`} text={point} />
                                     ))}
                                     {col2.map((point, i) => (
-                                        <CheckItem key={`c2-${i}`} text={point} hidden={isHidden(points.indexOf(point))} />
+                                        <CheckItem key={`c2-${i}`} text={point} />
                                     ))}
                                 </div>
 
@@ -249,9 +247,9 @@ export default function ServiceHero({
     );
 }
 
-function CheckItem({ text, hidden }: { text: string; hidden?: boolean }) {
+function CheckItem({ text }: { text: string }) {
     return (
-        <div className={`flex items-start gap-2 text-[13px] text-gray-700 ${hidden ? "hidden" : ""}`}>
+        <div className="flex items-start gap-2 text-[13px] text-gray-700">
             <div
                 aria-hidden="true"
                 className="mt-0.5 w-4 h-4 rounded-full bg-gray-100 flex items-center justify-center flex-shrink-0"

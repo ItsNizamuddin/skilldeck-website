@@ -41,18 +41,6 @@ export default function PartnerCompanyCard({
                 </div>
             )}
 
-            {onCompareToggle && (
-                <label className="absolute top-3 right-4 flex items-center gap-1.5 cursor-pointer select-none">
-                    <input
-                        type="checkbox"
-                        checked={Boolean(isCompared)}
-                        onChange={() => onCompareToggle(partner.id)}
-                        className="w-3.5 h-3.5 rounded border-slate-300 text-[#5544CC] focus:ring-[#5544CC] cursor-pointer"
-                    />
-                    <span className="text-[10px] font-bold text-slate-500">Compare</span>
-                </label>
-            )}
-
             {/* Partner Info */}
             <div className="flex flex-col items-center text-center space-y-3 pb-3">
                 <Link href={companyHref} data-no-loader="true" className="w-24 h-12 relative flex items-center justify-center overflow-hidden group">
