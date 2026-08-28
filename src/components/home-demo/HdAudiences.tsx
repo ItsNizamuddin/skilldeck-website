@@ -60,10 +60,10 @@ export default function HdAudiences() {
                             <h3 className="text-lg font-bold text-brand-dark mb-1">{a.title}</h3>
                             <p className="text-xs font-semibold text-brand-primary uppercase tracking-wide mb-3">{a.subtitle}</p>
                             <p className="text-sm text-brand-muted leading-relaxed mb-5">{a.description}</p>
-                            <span className="inline-flex items-center gap-1.5 text-sm font-bold text-brand-dark group-hover:text-brand-primary transition-colors">
+                            {/* <span className="inline-flex items-center gap-1.5 text-sm font-bold text-brand-dark group-hover:text-brand-primary transition-colors">
                                 Learn more
                                 <ArrowUpRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
-                            </span>
+                            </span> */}
                         </div>
                     ))}
                 </div>
