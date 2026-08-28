@@ -17,13 +17,17 @@ const clientLogos = [
     { spriteClass: "bg-sta", alt: "StarAgile" },
     { spriteClass: "bg-sax", alt: "Simpliaxis" },
     { spriteClass: "bg-pal", alt: "PremierAgile" },
-    { spriteClass: "bg-aa", alt: "AA" },
     { spriteClass: "bg-bt", alt: "Bells" },
     { spriteClass: "bg-vf", alt: "VLSI First" },
     { spriteClass: "bg-lnt", alt: "LearnNthrive" },
     { spriteClass: "bg-eg", alt: "EG" },
     { spriteClass: "bg-sd", alt: "SD" },
+    { spriteClass: "bg-sa", alt: "SA" },
     { spriteClass: "bg-agilespark", alt: "AgileSpark" },
+    { spriteClass: "bg-skilldeck", alt: "Skilldeck" },
+    { spriteClass: "bg-skilluped", alt: "SkillUped" },
+    { spriteClass: "bg-vlsifirst", alt: "VLSIFirst" },
+    { spriteClass: "bg-vlsiguru", alt: "VLSIGuru" },
 ];
 
 const stats = [
@@ -86,8 +90,12 @@ export default function HdWhySkilldeck() {
 
                 {/* Logo marquee */}
                 <div>
-                    <p className="text-center text-xs font-semibold text-slate-500 uppercase tracking-widest mb-6">
+                    <p className="text-center text-xs font-semibold text-slate-500 uppercase tracking-widest mb-2">
                         Proven by industry experience — including
+                    </p>
+                    <p className="text-center text-sm text-slate-400 max-w-xl mx-auto mb-6">
+                        Skilldeck is the result of several years of hands-on experience working with leading
+                        training brands.
                     </p>
                     <div className="relative">
                         <div className="absolute left-0 top-0 bottom-0 w-12 md:w-24 bg-gradient-to-r from-[#05060f] via-[#05060f]/80 to-transparent z-10 pointer-events-none" />
@@ -110,6 +118,10 @@ export default function HdWhySkilldeck() {
                     </div>
                     <p className="text-center text-sm text-slate-500 mt-4">
                         And <span className="text-brand-secondary font-semibold">30+ other training institutes</span>
+                    </p>
+                    <p className="text-center text-sm text-slate-500 mt-2">
+                        From technology to marketing to automation — Skilldeck is built on{" "}
+                        <span className="text-white font-semibold">real-world challenges, not assumptions.</span>
                     </p>
                 </div>
             </div>

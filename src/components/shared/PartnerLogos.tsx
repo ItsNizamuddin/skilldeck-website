@@ -6,6 +6,8 @@ interface PartnerLogosProps {
     showBorder?: boolean;
     className?: string;
     title?: string;
+    /** Server-fetched logos so the strip is in the initial HTML for crawlers. */
+    initialLogos?: { src: string; alt: string }[];
 }
 
 let globalPartnerLogosCache: { src: string; alt: string }[] | null = null;
@@ -13,11 +15,19 @@ let globalPartnerLogosCache: { src: string; alt: string }[] | null = null;
 export default function PartnerLogos({
     showBorder = true,
     className = "",
-    title = "Top Training Providers on Skilldeck"
+    title = "Top Training Providers on Skilldeck",
+    initialLogos
 }: PartnerLogosProps) {
-    const [partnerLogos, setPartnerLogos] = useState<{ src: string; alt: string }[]>(() => globalPartnerLogosCache || []);
+    const [partnerLogos, setPartnerLogos] = useState<{ src: string; alt: string }[]>(
+        () => (initialLogos && initialLogos.length > 0 ? initialLogos : globalPartnerLogosCache || [])
+    );
 
     useEffect(() => {
+        // Server already supplied the list; no need to fetch it again.
+        if (initialLogos && initialLogos.length > 0) {
+            globalPartnerLogosCache = initialLogos;
+            return;
+        }
         if (globalPartnerLogosCache && globalPartnerLogosCache.length > 0) {
             setPartnerLogos(globalPartnerLogosCache);
             return;
@@ -67,7 +77,7 @@ export default function PartnerLogos({
             }
         };
         fetchPartners();
-    }, []);
+    }, [initialLogos]);
 
     if (partnerLogos.length === 0) return null;
 
