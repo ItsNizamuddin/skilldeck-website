@@ -1,16 +1,24 @@
 import { fetchFromBackend } from "./apiProxy";
 import { cache } from "react";
 
+export interface ServiceCardSummary {
+    tagline?: string;
+    title?: string;
+    icon?: string;
+    thumbnail?: string;
+    content?: string;
+    ratings?: string;
+    clients?: string;
+    points?: string[];
+}
+
 export interface ServiceItem {
     slug: string;
     service_name: string;
     name?: string;
     order?: number;
     category_slug: string;
-    servicecard?: {
-        icon?: string;
-        thumbnail?: string;
-    };
+    servicecard?: ServiceCardSummary;
 }
 
 export interface CategoryWithServices {
@@ -82,4 +90,17 @@ export const getServicesCategories = cache(async (): Promise<CategoryWithService
         console.error("Error fetching categories and services:", error);
         return [];
     }
+});
+
+
+/**
+ * Flat list of every published service. The platform currently runs a single
+ * service category, so the home page lists services directly rather than
+ * grouping them behind category tabs.
+ */
+export const getAllServices = cache(async (): Promise<ServiceItem[]> => {
+    const categories = await getServicesCategories();
+    return categories
+        .flatMap((cat) => cat.services || [])
+        .sort((a, b) => (a.order || 0) - (b.order || 0));
 });

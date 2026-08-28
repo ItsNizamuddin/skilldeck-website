@@ -1,6 +1,7 @@
 import dynamic from "next/dynamic";
 import { PricingPlan } from "@/lib/plans";
 import FAQ from "../shared/FAQ";
+import type { ServiceItem } from "@/lib/services";
 import PartnerLogos from "../shared/PartnerLogos";
 
 import HdHero from "../home-demo/HdHero";
@@ -11,6 +12,7 @@ import HdBentoFeatures from "../home-demo/HdBentoFeatures";
 
 import AllFeaturesMarquee from "./elements/AllFeaturesMarquee";
 import MarketplacePromotion from "./elements/MarketplacePromotion";
+import ServicesGrid from "./elements/ServicesGrid";
 
 // Lazy-load heavy components below the fold for mobile performance (maintains SSR for SEO)
 const HdDemo = dynamic(() => import("../home-demo/HdDemo"), {
@@ -47,9 +49,10 @@ interface HomeProps {
     plans?: PricingPlan[];
     faqs?: { title: string; value: string }[];
     partnerLogos?: { src: string; alt: string }[];
+    services?: ServiceItem[];
 }
 
-const Home = ({ plans = [], faqs = [], partnerLogos = [] }: HomeProps) => {
+const Home = ({ plans = [], faqs = [], partnerLogos = [], services = [] }: HomeProps) => {
     return (
         <div className="flex flex-col overflow-hidden w-full">
             {/* 1 — Hook */}
@@ -64,43 +67,49 @@ const Home = ({ plans = [], faqs = [], partnerLogos = [] }: HomeProps) => {
 
             {/* 3 — Problem, then the cost breakdown it leads into */}
             <HdProblem />
+
+            {/* 4 — Services we deliver */}
+            <ServicesGrid services={services} />
+
+            {/* 5 — Paying for */}
             <HdPayingFor />
 
-            {/* 4 — Solution framing: without vs. with */}
+            {/* 6 — Solution framing: without vs. with */}
             <HdComparison />
 
-            {/* 5 — The full feature surface, then the module breakdown */}
+            {/* 7 — The full feature surface, then the module breakdown */}
             <AllFeaturesMarquee />
+
+            {/* 8 — Offer */}
+            <HdPricing plans={plans} />
+
             <HdBentoFeatures />
 
-            {/* 6 — See it working */}
+            {/* 9 — See it working */}
             <HdDemo />
 
-            {/* 7 — Why us, with the track record folded in */}
+            {/* 10 — Why us, with the track record folded in */}
             <HdWhySkilldeck />
 
-            {/* 8 — Who it's for */}
+            {/* 11 — Who it's for */}
             <HdAudiences />
 
-            {/* 9 — What you can build */}
+            {/* 12 — What you can build */}
             <HdShowcase />
 
-            {/* 10 — Marketplace */}
-            <section className="py-16 md:py-24 bg-white">
+            {/* 13 — Marketplace */}
+            <section className="bg-white">
                 <div className="container mx-auto px-4 lg:px-0">
                     <MarketplacePromotion />
                 </div>
             </section>
 
-            {/* 11 — Offer */}
-            <HdPricing plans={plans} />
-
-            {/* 12 — Convert */}
+            {/* 14 — Convert */}
             <HdCta />
 
-            {/* 13 — Objection handling */}
+            {/* 15 — Objection handling */}
             {faqs.length > 0 && (
-                <div className="py-16 md:py-24 bg-slate-50" id="faqs">
+                <div className=" bg-slate-50" id="faqs">
                     <div className="container mx-auto px-2 lg:px-0">
                         <FAQ items={faqs} />
                     </div>
