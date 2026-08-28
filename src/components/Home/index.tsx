@@ -11,6 +11,7 @@ import HdBentoFeatures from "../home-demo/HdBentoFeatures";
 
 import AllFeaturesMarquee from "./elements/AllFeaturesMarquee";
 import MarketplacePromotion from "./elements/MarketplacePromotion";
+import ProvenExperience from "./elements/ProvenExperience";
 
 // Lazy-load heavy components below the fold for mobile performance (maintains SSR for SEO)
 const HdDemo = dynamic(() => import("../home-demo/HdDemo"), {
@@ -46,10 +47,9 @@ const HdCta = dynamic(() => import("../home-demo/HdCta"), {
 interface HomeProps {
     plans?: PricingPlan[];
     faqs?: { title: string; value: string }[];
-    partnerLogos?: { src: string; alt: string }[];
 }
 
-const Home = ({ plans = [], faqs = [], partnerLogos = [] }: HomeProps) => {
+const Home = ({ plans = [], faqs = [] }: HomeProps) => {
     return (
         <div className="flex flex-col overflow-hidden w-full">
             {/* 1 — Hook */}
@@ -58,7 +58,7 @@ const Home = ({ plans = [], faqs = [], partnerLogos = [] }: HomeProps) => {
             {/* 2 — Social proof immediately under the fold */}
             <div className="bg-white pb-10">
                 <div className="container mx-auto px-4 lg:px-0">
-                    <PartnerLogos showBorder={false} initialLogos={partnerLogos} />
+                    <PartnerLogos showBorder={false} />
                 </div>
             </div>
 
@@ -76,8 +76,9 @@ const Home = ({ plans = [], faqs = [], partnerLogos = [] }: HomeProps) => {
             {/* 6 — See it working */}
             <HdDemo />
 
-            {/* 7 — Why us, with the track record folded in */}
+            {/* 7 — Why us, then the track record behind it */}
             <HdWhySkilldeck />
+            <ProvenExperience />
 
             {/* 8 — Who it's for */}
             <HdAudiences />

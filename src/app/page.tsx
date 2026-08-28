@@ -2,7 +2,6 @@ import MainNav from "@/components/shared/Navbar";
 import Footer from "@/components/shared/Footer";
 import HeroSection from "@/components/Home";
 import { fetchPlans } from "@/lib/plans";
-import { getPartnerLogos } from "@/lib/partners";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -27,7 +26,7 @@ export const metadata: Metadata = {
 export const revalidate = 3600;
 
 export default async function Page() {
-    const [plans, partnerLogos] = await Promise.all([fetchPlans("INR"), getPartnerLogos()]);
+    const plans = await fetchPlans("INR");
 
     const HOME_FAQS = [
         {
@@ -139,7 +138,7 @@ export default async function Page() {
             <MainNav />
 
             <main>
-                <HeroSection plans={plans} faqs={HOME_FAQS} partnerLogos={partnerLogos} />
+                <HeroSection plans={plans} faqs={HOME_FAQS} />
             </main>
 
             <Footer />

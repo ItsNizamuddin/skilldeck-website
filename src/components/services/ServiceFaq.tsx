@@ -4,7 +4,6 @@ import { useState } from "react";
 import { Plus, Minus, MessageCircleQuestion } from "lucide-react";
 import { ServiceFAQs } from "./types";
 import ServiceSectionIntro from "./ServiceSectionIntro";
-import { normalizeRichText } from "./richText";
 import { Button } from "@/components/ui/Button";
 import { useLeadModal } from "@/components/Forms/LeadModalContext";
 
@@ -76,21 +75,11 @@ export default function ServiceFaq({ faqs, serviceName }: ServiceFaqProps) {
                                             {isOpen ? <Minus className="w-4 h-4" /> : <Plus className="w-4 h-4" />}
                                         </span>
                                     </button>
-                                    {/* Every answer stays in the DOM and is collapsed with CSS —
-                                        unmounting the closed ones hides them from crawlers, and the
-                                        page emits FAQPage structured data claiming all of them. */}
-                                    {item.description && (
+                                    {isOpen && item.description && (
                                         <div
-                                            className={`grid transition-all duration-300 ease-in-out ${isOpen ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
-                                                }`}
-                                        >
-                                            <div className="overflow-hidden">
-                                                <div
-                                                    className="pl-10 pt-3 text-sm text-brand-muted leading-relaxed prose prose-sm max-w-none prose-p:my-1"
-                                                    dangerouslySetInnerHTML={{ __html: normalizeRichText(item.description) }}
-                                                />
-                                            </div>
-                                        </div>
+                                            className="pl-10 pt-3 text-sm text-brand-muted leading-relaxed prose prose-sm max-w-none prose-p:my-1"
+                                            dangerouslySetInnerHTML={{ __html: item.description }}
+                                        />
                                     )}
                                 </div>
                             );

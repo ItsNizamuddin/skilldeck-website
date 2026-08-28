@@ -1,7 +1,6 @@
 "use client";
 
 import { BarChart3, X, ChevronUp, Trash2 } from "lucide-react";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useCompare } from "./CompareContext";
 
@@ -14,7 +13,6 @@ function formatPrice(n: number) {
 
 export function CompareDrawer() {
     const ctx = useCompare();
-    const router = useRouter();
     const [open, setOpen] = useState(true);
 
     if (!ctx || ctx.compareList.length === 0) return null;
@@ -71,7 +69,6 @@ export function CompareDrawer() {
                                 <Trash2 className="w-4 h-4" /> Clear all
                             </button>
                             <button
-                                onClick={() => router.push("/compare")}
                                 disabled={compareList.length < 2}
                                 className="px-5 py-2 bg-gradient-to-r from-indigo-600 to-violet-600 text-white font-semibold rounded-xl text-sm disabled:opacity-50 disabled:cursor-not-allowed hover:shadow-lg transition-all"
                             >

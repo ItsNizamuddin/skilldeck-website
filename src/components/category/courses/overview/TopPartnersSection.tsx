@@ -4,23 +4,9 @@ import { useSchedules } from "@/context/SchedulesContext";
 import { getCurrencySymbol } from "@/lib/courseCardHelpers";
 import { mapToInstitute } from "@/lib/scheduleMapper";
 import { ArrowRight } from "lucide-react";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import PartnerCompanyCard from "./PartnerCompanyCard";
-import dynamic from "next/dynamic";
-
-// Client-only and code-split: the comparison contributes nothing to the server
-// HTML (so nothing for crawlers to weigh) and no JS until it is scrolled to.
-const PartnerComparisonTable = dynamic(() => import("./PartnerComparisonTable"), {
-    ssr: false,
-    loading: () => <div className="h-64 rounded-2xl border border-slate-100 bg-slate-50/60 animate-pulse" />,
-});
 import PartnerSchedulesList from "./PartnerSchedulesList";
-import {
-    ComparisonTableSkeleton,
-    PartnerCardsSkeleton,
-    PartnerCardsSkeletonMobile,
-    SchedulesSkeleton,
-} from "./PartnerSkeletons";
 
 interface TopPartnersSectionProps {
     courseSlug: string;
@@ -33,8 +19,6 @@ export default function TopPartnersSection({ courseSlug }: TopPartnersSectionPro
     const [compareList, setCompareList] = useState<string[]>([]);
     const [allTenants, setAllTenants] = useState<any[]>(() => cachedTenantsList || []);
     const [mobileIndex, setMobileIndex] = useState(0);
-    const [comparisonVisible, setComparisonVisible] = useState(false);
-    const comparisonAnchor = useRef<HTMLDivElement>(null);
 
     const activeCurrency = locationData?.currency || "USD";
 
@@ -183,63 +167,10 @@ export default function TopPartnersSection({ courseSlug }: TopPartnersSectionPro
         });
     }, [institutesList, schedules, activeCurrency]);
 
-    const MAX_COMPARE = 4;
-    /** Preselect three, leaving a free slot so "Add Company" is usable. */
-    const DEFAULT_COMPARE = 3;
-
-    // An empty compareList means "show the default top N", so any add/remove has to
-    // start from that same default — otherwise the first tick would collapse the
-    // table to a single column.
-    const currentSelection = (prev: string[]) =>
-        prev.length > 0 ? prev : partnersData.slice(0, DEFAULT_COMPARE).map(p => p.id);
-
-    // What is actually on screen. An untouched compareList still shows the default
-    // top N in the table, so the card checkboxes have to reflect that same set.
-    const effectiveCompare = useMemo(
-        () => currentSelection(compareList),
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-        [compareList, partnersData]
-    );
-
-    useEffect(() => {
-        const el = comparisonAnchor.current;
-        if (!el || comparisonVisible) return;
-        if (typeof IntersectionObserver === "undefined") {
-            const t = setTimeout(() => setComparisonVisible(true), 0);
-            return () => clearTimeout(t);
-        }
-        const observer = new IntersectionObserver(
-            (entries) => {
-                if (entries.some((e) => e.isIntersecting)) {
-                    setComparisonVisible(true);
-                    observer.disconnect();
-                }
-            },
-            { rootMargin: "300px 0px" }
-        );
-        observer.observe(el);
-        return () => observer.disconnect();
-    }, [comparisonVisible, partnersData.length]);
-
     const handleCompareToggle = (id: string) => {
-        setCompareList(prev => {
-            const base = currentSelection(prev);
-            if (base.includes(id)) return base.filter(item => item !== id);
-            if (base.length >= MAX_COMPARE) return base;
-            return [...base, id];
-        });
-    };
-
-    const handleCompareAdd = (id: string) => {
-        setCompareList(prev => {
-            const base = currentSelection(prev);
-            if (base.includes(id) || base.length >= MAX_COMPARE) return base;
-            return [...base, id];
-        });
-    };
-
-    const handleCompareRemove = (id: string) => {
-        setCompareList(prev => currentSelection(prev).filter(item => item !== id));
+        setCompareList(prev =>
+            prev.includes(id) ? prev.filter(item => item !== id) : [...prev, id]
+        );
     };
 
     const handleScrollToSchedules = () => {
@@ -289,10 +220,11 @@ export default function TopPartnersSection({ courseSlug }: TopPartnersSectionPro
             </div>
 
             {loading && partnersData.length === 0 ? (
-                <>
-                    <PartnerCardsSkeleton />
-                    <PartnerCardsSkeletonMobile />
-                </>
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+                    {[1, 2, 3, 4].map((n) => (
+                        <div key={n} className="h-64 bg-slate-50 border border-slate-100 rounded-3xl animate-pulse" />
+                    ))}
+                </div>
             ) : (
                 <>
                     {/* Desktop View: Grid */}
@@ -302,7 +234,7 @@ export default function TopPartnersSection({ courseSlug }: TopPartnersSectionPro
                                 key={partner.id}
                                 partner={partner}
                                 index={index}
-                                isCompared={effectiveCompare.includes(partner.id)}
+                                isCompared={compareList.includes(partner.id)}
                                 onCompareToggle={handleCompareToggle}
                                 onScrollToSchedules={handleScrollToSchedules}
                                 rankColorClass={getRankColorClass(index)}
@@ -322,7 +254,7 @@ export default function TopPartnersSection({ courseSlug }: TopPartnersSectionPro
                                             key={partner.id}
                                             partner={partner}
                                             index={index}
-                                            isCompared={effectiveCompare.includes(partner.id)}
+                                            isCompared={compareList.includes(partner.id)}
                                             onCompareToggle={handleCompareToggle}
                                             onScrollToSchedules={handleScrollToSchedules}
                                             rankColorClass={getRankColorClass(index)}
@@ -376,32 +308,7 @@ export default function TopPartnersSection({ courseSlug }: TopPartnersSectionPro
                 </>
             )}
 
-            {/* Side-by-side comparison — defaults to the top providers, refined by
-                the Compare checkboxes on the cards. */}
-            {loading && partnersData.length === 0 && <ComparisonTableSkeleton />}
-
-            {partnersData.length > 0 && (
-                <div ref={comparisonAnchor}>
-                    {comparisonVisible ? (
-                        <PartnerComparisonTable
-                            partners={partnersData}
-                            activeCurrency={activeCurrency}
-                            maxCompare={MAX_COMPARE}
-                            courseSlug={courseSlug}
-                            compact
-                            compareList={effectiveCompare}
-                            onAdd={handleCompareAdd}
-                            onRemove={handleCompareRemove}
-                        />
-                    ) : (
-                        <ComparisonTableSkeleton />
-                    )}
-                </div>
-            )}
-
             {/* Detailed Schedules Section */}
-            {loading && (!schedules || schedules.length === 0) && <SchedulesSkeleton />}
-
             {schedules && schedules.length > 0 && (
                 <PartnerSchedulesList
                     partnersData={partnersData}
