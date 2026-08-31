@@ -344,8 +344,7 @@ function NoPickFallback() {
                 {/* Ratings */}
                 <div className="grid grid-cols-2 gap-3">
                     <div className="flex items-center gap-2">
-                        {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img src="https://www.gstatic.com/images/branding/googleg/1x/googleg_standard_color_128dp.png" alt="Google" className="w-5 h-5 flex-shrink-0" loading="lazy" />
+                        <Image src="/companyLogos/google.png" alt="Google" width={20} height={20} className="w-5 h-5 flex-shrink-0 object-contain" />
                         <div>
                             <div className="flex items-center gap-1">
                                 <svg className="w-3 h-3 text-yellow-400 fill-yellow-400" viewBox="0 0 12 12"><path d="M6 1l1.5 3h3l-2.5 1.8 1 3L6 7.2 3 8.8l1-3L1.5 4h3z" /></svg>
