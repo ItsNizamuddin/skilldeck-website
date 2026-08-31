@@ -32,7 +32,7 @@ export default function HdComparison() {
                     <h2 className="heading-section mb-4">
                         No juggling tools. <HdGradientText>No operational nightmares.</HdGradientText>
                     </h2>
-                    <p className="body-large">
+                    <p className="body-medium">
                         Just one system that runs your entire training business end-to-end — from website to LMS, CRM to
                         marketing, payments to analytics.
                     </p>

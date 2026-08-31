@@ -1,6 +1,9 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowUpRight, Star, Users } from "lucide-react";
+import { useState } from "react";
+import { ArrowUpRight, ChevronLeft, ChevronRight, Star, Users } from "lucide-react";
 import ServiceItemIcon from "@/components/services/ServiceItemIcon";
 import type { ServiceItem } from "@/lib/services";
 
@@ -70,7 +73,7 @@ function ServiceCard({ service, index }: { service: ServiceItem; index: number }
                             {tags.map((tag) => (
                                 <span
                                     key={tag}
-                                    className="rounded-full bg-brand-primary/10 px-2 py-1 text-[10px] font-bold uppercase tracking-wide text-brand-primary"
+                                    className="rounded-full bg-brand-primary/10 px-2 py-1 text-[9px] 2xl:text-[10px] font-bold uppercase tracking-wide text-brand-primary"
                                 >
                                     {tag}
                                 </span>
@@ -125,7 +128,36 @@ export default function ServicesGrid({
     id = "services",
 }: ServicesGridProps) {
     const list = limit ? services.slice(0, limit) : services;
+    const [mobileIndex, setMobileIndex] = useState(0);
+    const [desktopPage, setDesktopPage] = useState(0);
+
     if (list.length === 0) return null;
+
+    // Mobile navigation (1 card per slide)
+    const handleMobilePrev = () => {
+        setMobileIndex((prev) => (prev === 0 ? list.length - 1 : prev - 1));
+    };
+
+    const handleMobileNext = () => {
+        setMobileIndex((prev) => (prev === list.length - 1 ? 0 : prev + 1));
+    };
+
+    // Desktop/Tablet navigation (3 cards per page)
+    const DESKTOP_PAGE_SIZE = 3;
+    const totalDesktopPages = Math.ceil(list.length / DESKTOP_PAGE_SIZE);
+
+    const handleDesktopPrev = () => {
+        setDesktopPage((prev) => (prev === 0 ? totalDesktopPages - 1 : prev - 1));
+    };
+
+    const handleDesktopNext = () => {
+        setDesktopPage((prev) => (prev === totalDesktopPages - 1 ? 0 : prev + 1));
+    };
+
+    const desktopVisibleCards = list.slice(
+        desktopPage * DESKTOP_PAGE_SIZE,
+        (desktopPage + 1) * DESKTOP_PAGE_SIZE
+    );
 
     return (
         <section id={id} className="scroll-mt-24 section-y bg-slate-50">
@@ -142,17 +174,101 @@ export default function ServicesGrid({
                             </>
                         )}
                     </h2>
-                    {subtitle && <p className="body-large">{subtitle}</p>}
+                    {subtitle && <p className="body-medium">{subtitle}</p>}
                 </div>
 
-                <ul
-                    className={`mx-auto grid grid-cols-1 gap-5 sm:grid-cols-2 ${list.length >= 3 ? "lg:grid-cols-3" : "max-w-3xl"
-                        }`}
-                >
-                    {list.map((service, i) => (
-                        <ServiceCard key={service.slug} service={service} index={i} />
-                    ))}
-                </ul>
+                {/* Mobile View: Single card carousel with Next / Previous navigation */}
+                <div className="block sm:hidden max-w-sm mx-auto space-y-4">
+                    <ul className="w-full">
+                        {list.map((service, i) => {
+                            if (i !== mobileIndex) return null;
+                            return <ServiceCard key={service.slug} service={service} index={i} />;
+                        })}
+                    </ul>
+
+                    {list.length > 1 && (
+                        <div className="flex items-center justify-between px-2 pt-2 bg-white rounded-2xl border border-slate-200 p-3 shadow-sm">
+                            <button
+                                type="button"
+                                onClick={handleMobilePrev}
+                                className="flex items-center justify-center w-10 h-10 rounded-xl border border-slate-200 bg-white text-slate-700 active:scale-95 transition-all cursor-pointer hover:border-brand-primary hover:text-brand-primary"
+                                aria-label="Previous service"
+                            >
+                                <ChevronLeft className="w-5 h-5" />
+                            </button>
+
+                            {/* Indicator dots */}
+                            <div className="flex items-center gap-1.5">
+                                {list.map((_, i) => (
+                                    <button
+                                        key={i}
+                                        onClick={() => setMobileIndex(i)}
+                                        className={`h-2 rounded-full transition-all duration-300 ${i === mobileIndex ? "bg-brand-primary w-5" : "bg-slate-300 w-2"
+                                            }`}
+                                        aria-label={`Go to service ${i + 1}`}
+                                    />
+                                ))}
+                            </div>
+
+                            <button
+                                type="button"
+                                onClick={handleMobileNext}
+                                className="flex items-center justify-center w-10 h-10 rounded-xl border border-slate-200 bg-white text-slate-700 active:scale-95 transition-all cursor-pointer hover:border-brand-primary hover:text-brand-primary"
+                                aria-label="Next service"
+                            >
+                                <ChevronRight className="w-5 h-5" />
+                            </button>
+                        </div>
+                    )}
+                </div>
+
+                {/* Tablet / Desktop View: max 3 cards per page + Next/Prev controls if > 3 */}
+                <div className="hidden sm:block space-y-6">
+                    <ul className="mx-auto grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+                        {desktopVisibleCards.map((service, i) => (
+                            <ServiceCard
+                                key={service.slug}
+                                service={service}
+                                index={desktopPage * DESKTOP_PAGE_SIZE + i}
+                            />
+                        ))}
+                    </ul>
+
+                    {totalDesktopPages > 1 && (
+                        <div className="flex items-center justify-center gap-4 pt-4">
+                            <button
+                                type="button"
+                                onClick={handleDesktopPrev}
+                                className="flex items-center justify-center w-11 h-11 rounded-2xl border border-slate-200 bg-white text-slate-700 hover:border-brand-primary hover:text-brand-primary active:scale-95 transition-all shadow-sm cursor-pointer"
+                                aria-label="Previous page of services"
+                            >
+                                <ChevronLeft className="w-5 h-5" />
+                            </button>
+
+                            {/* Desktop page indicator dots */}
+                            <div className="flex items-center gap-2">
+                                {Array.from({ length: totalDesktopPages }).map((_, pageIdx) => (
+                                    <button
+                                        key={pageIdx}
+                                        onClick={() => setDesktopPage(pageIdx)}
+                                        className={`h-2.5 rounded-full transition-all duration-300 ${pageIdx === desktopPage ? "bg-brand-primary w-7" : "bg-slate-300 w-2.5 hover:bg-slate-400"
+                                            }`}
+                                        aria-label={`Go to page ${pageIdx + 1}`}
+                                    />
+                                ))}
+                            </div>
+
+                            <button
+                                type="button"
+                                onClick={handleDesktopNext}
+                                className="flex items-center justify-center w-11 h-11 rounded-2xl border border-slate-200 bg-white text-slate-700 hover:border-brand-primary hover:text-brand-primary active:scale-95 transition-all shadow-sm cursor-pointer"
+                                aria-label="Next page of services"
+                            >
+                                <ChevronRight className="w-5 h-5" />
+                            </button>
+                        </div>
+                    )}
+                </div>
 
                 {limit && services.length > limit && (
                     <p className="mt-8 text-center text-sm font-semibold text-brand-muted">
