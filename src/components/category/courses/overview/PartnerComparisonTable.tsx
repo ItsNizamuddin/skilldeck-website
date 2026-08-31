@@ -588,6 +588,7 @@ export default function PartnerComparisonTable({
                     {fullComparisonHref && (
                         <Link
                             href={fullComparisonHref}
+                            rel="nofollow"
                             className="flex-1 flex items-center justify-center gap-2 h-11 rounded-2xl text-xs md:text-sm font-bold text-white bg-[linear-gradient(125deg,rgba(92,63,250,1)_0%,rgba(203,59,149,1)_48%,rgba(254,106,27,1)_100%)] hover:brightness-110 transition-all"
                         >
                             Open full comparison page

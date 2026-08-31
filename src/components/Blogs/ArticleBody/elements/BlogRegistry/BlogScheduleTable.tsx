@@ -3,6 +3,7 @@
 import { useState, useMemo, useEffect } from "react";
 import { ChevronLeft, ChevronRight, Calendar, MapPin, CreditCard, Monitor, Building2, ExternalLink, Loader2 } from "lucide-react";
 import Skeleton from "@/components/ui/Skeleton";
+import Image from "next/image";
 import Link from "next/link";
 import { useIpLocation } from "@/hooks/useIpLocation";
 import { mapToInstitute, mapToSchedule } from "@/lib/scheduleMapper";
@@ -167,9 +168,12 @@ function ScheduleRow({ schedule, index }: { schedule: any; index: number }) {
             <div style={styles.cell(isEven)}>
                 <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
                     {schedule.company?.logo ? (
-                        <img
+                        <Image
                             src={schedule.company.logo}
                             alt={schedule.company.name}
+                            width={32}
+                            height={32}
+                            sizes="32px"
                             style={{ width: 32, height: 32, objectFit: "contain", background: "white", border: "1px solid #e2e8f0", padding: 4, borderRadius: 4 }}
                         />
                     ) : (

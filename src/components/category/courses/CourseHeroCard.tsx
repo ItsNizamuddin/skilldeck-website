@@ -170,12 +170,12 @@ export default function CourseHeroCard({
             <div className="grid grid-cols-2 gap-3 pt-3">
                 {/* Google rating */}
                 <div className="flex items-center gap-2">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                        src="https://www.gstatic.com/images/branding/googleg/1x/googleg_standard_color_128dp.png"
+                    <Image
+                        src="/companyLogos/google.png"
                         alt="Google"
-                        className="w-5 h-5 flex-shrink-0"
-                        loading="lazy"
+                        width={20}
+                        height={20}
+                        className="w-5 h-5 flex-shrink-0 object-contain"
                     />
                     <div>
                         <div className="flex items-center gap-1">

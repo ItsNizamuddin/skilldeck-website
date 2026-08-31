@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useEffect, useState } from "react";
 
 interface PartnerLogosProps {
@@ -101,9 +102,14 @@ export default function PartnerLogos({
                                 className="flex-shrink-0 transition-all duration-300 transform hover:scale-110 cursor-pointer w-32 h-16 flex items-center justify-center"
                                 title={logo.alt}
                             >
-                                <img
+                                {/* next/image so the CMS originals (some are multi-MB)
+                                    are resized and served as webp/avif, not raw. */}
+                                <Image
                                     src={logo.src}
                                     alt={logo.alt}
+                                    width={128}
+                                    height={64}
+                                    sizes="128px"
                                     className="max-w-full max-h-full object-contain"
                                     loading="lazy"
                                 />
