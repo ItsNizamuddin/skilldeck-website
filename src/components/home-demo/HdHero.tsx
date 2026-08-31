@@ -14,7 +14,7 @@ const trustStats = [
 
 export default function HdHero() {
     return (
-        <section className="relative overflow-hidden bg-white pt-28 md:pt-36 pb-12 md:pb-16 2xl:pb-20">
+        <section className="relative overflow-hidden bg-white pt-20 lg:pt-24 pb-12 md:pb-16 2xl:pb-20">
             {/* Soft brand wash — light, not a dark slab */}
             <div aria-hidden="true" className="absolute inset-0 pointer-events-none">
                 <div className="absolute -top-40 -left-32 w-[30rem] h-[30rem] rounded-full bg-brand-primary/[0.07] blur-[110px]" />
@@ -22,35 +22,34 @@ export default function HdHero() {
             </div>
 
             <div className="container mx-auto px-4 lg:px-0 relative z-10">
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-10 items-center">
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 md:gap-6 lg:gap-10 items-center">
                     {/* Left — narrative */}
-                    <div className="lg:col-span-6">
-                        <span className="badge-brand mb-6">The Operating System for Training Institutes</span>
+                    <div className="md:col-span-6 lg:col-span-6 flex flex-col items-center lg:items-start">
+                        <span className="badge-brand mb-4">The Operating System for Training Institutes</span>
 
-                        <h1 className="text-4xl sm:text-5xl lg:text-[3.5rem] font-extrabold tracking-tight leading-[1.08] text-brand-dark mb-5">
-                            One Platform.
-                            <br />
+                        <h1 className="text-3xl sm:text-4xl lg:text-5xl flex flex-wrap items-center justify-center gap-x-3 gap-y-1 font-extrabold tracking-tight leading-[1.08] text-brand-dark mb-3">
+                            <span>One Platform.</span>
                             <HdGradientText>Zero Chaos.</HdGradientText>
                         </h1>
 
-                        <p className="text-base md:text-lg text-brand-muted max-w-xl leading-relaxed mb-4">
+                        <p className="text-base 2xl:text-lg text-brand-muted max-w-xl leading-relaxed mb-4">
                             90% of training institutes overspend on the wrong technology, bloated marketing teams,
                             and fragmented tools.
                         </p>
 
-                        <p className="text-base md:text-lg text-brand-muted max-w-xl leading-relaxed mb-8">
+                        <p className="text-base 2xl:text-lg text-brand-muted max-w-xl leading-relaxed mb-4 lg:mb-8">
                             <span className="text-brand-dark font-semibold">Skilldeck replaces 10+ tools</span> with
                             one powerful platform — and runs your business at up to{" "}
                             <span className="text-brand-dark font-semibold">90% lower cost</span>.
                         </p>
 
                         {/* Full-width stacked on phones, side by side from sm up */}
-                        <div className="flex flex-col sm:flex-row sm:flex-wrap sm:items-center gap-3 mb-10">
+                        <div className="flex flex-col sm:flex-row sm:flex-wrap items-center lg:items-start gap-3 mb-5">
                             <Button
                                 as={Link}
                                 href="/register"
                                 variant="primary"
-                                size="lg"
+                                size="md"
                                 className="rounded-xl font-bold w-full sm:w-auto"
                             >
                                 Experience the Platform Free
@@ -60,7 +59,7 @@ export default function HdHero() {
                                 as="a"
                                 href="#features"
                                 variant="outline-primary"
-                                size="lg"
+                                size="md"
                                 className="rounded-xl w-full sm:w-auto"
                             >
                                 Explore Features
@@ -68,7 +67,7 @@ export default function HdHero() {
                         </div>
 
                         {/* Trust stats */}
-                        <div className="grid grid-cols-3 gap-3 sm:flex sm:flex-wrap sm:items-center sm:gap-x-10 sm:gap-y-4 pt-7 border-t border-slate-200">
+                        <div className="w-full grid grid-cols-3 gap-2 sm:gap-3 xl:flex xl:flex-wrap xl:items-center xl:gap-x-10 xl:gap-y-4 pt-5 lg:pt-7 border-t border-slate-200">
                             {trustStats.map((stat) => (
                                 <div key={stat.label} className="flex flex-col items-center text-center gap-1 sm:flex-row sm:items-center sm:text-left sm:gap-2.5">
                                     <stat.icon className="w-4 h-4 text-brand-primary shrink-0" aria-hidden="true" />
@@ -83,7 +82,7 @@ export default function HdHero() {
 
                     {/* Right — animated "10+ tools become one" visual, cycling through the
                         full platform feature set rather than a fixed handful. */}
-                    <div className="lg:col-span-6">
+                    <div className="md:col-span-6 lg:col-span-6">
                         <div className="relative mx-auto max-w-lg">
                             <HdToolsConverge />
                         </div>

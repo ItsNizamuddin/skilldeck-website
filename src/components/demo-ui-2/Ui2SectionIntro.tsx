@@ -1,6 +1,4 @@
-import { normalizeRichText } from "./richText";
-
-interface ServiceSectionIntroProps {
+interface Ui2SectionIntroProps {
     numeral: string;
     kicker?: string;
     title?: string;
@@ -9,15 +7,8 @@ interface ServiceSectionIntroProps {
     dark?: boolean;
 }
 
-/** Editorial "chapter" header — ghost numeral + kicker + bold title. */
-export default function ServiceSectionIntro({
-    numeral,
-    kicker,
-    title,
-    description,
-    align = "left",
-    dark
-}: ServiceSectionIntroProps) {
+/** Editorial "chapter" header — ghost numeral + kicker + bold title. Demo-ui-2's own signature, distinct from /demo-ui's tag+heading style. */
+export default function Ui2SectionIntro({ numeral, kicker, title, description, align = "left", dark }: Ui2SectionIntroProps) {
     if (!title) return null;
 
     return (
@@ -39,7 +30,7 @@ export default function ServiceSectionIntro({
             {description && (
                 <div
                     className={`max-w-2xl ${dark ? "text-white/60 text-sm md:text-base leading-relaxed" : "body-medium"} ${align === "center" ? "mx-auto" : ""}`}
-                    dangerouslySetInnerHTML={{ __html: normalizeRichText(description) }}
+                    dangerouslySetInnerHTML={{ __html: description }}
                 />
             )}
         </div>
