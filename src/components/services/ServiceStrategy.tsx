@@ -44,10 +44,10 @@ export default function ServiceStrategyComponent({ strategy = {} }: ServiceStrat
                         />
 
                         {stats.length > 0 && (
-                            <div className="flex flex-wrap gap-x-6 gap-y-5 pt-2">
+                            <div className="flex flex-wrap gap-x-1 lg:gap-x-6 gap-y-5 pt-2">
                                 {stats.map((stat, i) => (
-                                    <div key={i} className={`max-w-[220px] ${i > 0 ? "sm:pl-6 sm:border-l border-slate-200" : ""}`}>
-                                        <p className="text-3xl font-black text-brand-primary leading-none">{stat.value}</p>
+                                    <div key={i} className={`max-w-[200px] ${i > 0 ? "sm:pl-6 sm:border-l border-slate-200" : ""}`}>
+                                        <p className="text-xl lg:text-2xl font-black text-brand-primary leading-none">{stat.value}</p>
                                         <p className="text-xs font-semibold text-brand-muted mt-1.5">
                                             {stat.tagline || stat.description}
                                         </p>
