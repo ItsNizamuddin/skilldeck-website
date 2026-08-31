@@ -17,7 +17,7 @@ export default function Ui2Impact({ stats }: Ui2ImpactProps) {
                     {items.map((stat, i) => (
                         <div key={i} className="flex flex-col items-center text-center gap-2 px-4 py-6">
                             <ServiceItemIcon iconString={stat.icon} className="w-5 h-5 text-brand-secondary" defaultIcon="Sparkles" />
-                            <p className="text-3xl md:text-4xl font-black text-brand-dark leading-none">{stat.value}</p>
+                            <p className="text-3xl lg:text-4xl font-black text-brand-dark leading-none">{stat.value}</p>
                             <p className="text-xs font-bold text-brand-muted">{stat.description}</p>
                             {stat.tagline && <p className="text-[11px] text-brand-muted/70 leading-snug max-w-[160px]">{stat.tagline}</p>}
                         </div>

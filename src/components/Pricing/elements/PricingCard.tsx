@@ -162,7 +162,7 @@ const PricingCard: React.FC<Props> = ({
                         const parts = plainText.split(splitRegex).map((s: any) => decodeEntities(s.trim())).filter(Boolean);
                         const [intro, ...bullets] = parts;
                         return (
-                            <div className={`space-y-1.5 h-36 overflow-hidden ${subTextColorClass}`}>
+                            <div className={`space-y-1.5 h-42 overflow-hidden ${subTextColorClass}`}>
                                 {intro && (
                                     <p className="text-[10px] 2xl:text-[11px] leading-relaxed ">{intro}</p>
                                 )}

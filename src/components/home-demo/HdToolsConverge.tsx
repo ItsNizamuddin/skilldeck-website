@@ -90,7 +90,7 @@ export default function HdToolsConverge() {
     }, []);
 
     return (
-        <div className="relative overflow-hidden rounded-3xl border border-slate-200 bg-gradient-to-br from-violet-50/70 via-white to-orange-50/60 p-6 md:p-8">
+        <div className="relative overflow-hidden rounded-3xl border border-slate-200 bg-gradient-to-br from-violet-50/70 via-white to-orange-50/60 p-4 lg:p-8">
             {/* Colour bleed behind the scattered tools */}
             <div aria-hidden="true" className="absolute inset-0 pointer-events-none">
                 <span className="absolute -top-16 -left-12 w-56 h-56 rounded-full bg-brand-primary/10 blur-[70px]" />
@@ -102,7 +102,7 @@ export default function HdToolsConverge() {
             </p>
 
             {/* Rotating tool tiles */}
-            <div className="relative grid grid-cols-2 sm:grid-cols-4 gap-2.5 mb-7">
+            <div className="relative grid grid-cols-2 sm:grid-cols-4 gap-2.5 lg:mb-7">
                 {slots.map((featureIndex, slot) => {
                     const feature = FEATURES[featureIndex];
                     const Icon = feature.icon;
@@ -133,7 +133,7 @@ export default function HdToolsConverge() {
             </div>
 
             {/* Convergence beam */}
-            <div className="relative flex flex-col items-center gap-1 mb-6">
+            <div className="relative flex flex-col items-center gap-1 mb-2 lg:mb-6">
                 <span className="relative h-7 w-px bg-slate-200 overflow-hidden" aria-hidden="true">
                     <span className="hd-beam absolute inset-0 bg-gradient-to-b from-transparent via-brand-primary to-transparent" />
                 </span>
@@ -154,7 +154,7 @@ export default function HdToolsConverge() {
                     aria-hidden="true"
                     className="hd-halo absolute -inset-2 rounded-3xl bg-brand-primary/20 blur-xl"
                 />
-                <div className="relative rounded-2xl bg-white border-2 border-brand-primary/20 shadow-lg shadow-brand-primary/10 p-5 flex items-center gap-4">
+                <div className="relative rounded-2xl bg-white border-2 border-brand-primary/20 shadow-lg shadow-brand-primary/10 p-3 lg:p-5 flex items-center gap-4">
                     <Image
                         src={skilldeckLogo}
                         alt="Skilldeck"
