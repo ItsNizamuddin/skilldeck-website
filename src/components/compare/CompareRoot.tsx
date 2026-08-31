@@ -8,6 +8,7 @@ import {
 } from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import Breadcrumb from "@/components/ui/Breadcrumb";
+import ComparisonProof from "@/components/shared/ComparisonProof";
 import { useLeadModal } from "@/components/Forms/LeadModalContext";
 import { buildColumn, buildCompanyColumn, CompareColumn, CompareSchedule, CompareTenant, humanDate, money } from "./compareModel";
 import { COMPARE_GROUPS, CompareRow, rowDiffers, rowHasData, winnerIndex } from "./compareRows";
@@ -394,9 +395,28 @@ export default function CompareRoot() {
             if (next === "company") qs.set("type", "companies");
             if (next === "schedule") qs.set("type", "schedules");
             if (courseSlug) qs.set("course", courseSlug);
+
+            // Carry the current selection across, translated into the target unit —
+            // otherwise the view re-seeds from the course pool and drops providers
+            // that have no batch for this course.
+            const translated = selectedKeys
+                .map((key) => {
+                    if (next === "schedule") {
+                        if (!isCompanyKey(key)) return rawId(key);
+                        const match = schedules.find((x) => x.tenantId === rawId(key));
+                        return match?._id || match?.id;
+                    }
+                    // Institutes and Both are both keyed off the provider.
+                    return tenantIdOfKey(key);
+                })
+                .filter((v): v is string => Boolean(v));
+
+            const unique = Array.from(new Set(translated));
+            if (unique.length > 0) qs.set("ids", unique.join(","));
+
             router.replace(qs.toString() ? `${pathname}?${qs.toString()}` : pathname, { scroll: false });
         },
-        [view, courseSlug, pathname, router]
+        [view, courseSlug, pathname, router, selectedKeys, schedules, tenantIdOfKey]
     );
 
     const awards = useMemo(() => {
@@ -462,6 +482,8 @@ export default function CompareRoot() {
             <Breadcrumb items={breadcrumb} />
 
             <div className="rounded-3xl border border-slate-200 bg-[linear-gradient(120deg,#faf9ff_0%,#ffffff_60%)] px-6 py-8 md:px-10 md:py-10">
+                <div className="grid grid-cols-1 items-center gap-8 lg:grid-cols-12">
+                    <div className="lg:col-span-7">
                 <span className="badge-brand mb-4">
                     <BadgeCheck className="w-3.5 h-3.5 mr-1.5" />
                     Up to four at a time
@@ -476,6 +498,10 @@ export default function CompareRoot() {
                     Fees are the easy part. This puts curriculum depth, delivery, commitment and cost per week of
                     instruction next to each other, and marks the stronger option on every row.
                 </p>
+                    </div>
+
+                    <ComparisonProof variant="cards" className="lg:col-span-5" />
+                </div>
             </div>
 
             <div className="flex flex-wrap items-center justify-between gap-3">
@@ -663,7 +689,7 @@ export default function CompareRoot() {
                                 </button>
 
                                 {!isCollapsed && (
-                                    <div className="overflow-x-auto overscroll-x-contain">
+                                    <div className="overflow-auto max-h-[70vh] overscroll-x-contain">
                                         <table className="w-full table-fixed border-collapse">
                                             <colgroup>
                                                 <col className="w-[130px] md:w-[190px]" />
@@ -671,6 +697,42 @@ export default function CompareRoot() {
                                                     <col key={c.key} className="w-[190px] md:w-[230px]" />
                                                 ))}
                                             </colgroup>
+                                            {/* Sticky primary header keeps the column identities visible
+                                                while a long group scrolls. */}
+                                            <thead>
+                                                <tr>
+                                                    <th className="text-left px-4 py-3 text-[10px] md:text-xs font-bold uppercase tracking-wide text-white bg-brand-primary sticky left-0 top-0 z-30 border-b border-brand-primary">
+                                                        Comparing
+                                                    </th>
+                                                    {columns.map((c) => (
+                                                        <th
+                                                            key={c.key}
+                                                            className="px-4 py-3 bg-brand-primary sticky top-0 z-20 border-b border-l border-white/20 align-middle"
+                                                        >
+                                                            <div className="flex items-center gap-2">
+                                                                <span className="relative w-6 h-6 shrink-0 rounded-md bg-white p-0.5">
+                                                                    {c.companyLogo ? (
+                                                                        <Image
+                                                                            src={c.companyLogo}
+                                                                            alt={c.companyName}
+                                                                            fill
+                                                                            sizes="24px"
+                                                                            className="object-contain p-0.5"
+                                                                        />
+                                                                    ) : (
+                                                                        <span className="flex h-full w-full items-center justify-center text-[10px] font-black text-brand-primary">
+                                                                            {c.companyName.charAt(0)}
+                                                                        </span>
+                                                                    )}
+                                                                </span>
+                                                                <span className="min-w-0 text-left text-[11px] md:text-xs font-bold text-white line-clamp-2">
+                                                                    {c.kind === "company" ? c.companyName : c.programme}
+                                                                </span>
+                                                            </div>
+                                                        </th>
+                                                    ))}
+                                                </tr>
+                                            </thead>
                                             <tbody className="divide-y divide-slate-100">
                                                 {visibleRows.map((row) => {
                                                     const win = winnerIndex(row, columns);

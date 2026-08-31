@@ -4,6 +4,7 @@ import { Course } from "@/types";
 import { Loader2, Sparkles } from "lucide-react";
 import { useState } from "react";
 import CourseCard from "./courses/CourseCard";
+import { bareCategoryName } from "@/lib/categoryName";
 
 interface Meta {
     page: number;
@@ -48,7 +49,7 @@ export default function CategoryCourses({ categoryName, courses: initialCourses,
                         <span className="text-[11px] font-semibold text-blue-600 uppercase tracking-widest">Available Programs</span>
                     </div>
                     <h2 className="text-lg md:text-xl lg:text-2xl font-black leading-tight text-slate-800 mb-4">
-                        Explore {categoryName} Courses
+                        Explore {bareCategoryName(categoryName)} Courses
                     </h2>
                     <p className="text-xs md:text-sm text-slate-500 max-w-2xl font-medium leading-relaxed">
                         Choose from our top-rated, globally recognized certifications designed to accelerate your growth and expertise.
