@@ -24,7 +24,7 @@ export default function Ui2SectionIntro({ numeral, kicker, title, description, a
                     </span>
                 )}
             </div>
-            <h2 className={`text-2xl md:text-4xl font-extrabold tracking-tight leading-[1.1] ${dark ? "text-white" : "text-brand-dark"}`}>
+            <h2 className={`text-2xl lg:text-3xl font-extrabold tracking-tight leading-[1.1] ${dark ? "text-white" : "text-brand-dark"}`}>
                 {title}
             </h2>
             {description && (

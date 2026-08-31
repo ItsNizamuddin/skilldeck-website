@@ -150,7 +150,7 @@ export default function ServiceHero({
                         )}
 
                         {/* CTAs */}
-                        <div className="flex flex-row items-center gap-3 pt-1">
+                        <div className="flex flex-row items-center justify-center lg:justify-start gap-3 pt-1">
                             <Button
                                 onClick={handleGetQuote}
                                 variant="primary"
