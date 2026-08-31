@@ -150,18 +150,18 @@ export default async function CategoryPage({ params }: PageProps) {
             <MainNav />
             <main className="flex-1">
                 <CategoryHero data={category} />
-                <CategoryHighlights stats={category.stats} keyPoints={category.key_points} categoryName={category.name} />
                 <CategoryCourses
                     categoryName={category.name}
                     courses={courses?.data || []}
                     meta={courses?.meta || { page: 1, limit: 6, total: 0, pages: 0 }}
                     slug={slug}
                 />
+                <CategoryHighlights stats={category.stats} keyPoints={category.key_points} categoryName={category.name} />
                 <CategorySalaries
                     categoryName={category.name}
                     salaries={category.salaries}
                 />
-                <CategoryCertification />
+                <CategoryCertification categoryName={category.name} />
 
                 {category.faqs && category.faqs.length > 0 && (
                     <div className="container mx-auto max-w-7xl px-6 my-8 md:my-12">

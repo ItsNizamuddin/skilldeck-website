@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Breadcrumb } from "../ui/Breadcrumb";
 import { Button } from "../ui/Button";
+import ComparisonProof from "../shared/ComparisonProof";
 
 interface CategoryHeroProps {
     data: CategoryData;
@@ -49,6 +50,9 @@ export default function CategoryHero({ data }: CategoryHeroProps) {
                                 </Button>
                             </Link>
                         </div>
+
+                        {/* Comparison outcomes — the reason to compare before enrolling. */}
+                        <ComparisonProof className="pt-4" />
                     </div>
 
                     {/* Right: Image */}

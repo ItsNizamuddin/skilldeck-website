@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useMemo, useState } from "react";
-import { ArrowRight, BadgeCheck, Building2, CheckCircle2, ChevronRight, Monitor, Plus, Star, TrendingDown, X, Zap } from "lucide-react";
+import { ArrowRight, BadgeCheck, Building2, CheckCircle2, ChevronDown, ChevronRight, Monitor, Plus, Star, TrendingDown, X, Zap } from "lucide-react";
 import { formatPrice, getCurrencySymbol } from "@/lib/courseCardHelpers";
 import ComparePickerModal, { PickerItem } from "@/components/compare/ComparePickerModal";
 
@@ -47,8 +47,9 @@ interface PartnerComparisonTableProps {
     partners: ComparisonPartner[];
     activeCurrency: string;
     maxCompare?: number;
-    /** Trims to the headline rows and surfaces a link to the full comparison. */
+    /** Trims to the headline rows, with an in-place toggle for the rest. */
     compact?: boolean;
+    /** Enables the deep link into the standalone /compare page. */
     courseSlug?: string;
     /** Ids currently ticked on the cards; empty means "show the default top N". */
     compareList?: string[];
@@ -142,6 +143,8 @@ export default function PartnerComparisonTable({
     onRemove,
 }: PartnerComparisonTableProps) {
     const [pickerOpen, setPickerOpen] = useState(false);
+    /** Full comparison by default; the viewer can collapse it to the headline rows. */
+    const [showAllRows, setShowAllRows] = useState(true);
 
     const selected = useMemo(() => {
         const picked = compareList.length > 0
@@ -192,8 +195,8 @@ export default function PartnerComparisonTable({
         highlights: selected.some((p) => (p.highlights || []).length > 0),
     };
 
-    // Preview on the course page: headline rows only, the rest lives on /compare.
-    if (compact) {
+    // Preview on the course page: headline rows only until expanded in place.
+    if (compact && !showAllRows) {
         has.minutes = false;
         has.batchType = false;
         has.location = false;
@@ -205,14 +208,27 @@ export default function PartnerComparisonTable({
 
     const canAdd = selected.length < maxCompare && available.length > 0;
 
+    // Carries the current selection so /compare opens on the same companies.
     const fullComparisonHref = courseSlug
         ? `/compare?type=companies&course=${encodeURIComponent(courseSlug)}` +
         (selected.length > 0 ? `&ids=${selected.map((p) => p.id).join(",")}` : "")
         : undefined;
+
     const columnCount = selected.length + (canAdd ? 1 : 0);
 
     const companyHref = (p: ComparisonPartner) =>
         p.slug ? `/companies/${p.slug}?id=${p.id || p._id}` : `/companies/${p.id || p._id}`;
+
+    const addPickerOnPrimary = (
+        <button
+            type="button"
+            onClick={() => setPickerOpen(true)}
+            className="w-full inline-flex items-center justify-center gap-1.5 h-9 rounded-xl border border-dashed border-white/50 text-[11px] md:text-xs font-bold text-white hover:bg-white/10 transition-colors"
+        >
+            <Plus className="w-3.5 h-3.5" />
+            Add Company
+        </button>
+    );
 
     const addPicker = (
         <button
@@ -233,8 +249,8 @@ export default function PartnerComparisonTable({
                         Compare Training Companies
                     </h3>
                     <p className="text-xs text-slate-500 font-medium">
-                        {compact
-                            ? "A quick side by side look — open the full comparison for every detail"
+                        {compact && !showAllRows
+                            ? "A quick side by side look — expand for every detail"
                             : "Side by side comparison of top training providers"}
                     </p>
                 </div>
@@ -243,14 +259,17 @@ export default function PartnerComparisonTable({
                         <BadgeCheck className="w-3.5 h-3.5 text-[#5544CC]" />
                         Compare up to {maxCompare} Companies
                     </span>
-                    {compact && fullComparisonHref && (
-                        <Link
-                            href={fullComparisonHref}
-                            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-[11px] font-bold text-white bg-[linear-gradient(125deg,rgba(92,63,250,1)_0%,rgba(203,59,149,1)_48%,rgba(254,106,27,1)_100%)]"
+                    {compact && (
+                        <button
+                            type="button"
+                            onClick={() => setShowAllRows((v) => !v)}
+                            aria-expanded={showAllRows}
+                            aria-controls="compare-partners-table"
+                            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-[11px] font-bold text-white bg-brand-primary hover:brightness-110 transition-all"
                         >
-                            Full comparison
-                            <ArrowRight className="w-3.5 h-3.5" />
-                        </Link>
+                            {showAllRows ? "Show less" : "Detailed comparison"}
+                            <ChevronDown className={`w-3.5 h-3.5 transition-transform ${showAllRows ? "rotate-180" : ""}`} />
+                        </button>
                     )}
                 </div>
             </div>
@@ -266,7 +285,7 @@ export default function PartnerComparisonTable({
                 sticky header anchors here rather than to the viewport. Capping the
                 height gives it somewhere to stick to during vertical scroll.
             */}
-            <div className="overflow-auto max-h-[70vh] rounded-2xl border border-slate-200 bg-white overscroll-x-contain">
+            <div id="compare-partners-table" className="overflow-auto max-h-[70vh] rounded-2xl border border-slate-200 bg-white overscroll-x-contain">
                 <table className="w-full table-fixed border-collapse">
                     <colgroup>
                         <col className="w-[110px] md:w-[170px]" />
@@ -277,20 +296,20 @@ export default function PartnerComparisonTable({
 
                     <thead>
                         <tr>
-                            <th className="text-left px-3 md:px-4 py-3 font-bold text-slate-700 text-[10px] md:text-xs uppercase tracking-wide bg-slate-50 sticky left-0 top-0 z-30 border-b border-r border-slate-200">
+                            <th className="text-left px-3 md:px-4 py-3.5 font-bold text-white text-[10px] md:text-xs uppercase tracking-wide bg-brand-primary sticky left-0 top-0 z-30 border-b border-brand-primary">
                                 Companies
                             </th>
                             {selected.map((p) => (
                                 <th
                                     key={p.id}
-                                    className="px-3 md:px-4 py-3 bg-white sticky top-0 z-20 border-b border-l border-slate-200 align-middle"
+                                    className="px-3 md:px-4 py-3.5 bg-brand-primary sticky top-0 z-20 border-b border-l border-white/20 align-middle"
                                 >
                                     <div className="flex items-center gap-2">
-                                        <span className="relative w-7 h-7 shrink-0">
+                                        <span className="relative w-7 h-7 shrink-0 rounded-lg bg-white p-0.5">
                                             {p.logo ? (
-                                                <Image src={p.logo} alt={p.name} fill sizes="28px" className="object-contain" />
+                                                <Image src={p.logo} alt={p.name} fill sizes="28px" className="object-contain p-0.5" />
                                             ) : (
-                                                <span className="w-7 h-7 rounded-lg bg-purple-50 flex items-center justify-center text-[11px] font-black text-purple-600">
+                                                <span className="w-7 h-7 rounded-lg bg-white flex items-center justify-center text-[11px] font-black text-brand-primary">
                                                     {p.name?.charAt(0)}
                                                 </span>
                                             )}
@@ -299,7 +318,8 @@ export default function PartnerComparisonTable({
                                             href={companyHref(p)}
                                             data-no-loader="true"
                                             title={p.name}
-                                            className="flex-1 min-w-0 text-[11px] md:text-xs font-bold text-slate-800 hover:text-purple-600 transition-colors line-clamp-2 text-left"
+                                            rel="nofollow"
+                                            className="flex-1 min-w-0 text-[11px] md:text-xs font-bold text-white hover:text-white/80 transition-colors line-clamp-2 text-left"
                                         >
                                             {p.name}
                                         </Link>
@@ -308,7 +328,7 @@ export default function PartnerComparisonTable({
                                                 type="button"
                                                 onClick={() => onRemove(p.id)}
                                                 aria-label={`Remove ${p.name} from comparison`}
-                                                className="shrink-0 text-slate-300 hover:text-slate-600 transition-colors"
+                                                className="shrink-0 text-white/60 hover:text-white transition-colors"
                                             >
                                                 <X className="w-3.5 h-3.5" />
                                             </button>
@@ -317,8 +337,8 @@ export default function PartnerComparisonTable({
                                 </th>
                             ))}
                             {canAdd && (
-                                <th className="px-3 md:px-4 py-3 bg-white sticky top-0 z-20 border-b border-l border-slate-200 align-middle">
-                                    {addPicker}
+                                <th className="px-3 md:px-4 py-3.5 bg-brand-primary sticky top-0 z-20 border-b border-l border-white/20 align-middle">
+                                    {addPickerOnPrimary}
                                 </th>
                             )}
                         </tr>
@@ -536,7 +556,8 @@ export default function PartnerComparisonTable({
                                     <Link
                                         href={companyHref(p)}
                                         data-no-loader="true"
-                                        className="w-full inline-flex items-center justify-center gap-1.5 h-9 rounded-xl border border-slate-200 text-[11px] md:text-xs font-bold text-slate-700 hover:border-purple-200 hover:text-purple-600 transition-colors"
+                                        rel="nofollow"
+                                        className="w-full inline-flex items-center justify-center gap-1.5 h-9 rounded-xl border border-slate-200 text-[11px] md:text-xs font-bold text-slate-700 hover:border-brand-primary/40 hover:text-brand-primary transition-colors"
                                     >
                                         View Full Details
                                         <ArrowRight className="w-3.5 h-3.5" />
@@ -551,14 +572,29 @@ export default function PartnerComparisonTable({
                 </table>
             </div>
 
-            {compact && fullComparisonHref && (
-                <Link
-                    href={fullComparisonHref}
-                    className="w-full flex items-center justify-center gap-2 h-11 rounded-2xl border border-slate-200 bg-white text-xs md:text-sm font-bold text-slate-700 hover:border-[#5544CC] hover:text-[#5544CC] transition-colors"
-                >
-                    View full comparison in detail
-                    <ArrowRight className="w-4 h-4" />
-                </Link>
+            {compact && (
+                <div className="flex flex-col sm:flex-row gap-3">
+                    <button
+                        type="button"
+                        onClick={() => setShowAllRows((v) => !v)}
+                        aria-expanded={showAllRows}
+                        aria-controls="compare-partners-table"
+                        className="flex-1 flex items-center justify-center gap-2 h-11 rounded-2xl border border-brand-primary/30 bg-white text-xs md:text-sm font-bold text-brand-primary hover:bg-brand-primary hover:text-white transition-colors"
+                    >
+                        {showAllRows ? "Show fewer details" : "Show detailed comparison report"}
+                        <ChevronDown className={`w-4 h-4 transition-transform ${showAllRows ? "rotate-180" : ""}`} />
+                    </button>
+
+                    {fullComparisonHref && (
+                        <Link
+                            href={fullComparisonHref}
+                            className="flex-1 flex items-center justify-center gap-2 h-11 rounded-2xl text-xs md:text-sm font-bold text-white bg-[linear-gradient(125deg,rgba(92,63,250,1)_0%,rgba(203,59,149,1)_48%,rgba(254,106,27,1)_100%)] hover:brightness-110 transition-all"
+                        >
+                            Open full comparison page
+                            <ArrowRight className="w-4 h-4" />
+                        </Link>
+                    )}
+                </div>
             )}
 
             <p className="text-center text-[11px] text-slate-400">

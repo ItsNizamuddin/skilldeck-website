@@ -1,8 +1,16 @@
 import { Award, CheckCircle } from 'lucide-react';
 import Image from 'next/image';
 import OpenModalButton from '../ui/OpenModalButton';
+import { bareCategoryName } from '@/lib/categoryName';
 
-export default function CategoryCertification() {
+interface CategoryCertificationProps {
+    /** Category name, so the copy is not hardcoded to one vertical. */
+    categoryName?: string;
+}
+
+export default function CategoryCertification({ categoryName }: CategoryCertificationProps) {
+    const subject = bareCategoryName(categoryName) || "Professional";
+
     return (
         <section className="bg-slate-950 text-white py-16 lg:py-24 relative overflow-hidden">
             {/* Soft glowing details */}
@@ -17,10 +25,11 @@ export default function CategoryCertification() {
                         <span className="text-xs font-black tracking-widest uppercase">Verified Certification</span>
                     </div>
                     <h2 className="text-2xl md:text-3xl font-black tracking-tight leading-tight text-white">
-                        Global Agile Certifications
+                        Global {subject} Certifications
                     </h2>
                     <p className="text-slate-400 text-xs md:text-sm leading-relaxed max-w-2xl mx-auto font-medium">
-                        Boost your career with in-demand Agile Management credentials. Stand out with globally recognized certifications validated by leading industry bodies.
+                        Boost your career with in-demand {subject} credentials. Stand out with globally recognized
+                        certifications validated by leading industry bodies.
                     </p>
                 </div>
 
@@ -62,7 +71,7 @@ export default function CategoryCertification() {
                         <div className="relative w-full max-w-[500px] aspect-[4/3] rounded-3xl overflow-hidden border border-white/5 bg-slate-900/40 backdrop-blur-md p-4 shadow-2xl">
                             <div className="relative w-full h-full rounded-2xl overflow-hidden bg-slate-950">
                                 <Image
-                                    src="/category/cat-cert.png"
+                                    src="/category/cat-cert.webp"
                                     alt="Certificate of Achievement"
                                     fill
                                     sizes="(max-width: 768px) 100vw, 40vw"

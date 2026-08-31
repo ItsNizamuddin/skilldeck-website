@@ -21,7 +21,7 @@ export default function CategoryContact() {
                                 R
                             </div>
                             <div>
-                                <h3 className="text-2xl md:text-3xl font-black leading-tight text-white">Speak with Rohith</h3>
+                                <h3 className="text-2xl md:text-3xl font-black leading-tight text-white">Speak with Regina</h3>
                                 <p className="text-slate-400 text-xs md:text-sm font-semibold">Our Dedicated Learning Advisor</p>
                             </div>
                         </div>

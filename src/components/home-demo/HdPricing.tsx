@@ -7,7 +7,9 @@ interface HdPricingProps {
 
 export default function HdPricing({ plans }: HdPricingProps) {
     return (
-        <section id="pricing" className="scroll-mt-24 section-y bg-white">
+        // PricingSection already carries `section-y`; adding it here too doubled the
+        // vertical padding at both ends.
+        <section id="pricing" className="scroll-mt-24 bg-white">
             <PricingSection plans={plans} />
         </section>
     );

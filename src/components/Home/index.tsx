@@ -59,7 +59,7 @@ const Home = ({ plans = [], faqs = [], partnerLogos = [], services = [] }: HomeP
             <HdHero />
 
             {/* 2 — Social proof immediately under the fold */}
-            <div className="bg-white pb-10">
+            <div className="">
                 <div className="container mx-auto px-4 lg:px-0">
                     <PartnerLogos showBorder={false} initialLogos={partnerLogos} />
                 </div>

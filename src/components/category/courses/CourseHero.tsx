@@ -2,6 +2,7 @@
 
 import CompanyContactButton from "@/components/companies/CompanyContactButton";
 import Breadcrumb from "@/components/ui/Breadcrumb";
+import ComparisonProof from "@/components/shared/ComparisonProof";
 import { Button } from "@/components/ui/Button";
 import { useSchedules } from "@/context/SchedulesContext";
 import type { CourseHeroData } from "@/types/hero";
@@ -185,6 +186,9 @@ export default function CourseHero({ course, courseSlug, locationSlug }: CourseH
                                 <ArrowRight className="w-4 h-4" aria-hidden="true" />
                             </Button>
                         </div>
+
+                        {/* Comparison outcomes — the reason to compare before enrolling. */}
+                        <ComparisonProof className="mt-5" />
                     </div>
 
                     {/* ───────────── RIGHT COLUMN ───────────── */}

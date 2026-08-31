@@ -387,8 +387,8 @@ export default function TopPartnersSection({ courseSlug }: TopPartnersSectionPro
                             partners={partnersData}
                             activeCurrency={activeCurrency}
                             maxCompare={MAX_COMPARE}
-                            courseSlug={courseSlug}
                             compact
+                            courseSlug={courseSlug}
                             compareList={effectiveCompare}
                             onAdd={handleCompareAdd}
                             onRemove={handleCompareRemove}
