@@ -71,12 +71,28 @@ export default function CompareRoot() {
     const view: CompareView =
         typeParam === "companies" ? "company" : typeParam === "schedules" ? "schedule" : "both";
     const courseSlug = params.get("course") || undefined;
+    const titleParam = params.get("title") || params.get("courseTitle");
     const urlIds = useMemo(
         () => (params.get("ids") || "").split(",").map((v) => v.trim()).filter(Boolean),
         [params]
     );
 
     const [schedules, setSchedules] = useState<CompareSchedule[]>([]);
+
+    const rawCourseTitle = titleParam || schedules[0]?.product?.name || schedules[0]?.marketplaceProduct?.name;
+
+    const displayCourseTitle = useMemo(() => {
+        if (rawCourseTitle) {
+            const cleaned = rawCourseTitle.replace(/\s+(training|course|certification|provider|providers)$/i, "").trim();
+            return cleaned || rawCourseTitle;
+        }
+        if (courseSlug) {
+            const words = courseSlug.split("-").filter((w) => w !== "training" && w !== "course");
+            if (words.length === 0) return undefined;
+            return words.map((w) => (w.length <= 4 ? w.toUpperCase() : w.charAt(0).toUpperCase() + w.slice(1))).join(" ");
+        }
+        return undefined;
+    }, [rawCourseTitle, courseSlug]);
     const [tenants, setTenants] = useState<CompareTenant[]>([]);
     const [directory, setDirectory] = useState<CompareTenant[]>([]);
     const [selectedKeys, setSelectedKeys] = useState<string[]>([]);
@@ -484,20 +500,31 @@ export default function CompareRoot() {
             <div className="rounded-3xl border border-slate-200 bg-[linear-gradient(120deg,#faf9ff_0%,#ffffff_60%)] px-6 py-8 md:px-10 md:py-10">
                 <div className="grid grid-cols-1 items-center gap-8 lg:grid-cols-12">
                     <div className="lg:col-span-7">
-                <span className="badge-brand mb-4">
-                    <BadgeCheck className="w-3.5 h-3.5 mr-1.5" />
-                    Up to four at a time
-                </span>
-                <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight text-brand-dark mb-3">
-                    Compare {view === "company" ? "institutes" : view === "schedule" ? "schedules" : "your options"}{" "}
-                    <span className="bg-[linear-gradient(125deg,rgba(92,63,250,1)_0%,rgba(203,59,149,1)_48%,rgba(254,106,27,1)_100%)] bg-clip-text text-transparent">
-                        properly.
-                    </span>
-                </h1>
-                <p className="body-medium max-w-2xl">
-                    Fees are the easy part. This puts curriculum depth, delivery, commitment and cost per week of
-                    instruction next to each other, and marks the stronger option on every row.
-                </p>
+                        <span className="badge-brand mb-4">
+                            <BadgeCheck className="w-3.5 h-3.5 mr-1.5" />
+                            Up to four at a time
+                        </span>
+                        <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight text-brand-dark mb-3">
+                            Compare{" "}
+                            {displayCourseTitle ? (
+                                <>
+                                    <span className="bg-[linear-gradient(125deg,rgba(92,63,250,1)_0%,rgba(203,59,149,1)_48%,rgba(254,106,27,1)_100%)] bg-clip-text text-transparent">
+                                        {displayCourseTitle}
+                                    </span>{" "}
+                                    Training & certification Providers.
+                                </>
+                            ) : (
+                                <>
+                                    {view === "company" ? "institutes" : view === "schedule" ? "schedules" : "your options"}{" "}
+                                    <span className="bg-[linear-gradient(125deg,rgba(92,63,250,1)_0%,rgba(203,59,149,1)_48%,rgba(254,106,27,1)_100%)] bg-clip-text text-transparent">
+                                        Training & certification Providers.
+                                    </span>
+                                </>
+                            )}
+                        </h1>
+                        <p className="body-medium max-w-2xl">
+                            Compare before you make the decision! Not all the institutes offer same value, cirriculum, price, pre and post training benefits. Compare all the offerings from the providers and place a quote here. We assure you of the best price and suggest the best rated training/certification providers for the {displayCourseTitle ? `${displayCourseTitle} ` : ""}course you are looking at.
+                        </p>
                     </div>
 
                     <ComparisonProof variant="cards" className="lg:col-span-5" />
