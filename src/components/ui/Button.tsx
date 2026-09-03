@@ -33,10 +33,11 @@ export const Button: React.FC<ButtonProps> = ({
     return (
       <Component
         className={cn(
-          "rounded-xl inline-flex transition-all duration-200 transform active:scale-95",
+          "rounded-xl inline-flex items-center justify-center transition-all duration-200 transform active:scale-95",
           "hover:-translate-y-1px hover:shadow-lg hover:shadow-[#5c3ffa]/25",
           "disabled:opacity-50 disabled:pointer-events-none",
           "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#5c3ffa]",
+          sizes[size],
           className
         )}
         style={{ padding: "1.5px", background: "var(--gradient-brand)" }}
@@ -50,8 +51,7 @@ export const Button: React.FC<ButtonProps> = ({
             // Follow the wrapper's radius so a caller-supplied rounding
             // (e.g. `rounded-full`) does not leave the gradient ring broken.
             "transition-all duration-200 rounded-[inherit]",
-            "flex items-center justify-center gap-2 w-full h-full font-semibold",
-            sizes[size]
+            "flex items-center justify-center gap-2 w-full h-full font-semibold px-3"
           )}
         >
           {children}

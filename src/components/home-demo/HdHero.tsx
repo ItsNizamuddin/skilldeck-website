@@ -43,14 +43,14 @@ export default function HdHero() {
                             <span className="text-brand-dark font-semibold">90% lower cost</span>.
                         </p>
 
-                        {/* Full-width stacked on phones, side by side from sm up */}
-                        <div className="flex flex-col sm:flex-row sm:flex-wrap items-center lg:items-start gap-3 mb-5">
+                        {/* Side by side row across all screens */}
+                        <div className="flex flex-row flex-wrap items-center justify-center lg:justify-start gap-2.5 sm:gap-3 mb-5">
                             <Button
                                 as={Link}
                                 href="/register"
                                 variant="primary"
                                 size="md"
-                                className="rounded-xl font-bold w-full sm:w-auto"
+                                className="rounded-xl font-bold text-xs sm:text-sm px-3.5 sm:px-5 h-11 flex items-center justify-center"
                             >
                                 Experience the Platform Free
                                 <ArrowRight className="w-4 h-4" />
@@ -60,7 +60,7 @@ export default function HdHero() {
                                 href="#features"
                                 variant="outline-primary"
                                 size="md"
-                                className="rounded-xl w-full sm:w-auto"
+                                className="rounded-xl text-xs sm:text-sm px-3.5 sm:px-5 h-11 flex items-center justify-center"
                             >
                                 Explore Features
                             </Button>

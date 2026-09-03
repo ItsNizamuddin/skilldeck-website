@@ -173,15 +173,10 @@ export default function TopPartnersSection({ courseSlug, courseTitle }: TopPartn
             };
         });
 
-        // Sort: Companies with schedules first, then rank
-        return mapped.sort((a, b) => {
-            const aHasSchedules = a.schedulesCount > 0 ? 1 : 0;
-            const bHasSchedules = b.schedulesCount > 0 ? 1 : 0;
-            if (aHasSchedules !== bHasSchedules) {
-                return bHasSchedules - aHasSchedules;
-            }
-            return (a.rank || 999) - (b.rank || 999);
-        });
+        // Only keep tenants who have schedules for this course, sorted by rank
+        return mapped
+            .filter((p) => p.schedulesCount > 0)
+            .sort((a, b) => (a.rank || 999) - (b.rank || 999));
     }, [institutesList, schedules, activeCurrency]);
 
     const MAX_COMPARE = 4;

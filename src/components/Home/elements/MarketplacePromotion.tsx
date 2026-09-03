@@ -1,9 +1,8 @@
 "use client";
 
-import { ArrowRight, GraduationCap, Target, TrendingUp } from "lucide-react";
+import { GraduationCap, Target, TrendingUp } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import PartnerLogos from "../../shared/PartnerLogos";
 import MarketPlaceCta from "./MarketPlaceCta";
 
 // Bidding Visual Component without framer-motion dependency
@@ -88,6 +87,8 @@ const MarketplaceBiddingVisual = () => {
 const MarketplacePromotion = () => {
     return (
         <div className="mt-20 group relative overflow-hidden">
+            {/* Free Marketplace Signup CTA Banner */}
+            <MarketPlaceCta />
             <div className="relative z-10 grid lg:grid-cols-2 gap-12 items-center">
                 <div className="space-y-4">
                     <div className="badge-brand gap-2 border border-blue-100 shadow-sm">
@@ -141,11 +142,6 @@ const MarketplacePromotion = () => {
                 </div>
             </div>
 
-            {/* Free Marketplace Signup CTA Banner */}
-            <MarketPlaceCta />
-
-            {/* Trusted Partners Section */}
-            <PartnerLogos />
         </div>
     );
 };

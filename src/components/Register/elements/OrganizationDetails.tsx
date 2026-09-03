@@ -1,7 +1,20 @@
 import { AlertCircle, Building2, User } from 'lucide-react';
 import React, { ChangeEvent } from 'react';
-import { FormInput } from '../../Forms/FormElements';
+import { FormInput, FormSelect } from '../../Forms/FormElements';
 import { FieldErrors, FormData } from '../hooks/useRegisterForm';
+
+const INDUSTRY_OPTIONS = [
+    'Technology',
+    'Healthcare',
+    'Finance',
+    'Education',
+    'Manufacturing',
+    'Retail',
+    'Consulting',
+    'Real Estate',
+    'Media & Entertainment',
+    'Other'
+];
 
 interface OrganizationDetailsProps {
     formData: FormData;
@@ -106,15 +119,21 @@ export const OrganizationDetails: React.FC<OrganizationDetailsProps> = ({
                     </div>
 
                     <div>
-                        <FormInput
+                        <FormSelect
                             label="Industry"
                             name="industry"
                             value={formData.industry}
                             onChange={handleInputChange}
-                            placeholder="e.g. Education, IT Services, Healthcare"
                             required
                             className={fieldErrors.industry ? '!border-red-400 !ring-red-500/20 focus:!border-red-500' : ''}
-                        />
+                        >
+                            <option value="">Select Industry</option>
+                            {INDUSTRY_OPTIONS.map((option) => (
+                                <option key={option} value={option}>
+                                    {option}
+                                </option>
+                            ))}
+                        </FormSelect>
                         {fieldErrors.industry && (
                             <p className="mt-1.5 text-xs text-red-500 flex items-center gap-1">
                                 <AlertCircle className="w-3 h-3" />
