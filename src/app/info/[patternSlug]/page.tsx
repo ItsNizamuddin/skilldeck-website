@@ -186,7 +186,7 @@ export default async function PatternPage({ params }: { params: Promise<{ patter
                         }>
                             <SchedulesProvider>
                                 <div className="container mx-auto px-2 lg:px-0 md:py-12">
-                                    <TopPartnersSection courseSlug={course.slug} />
+                                    <TopPartnersSection courseSlug={course.slug} courseTitle={course?.course_title || course?.course_name} />
                                 </div>
 
                                 <CourseOverview

@@ -267,7 +267,7 @@ export default async function CoursePage({
                         locationSlug={locationSlug}
                     />
                     <div className="container mx-auto px-2 lg:px-0 md:py-12">
-                        <TopPartnersSection courseSlug={courseSlug} />
+                        <TopPartnersSection courseSlug={courseSlug} courseTitle={course?.course_name || course?.title} />
                     </div>
                     <CourseOverview
                         data={course}
@@ -277,16 +277,16 @@ export default async function CoursePage({
                     <div className="container mx-auto px-2 lg:px-0 pb-16 space-y-12">
                         {(course.bottomSection?.value || course.internalSection?.value) && (
                             <div className="space-y-6">
-                                {course.internalSection?.value && (
-                                    <CourseRelatedLinks
-                                        title={course.internalSection.title}
-                                        value={course.internalSection.value}
-                                    />
-                                )}
                                 {course.bottomSection?.value && (
                                     <CourseAccordionSection
                                         title={course.bottomSection.title}
                                         value={course.bottomSection.value}
+                                    />
+                                )}
+                                {course.internalSection?.value && (
+                                    <CourseRelatedLinks
+                                        title={course.internalSection.title}
+                                        value={course.internalSection.value}
                                     />
                                 )}
                             </div>

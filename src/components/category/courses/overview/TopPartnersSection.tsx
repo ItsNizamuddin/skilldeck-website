@@ -24,11 +24,12 @@ import {
 
 interface TopPartnersSectionProps {
     courseSlug: string;
+    courseTitle?: string;
 }
 
 let cachedTenantsList: any[] | null = null;
 
-export default function TopPartnersSection({ courseSlug }: TopPartnersSectionProps) {
+export default function TopPartnersSection({ courseSlug, courseTitle }: TopPartnersSectionProps) {
     const { schedules, loading, locationData, tenants } = useSchedules(courseSlug);
     const [compareList, setCompareList] = useState<string[]>([]);
     const [allTenants, setAllTenants] = useState<any[]>(() => cachedTenantsList || []);
@@ -389,6 +390,7 @@ export default function TopPartnersSection({ courseSlug }: TopPartnersSectionPro
                             maxCompare={MAX_COMPARE}
                             compact
                             courseSlug={courseSlug}
+                            courseTitle={courseTitle}
                             compareList={effectiveCompare}
                             onAdd={handleCompareAdd}
                             onRemove={handleCompareRemove}

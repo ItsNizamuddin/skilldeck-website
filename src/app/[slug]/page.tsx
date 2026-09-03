@@ -169,17 +169,17 @@ export default async function CategoryPage({ params }: PageProps) {
                     </div>
                 )}
 
-                {category.internalSection?.value && (
-                    <Accordion items={[{
-                        title: category.internalSection.title || "Internal Section",
-                        value: category.internalSection.value
-                    }]} />
-                )}
-
                 {category.bottomSection?.value && (
                     <Accordion items={[{
                         title: category.bottomSection.title || "Bottom Section",
                         value: category.bottomSection.value
+                    }]} />
+                )}
+
+                {category.internalSection?.value && (
+                    <Accordion items={[{
+                        title: category.internalSection.title || "Internal Section",
+                        value: category.internalSection.value
                     }]} />
                 )}
 

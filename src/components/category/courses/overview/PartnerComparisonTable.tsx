@@ -51,6 +51,8 @@ interface PartnerComparisonTableProps {
     compact?: boolean;
     /** Enables the deep link into the standalone /compare page. */
     courseSlug?: string;
+    /** Course title to display in comparison header. */
+    courseTitle?: string;
     /** Ids currently ticked on the cards; empty means "show the default top N". */
     compareList?: string[];
     onAdd?: (id: string) => void;
@@ -138,6 +140,7 @@ export default function PartnerComparisonTable({
     maxCompare = 4,
     compact = false,
     courseSlug,
+    courseTitle,
     compareList = [],
     onAdd,
     onRemove,
@@ -211,6 +214,7 @@ export default function PartnerComparisonTable({
     // Carries the current selection so /compare opens on the same companies.
     const fullComparisonHref = courseSlug
         ? `/compare?type=companies&course=${encodeURIComponent(courseSlug)}` +
+        (courseTitle ? `&title=${encodeURIComponent(courseTitle)}` : "") +
         (selected.length > 0 ? `&ids=${selected.map((p) => p.id).join(",")}` : "")
         : undefined;
 
