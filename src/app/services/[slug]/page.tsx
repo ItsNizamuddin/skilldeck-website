@@ -290,16 +290,16 @@ export default async function ServicePage({ params }: { params: Promise<ServiceP
                 {/* Bottom and Internal Sections */}
                 {(service.bottomSection?.value || service.internalSection?.value) && (
                     <div className="container mx-auto px-2 lg:px-0 pb-12 md:pb-16 2xl:pb-20 space-y-6">
-                        {service.internalSection?.value && (
-                            <CourseRelatedLinks
-                                title={service.internalSection.title || ""}
-                                value={service.internalSection.value || ""}
-                            />
-                        )}
                         {service.bottomSection?.value && (
                             <CourseAccordionSection
                                 title={service.bottomSection.title || ""}
                                 value={service.bottomSection.value || ""}
+                            />
+                        )}
+                        {service.internalSection?.value && (
+                            <CourseRelatedLinks
+                                title={service.internalSection.title || ""}
+                                value={service.internalSection.value || ""}
                             />
                         )}
                     </div>

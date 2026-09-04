@@ -27,7 +27,9 @@ export default function ServiceWhyChooseUs({
     const gridCols = GRID_BY_COUNT[points.length] || DEFAULT_GRID;
 
     return (
-        <section id="why" className="scroll-mt-24 section-y">
+        /* Sits on the same white ground as the hero, so a full section-y on both
+           sides of the seam reads as a gap rather than a break. */
+        <section id="why" className="scroll-mt-24 pt-4 md:pt-6 pb-12 md:pb-16 2xl:pb-20">
             <div className="container mx-auto px-2 lg:px-0 space-y-10 lg:space-y-12">
                 <ServiceSectionIntro
                     numeral="01"

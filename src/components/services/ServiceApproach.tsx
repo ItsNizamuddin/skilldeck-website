@@ -31,18 +31,18 @@ export default function ServiceApproach({ approach = {}, media }: ServiceApproac
 
     return (
         <section id="approach" className="scroll-mt-24 section-y">
-            <div className="container mx-auto px-2 lg:px-0 space-y-14">
-                <ServiceSectionIntro
-                    numeral="03"
-                    kicker={approach.tagline || "How We Work"}
-                    title={approach.title || "How We Work & Optimize Outcomes"}
-                    description={approach.description}
-                />
-
-                {/* The media cell is `align-self: start` + sticky, so it tracks the
-                    whole body column — timeline, KPIs and tools — not just the steps. */}
+            <div className="container mx-auto px-2 lg:px-0">
+                {/* The intro lives inside the body column so the media frame starts
+                    level with the heading rather than with the timeline. */}
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-start">
                     <div className={`space-y-14 ${mediaSource ? "lg:col-span-7" : "lg:col-span-12"}`}>
+                        <ServiceSectionIntro
+                            numeral="03"
+                            kicker={approach.tagline || "How We Work"}
+                            title={approach.title || "How We Work & Optimize Outcomes"}
+                            description={approach.description}
+                        />
+
                         {steps.length > 0 && (
                             <div className="relative">
                                 <div className="absolute left-6 top-4 bottom-4 w-px bg-gradient-to-b from-brand-primary/40 via-brand-primary/20 to-transparent" />
@@ -121,28 +121,60 @@ export default function ServiceApproach({ approach = {}, media }: ServiceApproac
                         )}
 
                         {tools.length > 0 && (
-                            <div className="space-y-5">
-                                {approach.tools?.badge && (
-                                    <p className="text-[11px] font-bold uppercase tracking-widest text-brand-secondary">{approach.tools.badge}</p>
-                                )}
-                                {approach.tools?.description && <p className="body-medium max-w-2xl">{approach.tools.description}</p>}
-                                <div className="flex flex-wrap items-center gap-3">
-                                    {tools.map((tool, i) => (
-                                        <div
-                                            key={i}
-                                            className="flex items-center gap-2.5 bg-white border border-slate-200 rounded-xl pl-3 pr-4 py-2.5 shadow-sm hover:border-brand-primary/30 hover:shadow-md transition-all duration-200"
-                                        >
-                                            {isImageSrc(tool.icon) ? (
-                                                <div className="relative w-6 h-6 shrink-0">
-                                                    <Image src={tool.icon as string} alt={tool.tagline || "Tool"} fill sizes="24px" className="object-contain" />
-                                                </div>
-                                            ) : (
-                                                <ServiceIconWrapper iconString={tool.icon} className="w-6 h-6 rounded-md" iconClassName="w-3.5 h-3.5" />
-                                            )}
-                                            <span className="text-sm font-semibold text-brand-dark">{tool.tagline}</span>
-                                        </div>
-                                    ))}
+                            <div className="space-y-6">
+                                <div className="space-y-2">
+                                    {approach.tools?.badge && (
+                                        <span className="inline-flex items-center gap-2 text-[11px] font-bold uppercase tracking-widest text-brand-secondary">
+                                            <span aria-hidden="true" className="w-6 h-px bg-brand-secondary/50" />
+                                            {approach.tools.badge}
+                                        </span>
+                                    )}
+                                    {approach.tools?.description && (
+                                        <p className="text-base md:text-lg font-bold text-brand-dark max-w-2xl leading-snug">
+                                            {approach.tools.description}
+                                        </p>
+                                    )}
                                 </div>
+
+                                {/* Equal-width cards instead of ragged pills — the taglines are
+                                    long enough that a wrapping flex row left holes in the grid. */}
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                    {tools.map((tool, i) => {
+                                        const accent = accentAt(TILE_ACCENTS, i);
+                                        return (
+                                            <div
+                                                key={i}
+                                                className="group relative overflow-hidden flex items-center gap-3 bg-white border border-slate-200/80 rounded-xl p-3.5 shadow-sm hover:-translate-y-0.5 hover:shadow-md transition-all duration-300"
+                                            >
+                                                <span
+                                                    aria-hidden="true"
+                                                    className="absolute inset-y-0 left-0 w-1 scale-y-0 origin-top group-hover:scale-y-100 transition-transform duration-500"
+                                                    style={{ backgroundColor: accent.hex }}
+                                                />
+                                                {isImageSrc(tool.icon) ? (
+                                                    <div className="relative w-9 h-9 shrink-0 rounded-lg border border-slate-100 bg-white">
+                                                        <Image
+                                                            src={tool.icon as string}
+                                                            alt={tool.tagline || "Tool"}
+                                                            fill
+                                                            sizes="36px"
+                                                            className="object-contain p-1.5"
+                                                        />
+                                                    </div>
+                                                ) : (
+                                                    <ServiceIconWrapper
+                                                        iconString={tool.icon}
+                                                        className="w-9 h-9 rounded-lg group-hover:scale-105 transition-transform duration-300"
+                                                        iconClassName="w-4.5 h-4.5"
+                                                        fallbackBgClass={accent.chip}
+                                                    />
+                                                )}
+                                                <span className="text-sm font-bold text-brand-dark leading-snug">{tool.tagline}</span>
+                                            </div>
+                                        );
+                                    })}
+                                </div>
+
                                 {approach.tools?.cta?.title && (
                                     <ServiceCtaBanner
                                         title={approach.tools.cta.title}

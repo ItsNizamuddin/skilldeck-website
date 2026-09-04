@@ -139,7 +139,7 @@ export default function ServiceHero({
     return (
         <section
             id="overview"
-            className="relative bg-white pt-24 md:pt-28 lg:pt-32 pb-12 md:pb-16 2xl:pb-20 overflow-hidden scroll-mt-20"
+            className="relative bg-white pt-24 md:pt-28 lg:pt-32 pb-10 md:pb-12 overflow-hidden scroll-mt-20"
         >
             {/* Ambient brand wash behind the media column */}
             <div
@@ -351,7 +351,7 @@ export default function ServiceHero({
 
                 {/* ───────────── STATS BAND ───────────── */}
                 {stats.length > 0 && (
-                    <div className="mt-12 lg:mt-16 rounded-2xl border border-slate-200/80 bg-white shadow-sm shadow-slate-200/60 overflow-hidden">
+                    <div className="mt-10 lg:mt-12 rounded-2xl border border-slate-200/80 bg-white shadow-sm shadow-slate-200/60 overflow-hidden">
                         <div className="grid grid-cols-2 lg:grid-cols-4 divide-x divide-y lg:divide-y-0 divide-slate-100">
                             {stats.map((stat, i) => (
                                 <div key={i} className="flex flex-col items-center text-center gap-2 px-4 py-6">
