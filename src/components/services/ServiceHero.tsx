@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import Image from "next/image";
 import { ArrowRight, Download, PlayCircle, Sparkles, Star } from "lucide-react";
 import { Button } from "@/components/ui/Button";
@@ -8,131 +7,47 @@ import Breadcrumb from "@/components/ui/Breadcrumb";
 import ServiceItemIcon from "./ServiceItemIcon";
 import ServiceIconWrapper from "./ServiceIconWrapper";
 import { useLeadModal } from "@/components/Forms/LeadModalContext";
-import {
-    ServiceBanner,
-    ServiceCard,
-    ServiceCategoryRef,
-    ServiceStatItem,
-    ServiceWhyPoint,
-} from "./types";
-import { isVideoUrl, normalizeRichText, resolveMediaAlt, resolveMediaUrl } from "./richText";
+import { normalizeRichText } from "./richText";
 import { accentAt, STAT_ACCENTS, TILE_ACCENTS } from "./accents";
-
-interface ServiceHeroProps {
-    banner?: ServiceBanner;
-    servicestats?: ServiceStatItem[];
-    serviceName: string;
-    servicecard?: ServiceCard;
-    serviceCategory?: ServiceCategoryRef;
-    /** Icon + title + blurb tiles under the headline — sourced from `whyservice.points`. */
-    highlights?: ServiceWhyPoint[];
-    fallbackTagline?: string;
-    description?: string;
-    brochureUrl?: string;
-    clientsCount?: string;
-    primaryCtaText?: string;
-    secondaryCtaText?: string;
-    secondaryCtaHref?: string;
-}
-
-/** How many feature tiles the headline column carries before it crowds the media. */
-const MAX_HIGHLIGHTS = 4;
-
-/** Frame ratio before the asset reports its own, plus the bounds it may take. */
-const DEFAULT_ASPECT = 16 / 10;
-const MIN_ASPECT = 0.7;  // taller than this gets letterboxed instead of stretching the column
-const MAX_ASPECT = 2.4;
-
-function clampAspect(width: number, height: number): number | null {
-    if (!width || !height) return null;
-    return Math.min(MAX_ASPECT, Math.max(MIN_ASPECT, width / height));
-}
+import { renderHeading, ServiceHeroProps, useHeroContent, useMediaAspect } from "./heroShared";
 
 /**
- * Editors mark accent words with `<strong>`/`<em>`/`<mark>`; when the CMS ships
- * plain text the trailing two words take the gradient so the headline still
- * carries the brand ramp.
+ * Variant A — split hero (current design).
+ *
+ * Message left, product shot right, proof band underneath. The prop contract and
+ * every CMS fallback live in `heroShared`, shared with the two variants under
+ * review.
  */
-function renderHeading(heading: string) {
-    if (/<[a-z][\s\S]*>/i.test(heading)) {
-        return (
-            <span
-                className="[&_strong]:text-brand-gradient [&_em]:text-brand-gradient [&_em]:not-italic [&_mark]:bg-transparent [&_mark]:text-brand-gradient"
-                dangerouslySetInnerHTML={{ __html: normalizeRichText(heading) }}
-            />
-        );
-    }
-
-    const words = heading.trim().split(/\s+/);
-    if (words.length < 4) return <>{heading}</>;
-
-    const lead = words.slice(0, -2).join(" ");
-    const accent = words.slice(-2).join(" ");
-    return (
-        <>
-            {lead} <span className="text-brand-gradient">{accent}</span>
-        </>
-    );
-}
-
 export default function ServiceHero({
-    banner = {},
-    servicestats = [],
-    serviceName,
-    servicecard = {},
-    serviceCategory,
-    highlights = [],
-    fallbackTagline = "Professional Service",
-    description = "",
-    brochureUrl,
-    clientsCount,
     primaryCtaText = "Get Free Consultation",
     secondaryCtaText = "See how it works",
     secondaryCtaHref = "#approach",
+    brochureUrl,
+    ...props
 }: ServiceHeroProps) {
     const { openModal } = useLeadModal();
-    // The CMS ships dashboards, portraits and 16:9 clips alike, so the frame
-    // takes the asset's own ratio rather than cropping it to a fixed one.
-    const [mediaAspect, setMediaAspect] = useState<number | null>(null);
-
-    const heading = banner.h1 || servicecard.title || serviceName;
-    const body = banner.description || servicecard.content || description;
-    const tagline = servicecard.tagline || banner.tagline || fallbackTagline;
-    const review = banner.reviews?.[0];
-    const clients = clientsCount || servicecard.clients;
-    const rating = servicecard.ratings || review?.ratings;
-
-    // Banner asset first, service-card thumbnail as the fallback; either may be a clip.
-    const media = resolveMediaUrl(banner.media) || servicecard.thumbnail?.trim() || undefined;
-    const mediaAlt = resolveMediaAlt(banner.media) || heading;
-    const mediaIsVideo = isVideoUrl(media);
-
-    // Feature tiles prefer the richer `whyservice` points; the flat card points
-    // are the fallback so the row is never empty.
-    const featurePoints = highlights.filter((p) => p?.title).slice(0, MAX_HIGHLIGHTS);
-    const fallbackPoints = (servicecard.points || [])
-        .filter(Boolean)
-        .slice(0, MAX_HIGHLIGHTS)
-        .map((point) => ({ title: point }) as ServiceWhyPoint);
-    const features = featurePoints.length > 0 ? featurePoints : fallbackPoints;
-
-    const floatingStat = (banner.stats || []).find((s) => s?.value);
-    const stats = servicestats.filter((s) => s?.value);
-
-    // No /services index or per-category route exists yet, so the ancestors
-    // render as plain text rather than links to 404s.
-    const breadcrumbItems = [
-        { label: "Home", href: "/" },
-        { label: "Services" },
-        ...(serviceCategory?.name ? [{ label: serviceCategory.name }] : []),
-        { label: serviceName },
-    ];
+    const { aspectRatio, onImageLoad, onVideoLoad } = useMediaAspect();
+    const {
+        heading,
+        body,
+        tagline,
+        rating,
+        clients,
+        review,
+        media,
+        mediaAlt,
+        mediaIsVideo,
+        features,
+        floatingStat,
+        stats,
+        breadcrumbItems,
+    } = useHeroContent(props);
 
     const handleGetQuote = () => {
         openModal({
             source: "service-hero",
-            formTitle: `Get a Quote for ${serviceName}`,
-            defaultValues: { subject: `Quote request for ${serviceName}` },
+            formTitle: `Get a Quote for ${props.serviceName}`,
+            defaultValues: { subject: `Quote request for ${props.serviceName}` },
         });
     };
 
@@ -268,7 +183,7 @@ export default function ServiceHero({
                                 {media && mediaIsVideo ? (
                                     <div
                                         className="relative w-full bg-slate-900"
-                                        style={{ aspectRatio: mediaAspect ?? DEFAULT_ASPECT }}
+                                        style={{ aspectRatio }}
                                     >
                                         <video
                                             src={media}
@@ -279,15 +194,13 @@ export default function ServiceHero({
                                             loop
                                             playsInline
                                             preload="metadata"
-                                            onLoadedMetadata={(e) =>
-                                                setMediaAspect(clampAspect(e.currentTarget.videoWidth, e.currentTarget.videoHeight))
-                                            }
+                                            onLoadedMetadata={onVideoLoad}
                                         />
                                     </div>
                                 ) : media ? (
                                     <div
                                         className="relative w-full bg-slate-50"
-                                        style={{ aspectRatio: mediaAspect ?? DEFAULT_ASPECT }}
+                                        style={{ aspectRatio }}
                                     >
                                         <Image
                                             src={media}
@@ -296,18 +209,16 @@ export default function ServiceHero({
                                             sizes="(max-width: 1024px) 100vw, 50vw"
                                             className="object-contain"
                                             priority
-                                            onLoad={(e) =>
-                                                setMediaAspect(clampAspect(e.currentTarget.naturalWidth, e.currentTarget.naturalHeight))
-                                            }
+                                            onLoad={onImageLoad}
                                         />
                                     </div>
                                 ) : (
                                     <div
                                         className="relative w-full flex items-center justify-center"
-                                        style={{ background: "var(--gradient-brand)", aspectRatio: DEFAULT_ASPECT }}
+                                        style={{ background: "var(--gradient-brand)", aspectRatio }}
                                     >
                                         <ServiceItemIcon
-                                            iconString={servicecard.icon}
+                                            iconString={props.servicecard?.icon}
                                             className="w-16 h-16 text-white/90"
                                             defaultIcon="Sparkles"
                                         />
