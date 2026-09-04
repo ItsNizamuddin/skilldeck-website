@@ -1,7 +1,9 @@
 import React from "react";
 import { ServiceStrategy } from "./types";
 import ServiceItemIcon from "./ServiceItemIcon";
+import ServiceIconWrapper from "./ServiceIconWrapper";
 import ServiceSectionIntro from "./ServiceSectionIntro";
+import { accentAt, STAT_ACCENTS } from "./accents";
 
 interface ServiceBusinessProps {
     business?: ServiceStrategy;
@@ -47,18 +49,32 @@ export default function ServiceBusiness({ business = {} }: ServiceBusinessProps)
                 )}
 
                 {stats.length > 0 && (
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                         {stats.map((stat, i) => (
-                            <div key={i} className="rounded-2xl bg-white border border-slate-100 shadow-sm p-5 space-y-2">
-                                <ServiceItemIcon
+                            <div
+                                key={i}
+                                className="group flex items-start gap-4 rounded-2xl bg-white border border-slate-200/80 shadow-sm p-5 hover:shadow-md hover:border-brand-primary/30 hover:-translate-y-0.5 transition-all duration-300"
+                            >
+                                <ServiceIconWrapper
                                     iconString={stat.icon}
-                                    className="w-5 h-5 text-brand-primary"
+                                    className="w-11 h-11 rounded-xl"
+                                    iconClassName="w-5 h-5"
                                     defaultIcon="Activity"
+                                    fallbackBgClass={accentAt(STAT_ACCENTS, i).chip}
                                 />
-                                <p className="text-2xl font-black text-brand-dark leading-none">{stat.value}</p>
-                                <p className="text-[11px] font-semibold text-brand-muted leading-snug">
-                                    {stat.description || stat.tagline}
-                                </p>
+                                <div className="min-w-0">
+                                    <p className="text-2xl lg:text-3xl font-black text-brand-dark leading-none tracking-tight">
+                                        {stat.value}
+                                    </p>
+                                    <p className="mt-1.5 text-xs font-semibold text-brand-muted leading-snug">
+                                        {stat.tagline || stat.description}
+                                    </p>
+                                    {stat.tagline && stat.description && (
+                                        <p className="mt-0.5 text-[11px] text-brand-muted/70 leading-snug">
+                                            {stat.description}
+                                        </p>
+                                    )}
+                                </div>
                             </div>
                         ))}
                     </div>

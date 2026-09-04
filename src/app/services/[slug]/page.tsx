@@ -12,7 +12,6 @@ import { getServicesCategories } from "@/lib/services";
 // Import modular components
 import { ServiceData } from "@/components/services/types";
 import ServiceHero from "@/components/services/ServiceHero";
-import ServiceStats from "@/components/services/ServiceStats";
 import ServiceWhyChooseUs from "@/components/services/ServiceWhyChooseUs";
 import ServiceBenefits from "@/components/services/ServiceBenefits";
 import ServiceApproach from "@/components/services/ServiceApproach";
@@ -250,12 +249,10 @@ export default async function ServicePage({ params }: { params: Promise<ServiceP
                     serviceCategory={service.serviceCategory}
                     fallbackTagline={service.servicecard?.tagline}
                     description={service.description}
+                    highlights={service.whyservice?.points}
                     brochureUrl={service.leadmagnet?.[0]?.broucher?.url}
                     clientsCount={service.servicecard?.clients}
                 />
-
-                {/* Service Stats Row */}
-                <ServiceStats stats={service.servicestats} />
 
                 {/* Chapter rail */}
                 <ServiceChapterDots items={chapters} />

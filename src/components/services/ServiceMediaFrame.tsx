@@ -6,7 +6,7 @@ import { ImageOff } from "lucide-react";
 import { ServiceMedia } from "./types";
 import { isVideoUrl, resolveMediaAlt, resolveMediaUrl } from "./richText";
 
-interface ServiceApproachMediaProps {
+interface ServiceMediaFrameProps {
     media?: string | ServiceMedia;
     fallbackLabel?: string;
 }
@@ -26,14 +26,14 @@ function clampAspect(width: number, height: number): number | null {
 }
 
 /**
- * Media companion for the approach timeline.
+ * Media companion for a service section (approach timeline, strategy, …).
  *
  * - The CMS ships both portrait (9:16) and landscape (16:9) assets, so the frame
  *   measures the source's intrinsic aspect on load and matches it.
  * - Video bytes are only fetched once the frame nears the viewport, and playback
  *   is tied to visibility so an offscreen clip never burns CPU or bandwidth.
  */
-export default function ServiceApproachMedia({ media, fallbackLabel = "Our Approach" }: ServiceApproachMediaProps) {
+export default function ServiceMediaFrame({ media, fallbackLabel = "Media" }: ServiceMediaFrameProps) {
     const [failed, setFailed] = useState(false);
     const [aspect, setAspect] = useState<number | null>(null);
     const [shouldLoad, setShouldLoad] = useState(false);
