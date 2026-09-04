@@ -1,173 +1,166 @@
 "use client";
 
-import { useState } from "react";
 import Image from "next/image";
-import { ArrowRight, Download, Sparkles, Star } from "lucide-react";
+import { ArrowRight, Download, PlayCircle, Sparkles, Star } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import Breadcrumb from "@/components/ui/Breadcrumb";
 import ServiceItemIcon from "./ServiceItemIcon";
+import ServiceIconWrapper from "./ServiceIconWrapper";
 import { useLeadModal } from "@/components/Forms/LeadModalContext";
-import { ServiceBanner, ServiceCard, ServiceCategoryRef, ServiceStatItem } from "./types";
 import { normalizeRichText } from "./richText";
+import { accentAt, STAT_ACCENTS, TILE_ACCENTS } from "./accents";
+import { renderHeading, ServiceHeroProps, useHeroContent, useMediaAspect } from "./heroShared";
 
-interface ServiceHeroProps {
-    banner?: ServiceBanner;
-    servicestats?: ServiceStatItem[];
-    serviceName: string;
-    servicecard?: ServiceCard;
-    serviceCategory?: ServiceCategoryRef;
-    fallbackTagline?: string;
-    description?: string;
-    brochureUrl?: string;
-    clientsCount?: string;
-    primaryCtaText?: string;
-    secondaryCtaText?: string;
-    secondaryCtaHref?: string;
-}
-
+/**
+ * Variant A — split hero (current design).
+ *
+ * Message left, product shot right, proof band underneath. The prop contract and
+ * every CMS fallback live in `heroShared`, shared with the two variants under
+ * review.
+ */
 export default function ServiceHero({
-    banner = {},
-    serviceName,
-    servicecard = {},
-    serviceCategory,
-    fallbackTagline = "Professional Service",
-    description = "",
-    brochureUrl,
-    clientsCount,
     primaryCtaText = "Get Free Consultation",
     secondaryCtaText = "See how it works",
     secondaryCtaHref = "#approach",
+    brochureUrl,
+    ...props
 }: ServiceHeroProps) {
-    const [isExpanded, setIsExpanded] = useState(false);
     const { openModal } = useLeadModal();
-
-    const heading = banner.h1 || servicecard.title || serviceName;
-    const body = banner.description || servicecard.content || description;
-    const tagline = servicecard.tagline || banner.tagline || fallbackTagline;
-    const points = (servicecard.points || []).filter(Boolean);
-    const bannerStats = (banner.stats || []).filter((s) => s?.value);
-    const review = banner.reviews?.[0];
-    const media = banner.media?.url;
-    const clients = clientsCount || servicecard.clients;
-
-    // Every point is rendered so crawlers see the full list; the overflow is
-    // hidden with CSS rather than sliced out of the DOM.
-    const colBreak = Math.ceil(points.length / 2);
-    const col1 = points.slice(0, colBreak);
-    const col2 = points.slice(colBreak);
-    const hiddenCount = points.length - 4;
-    const isHidden = (index: number) => !isExpanded && index >= 4;
-
-    // No /services index or per-category route exists yet, so the ancestors
-    // render as plain text rather than links to 404s.
-    const breadcrumbItems = [
-        { label: "Home", href: "/" },
-        { label: "Services" },
-        ...(serviceCategory?.name ? [{ label: serviceCategory.name }] : []),
-        { label: serviceName },
-    ];
+    const { aspectRatio, onImageLoad, onVideoLoad } = useMediaAspect();
+    const {
+        heading,
+        body,
+        tagline,
+        rating,
+        clients,
+        review,
+        media,
+        mediaAlt,
+        mediaIsVideo,
+        features,
+        floatingStat,
+        stats,
+        breadcrumbItems,
+    } = useHeroContent(props);
 
     const handleGetQuote = () => {
         openModal({
             source: "service-hero",
-            formTitle: `Get a Quote for ${serviceName}`,
-            defaultValues: { subject: `Quote request for ${serviceName}` },
+            formTitle: `Get a Quote for ${props.serviceName}`,
+            defaultValues: { subject: `Quote request for ${props.serviceName}` },
         });
     };
 
     return (
-        <section id="overview" className="relative bg-white pt-24 md:pt-28 lg:pt-32 pb-12 md:pb-16 2xl:pb-20 overflow-hidden scroll-mt-20">
-            {/* Subtle right-side background tint, matching course hero language */}
+        <section
+            id="overview"
+            className="relative bg-white pt-24 md:pt-28 lg:pt-32 pb-10 md:pb-12 overflow-hidden scroll-mt-20"
+        >
+            {/* Ambient brand wash behind the media column */}
             <div
                 aria-hidden="true"
-                className="absolute top-0 right-0 w-1/2 h-full bg-[#F9FAFB] -skew-x-6 translate-x-1/4 -z-10"
+                className="absolute top-[-10%] right-[-8%] w-[46rem] h-[46rem] rounded-full bg-[#5C3FFA]/[0.07] blur-3xl -z-10"
             />
             <div
                 aria-hidden="true"
-                className="absolute -top-24 -left-24 w-72 h-72 rounded-full bg-[#5C3FFA]/5 blur-3xl -z-10"
+                className="absolute top-1/3 right-1/4 w-80 h-80 rounded-full bg-[#CB3B95]/[0.06] blur-3xl -z-10"
+            />
+            <div
+                aria-hidden="true"
+                className="absolute -top-16 -left-24 w-72 h-72 rounded-full bg-[#5C3FFA]/5 blur-3xl -z-10"
+            />
+            {/* Dot lattice, mirroring the reference layout */}
+            <div
+                aria-hidden="true"
+                className="hidden lg:block absolute top-32 right-6 w-40 h-40 -z-10 opacity-[0.35]"
+                style={{
+                    backgroundImage: "radial-gradient(currentColor 1px, transparent 1px)",
+                    backgroundSize: "14px 14px",
+                    color: "#5C3FFA",
+                }}
             />
 
-            <div className="container mx-auto px-2 lg:px-0 lg:space-y-12">
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-4 items-start">
+            <div className="container mx-auto px-2 lg:px-0">
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-center">
                     {/* ───────────── LEFT COLUMN ───────────── */}
-                    <div className="lg:col-span-7 space-y-4">
+                    <div className="lg:col-span-6 space-y-5">
                         <Breadcrumb items={breadcrumbItems} />
 
                         {/* Category / rating badges */}
                         <div className="flex items-center gap-2 flex-wrap">
                             {tagline && (
                                 <span
-                                    className="inline-flex items-center gap-1.5 text-[10px] 2xl:text-xs font-semibold text-white px-3 py-1 rounded-full shadow-sm"
+                                    className="inline-flex items-center gap-1.5 text-[11px] 2xl:text-xs font-semibold text-white px-3.5 py-1.5 rounded-full shadow-sm"
                                     style={{ background: "var(--gradient-brand)" }}
                                 >
                                     <Sparkles className="w-3.5 h-3.5" aria-hidden="true" />
                                     {tagline}
                                 </span>
                             )}
-                            {servicecard.ratings && (
-                                <span className="inline-flex items-center gap-1.5 text-[10px] 2xl:text-xs font-semibold text-amber-700 bg-amber-50 border border-amber-100 px-3 py-1 rounded-full">
+                            {rating && (
+                                <span className="inline-flex items-center gap-1.5 text-[11px] 2xl:text-xs font-semibold text-amber-700 bg-amber-50 border border-amber-100 px-3.5 py-1.5 rounded-full">
                                     <Star className="w-3.5 h-3.5 fill-amber-500 text-amber-500" aria-hidden="true" />
-                                    {servicecard.ratings} Rated{clients ? ` · ${clients} Clients` : ""}
+                                    {rating} Rated{clients ? ` · ${clients} Clients` : ""}
                                 </span>
                             )}
                         </div>
 
-                        {/* Title + description */}
-                        <div className="space-y-3">
-                            <h1 className="text-2xl md:text-3xl lg:text-4xl font-extrabold text-brand-dark leading-[1.15] tracking-tight">
-                                {heading}
+                        {/* Headline + description */}
+                        <div className="space-y-4">
+                            <h1 className="text-3xl md:text-4xl lg:text-[2.75rem] xl:text-5xl font-extrabold text-brand-dark leading-[1.1] tracking-tight">
+                                {renderHeading(heading)}
                             </h1>
                             {body && (
                                 <div
-                                    className="body-medium max-w-2xl"
+                                    className="body-medium max-w-xl"
                                     dangerouslySetInnerHTML={{ __html: normalizeRichText(body) }}
                                 />
                             )}
                         </div>
 
-                        {/* Checklist — 2-column bordered, mirrors course hero keypoints */}
-                        {points.length > 0 && (
-                            <div className="border w-full md:w-fit border-gray-200 rounded-xl p-3 bg-white">
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-x-16 gap-y-2">
-                                    {col1.map((point, i) => (
-                                        <CheckItem key={`c1-${i}`} text={point} hidden={isHidden(points.indexOf(point))} />
-                                    ))}
-                                    {col2.map((point, i) => (
-                                        <CheckItem key={`c2-${i}`} text={point} hidden={isHidden(points.indexOf(point))} />
-                                    ))}
-                                </div>
-
-                                {!isExpanded && hiddenCount > 0 && (
-                                    <button
-                                        onClick={() => setIsExpanded(true)}
-                                        className="mt-2 text-brand-primary text-[11px] 2xl:text-xs font-semibold flex items-center gap-1 hover:underline"
-                                    >
-                                        + {hiddenCount} more
-                                        <ArrowRight className="w-3 h-3" aria-hidden="true" />
-                                    </button>
-                                )}
+                        {/* Feature tiles */}
+                        {features.length > 0 && (
+                            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-1">
+                                {features.map((feature, i) => (
+                                    <div key={i} className="group space-y-2">
+                                        <ServiceIconWrapper
+                                            iconString={feature.icon}
+                                            className="w-11 h-11 rounded-xl border border-slate-200/80 shadow-sm group-hover:-translate-y-0.5 group-hover:border-brand-primary/30 transition-all duration-300"
+                                            iconClassName="w-5 h-5"
+                                            defaultIcon="Sparkles"
+                                            fallbackBgClass={accentAt(TILE_ACCENTS, i).chip}
+                                        />
+                                        <p className="text-[13px] font-bold text-brand-dark leading-snug">{feature.title}</p>
+                                        {feature.description && (
+                                            <p className="text-[11px] text-brand-muted leading-snug line-clamp-2">
+                                                {feature.description}
+                                            </p>
+                                        )}
+                                    </div>
+                                ))}
                             </div>
                         )}
 
                         {/* CTAs */}
-                        <div className="flex flex-row items-center justify-center lg:justify-start gap-3 pt-1">
+                        <div className="flex flex-wrap items-center gap-3 pt-1">
                             <Button
                                 onClick={handleGetQuote}
                                 variant="primary"
                                 size="lg"
-                                className="h-12 px-5 md:px-8 rounded-xl text-sm font-bold"
+                                className="h-12 px-5 md:px-7 rounded-xl text-sm font-bold gap-2"
                             >
                                 {primaryCtaText}
+                                <ArrowRight className="w-4 h-4" aria-hidden="true" />
                             </Button>
                             <Button
                                 as="a"
                                 href={secondaryCtaHref}
                                 variant="outline"
                                 size="lg"
-                                className="h-12 px-4 md:px-6 rounded-xl border border-gray-300 text-gray-700 font-semibold text-sm hover:border-gray-500 hover:bg-gray-50 transition-all hover:text-gray-900 gap-2"
+                                className="h-12 px-4 md:px-6 rounded-xl border border-gray-300 bg-white text-gray-800 font-semibold text-sm hover:border-gray-500 hover:bg-gray-50 hover:text-gray-900 transition-all gap-2"
                             >
+                                <PlayCircle className="w-5 h-5 text-brand-primary" aria-hidden="true" />
                                 {secondaryCtaText}
-                                <ArrowRight className="w-4 h-4" aria-hidden="true" />
                             </Button>
                             {brochureUrl && (
                                 <a
@@ -183,84 +176,112 @@ export default function ServiceHero({
                         </div>
                     </div>
 
-                    {/* ───────────── RIGHT COLUMN — media / trust card ───────────── */}
-                    <div className="lg:col-span-5 mt-2 lg:mt-0">
-                        <div className="relative rounded-2xl overflow-hidden border border-gray-200 shadow-2xl shadow-gray-200/60 bg-white">
-                            {media ? (
-                                <div className="relative w-full aspect-[4/3] bg-slate-50">
-                                    <Image
-                                        src={media}
-                                        alt={banner.media?.alt || heading}
-                                        fill
-                                        sizes="(max-width: 1024px) 100vw, 40vw"
-                                        className="object-contain"
-                                        priority
-                                    />
-                                </div>
-                            ) : (
-                                <div
-                                    className="relative w-full aspect-[4/3] flex items-center justify-center"
-                                    style={{ background: "var(--gradient-brand)" }}
-                                >
-                                    <ServiceItemIcon
-                                        iconString={servicecard.icon}
-                                        className="w-16 h-16 text-white/90"
-                                        defaultIcon="Sparkles"
-                                    />
-                                </div>
-                            )}
-
-                            {/* Rating pill overlay */}
-                            {review?.ratings && (
-                                <div className="absolute top-4 left-4 bg-white/95 backdrop-blur-sm rounded-xl px-3 py-2 shadow-lg flex items-center gap-2">
-                                    {review.icon ? (
-                                        <ServiceItemIcon iconString={review.icon} className="w-4 h-4 text-amber-500" defaultIcon="Star" />
-                                    ) : (
-                                        <Star className="w-4 h-4 fill-amber-500 text-amber-500" />
-                                    )}
-                                    <div className="leading-none">
-                                        <div className="text-sm font-extrabold text-brand-dark">{review.ratings}</div>
-                                        {review.count && (
-                                            <div className="text-[10px] text-brand-muted font-medium">{review.count} reviews</div>
-                                        )}
+                    {/* ───────────── RIGHT COLUMN — media panel ───────────── */}
+                    <div className="lg:col-span-6 mt-2 lg:mt-0">
+                        <div className="relative">
+                            <div className="relative rounded-2xl overflow-hidden border border-slate-200/80 shadow-2xl shadow-slate-300/50 bg-white">
+                                {media && mediaIsVideo ? (
+                                    <div
+                                        className="relative w-full bg-slate-900"
+                                        style={{ aspectRatio }}
+                                    >
+                                        <video
+                                            src={media}
+                                            aria-label={mediaAlt}
+                                            className="w-full h-full object-contain"
+                                            autoPlay
+                                            muted
+                                            loop
+                                            playsInline
+                                            preload="metadata"
+                                            onLoadedMetadata={onVideoLoad}
+                                        />
                                     </div>
-                                </div>
-                            )}
+                                ) : media ? (
+                                    <div
+                                        className="relative w-full bg-slate-50"
+                                        style={{ aspectRatio }}
+                                    >
+                                        <Image
+                                            src={media}
+                                            alt={mediaAlt}
+                                            fill
+                                            sizes="(max-width: 1024px) 100vw, 50vw"
+                                            className="object-contain"
+                                            priority
+                                            onLoad={onImageLoad}
+                                        />
+                                    </div>
+                                ) : (
+                                    <div
+                                        className="relative w-full flex items-center justify-center"
+                                        style={{ background: "var(--gradient-brand)", aspectRatio }}
+                                    >
+                                        <ServiceItemIcon
+                                            iconString={props.servicecard?.icon}
+                                            className="w-16 h-16 text-white/90"
+                                            defaultIcon="Sparkles"
+                                        />
+                                    </div>
+                                )}
 
-                            {/* Quick highlight chips overlay */}
-                            {bannerStats.length > 0 && (
-                                <div className="absolute bottom-4 right-4 left-4 flex flex-wrap justify-end gap-2">
-                                    {bannerStats.map((stat, i) => (
-                                        <div
-                                            key={i}
-                                            className="inline-flex items-center gap-1.5 bg-white/95 backdrop-blur-sm rounded-full px-3 py-1.5 shadow-lg text-[11px] font-bold text-brand-dark"
-                                        >
-                                            <ServiceItemIcon iconString={stat.icon} className="w-3.5 h-3.5 text-brand-primary" defaultIcon="BadgeCheck" />
-                                            {stat.value}
+                                {/* Rating pill overlay */}
+                                {review?.ratings && (
+                                    <div className="absolute top-4 left-4 bg-white/95 backdrop-blur-sm rounded-xl px-3 py-2 shadow-lg flex items-center gap-2">
+                                        {review.icon ? (
+                                            <ServiceItemIcon iconString={review.icon} className="w-4 h-4 text-amber-500" defaultIcon="Star" />
+                                        ) : (
+                                            <Star className="w-4 h-4 fill-amber-500 text-amber-500" />
+                                        )}
+                                        <div className="leading-none">
+                                            <div className="text-sm font-extrabold text-brand-dark">{review.ratings}</div>
+                                            {review.count && (
+                                                <div className="text-[10px] text-brand-muted font-medium">{review.count} reviews</div>
+                                            )}
                                         </div>
-                                    ))}
+                                    </div>
+                                )}
+                            </div>
+
+                            {/* Floating claim card, overlapping the frame's bottom-right corner */}
+                            {floatingStat && (
+                                <div className="absolute -bottom-5 right-4 sm:right-6 max-w-[85%] bg-white rounded-xl border border-slate-200/80 shadow-xl px-4 py-3 flex items-center gap-3">
+                                    <ServiceIconWrapper
+                                        iconString={floatingStat.icon}
+                                        className="w-10 h-10 rounded-lg"
+                                        iconClassName="w-5 h-5"
+                                        defaultIcon="GraduationCap"
+                                        fallbackBgClass="bg-brand-primary/10 text-brand-primary"
+                                    />
+                                    <p className="text-sm font-bold text-brand-dark leading-snug">{floatingStat.value}</p>
                                 </div>
                             )}
                         </div>
                     </div>
                 </div>
+
+                {/* ───────────── STATS BAND ───────────── */}
+                {stats.length > 0 && (
+                    <div className="mt-10 lg:mt-12 rounded-2xl border border-slate-200/80 bg-white shadow-sm shadow-slate-200/60 overflow-hidden">
+                        <div className="grid grid-cols-2 lg:grid-cols-4 divide-x divide-y lg:divide-y-0 divide-slate-100">
+                            {stats.map((stat, i) => (
+                                <div key={i} className="flex flex-col items-center text-center gap-2 px-4 py-6">
+                                    <ServiceItemIcon
+                                        iconString={stat.icon}
+                                        className={`w-5 h-5 ${accentAt(STAT_ACCENTS, i).text}`}
+                                        defaultIcon="Sparkles"
+                                    />
+                                    <p className="text-2xl lg:text-3xl font-black text-brand-dark leading-none">{stat.value}</p>
+                                    <p className="text-xs font-bold text-brand-dark">{stat.description}</p>
+                                    {stat.tagline && (
+                                        <p className="text-[11px] text-brand-muted/80 leading-snug max-w-[180px]">{stat.tagline}</p>
+                                    )}
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                )}
             </div>
         </section>
-    );
-}
-
-function CheckItem({ text, hidden }: { text: string; hidden?: boolean }) {
-    return (
-        <div className={`flex items-start gap-2 text-[13px] text-gray-700 ${hidden ? "hidden" : ""}`}>
-            <div
-                aria-hidden="true"
-                className="mt-0.5 w-4 h-4 rounded-full bg-gray-100 flex items-center justify-center flex-shrink-0"
-            >
-                <svg viewBox="0 0 12 12" className="w-3.5 h-3.5 p-0.5 border border-brand-primary rounded-full text-brand-primary" fill="none" stroke="currentColor" strokeWidth={2.5}>
-                    <polyline points="2,6 5,9 10,3" />
-                </svg>
-            </div>
-            {text}
-        </div>
     );
 }

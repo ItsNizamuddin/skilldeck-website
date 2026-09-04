@@ -188,22 +188,22 @@ const Body = ({ singleArticle }: any) => {
                 </div>
             </div>
 
-            {/* Internal Section (Related Links) */}
-            {article?.internalSection?.value && (
+            {/* Bottom Section (Accordion) */}
+            {article?.bottomSection?.value && (
                 <div className="mt-6">
-                    <CourseRelatedLinks
-                        title={article.internalSection.title}
-                        value={article.internalSection.value}
+                    <CourseAccordionSection
+                        title={article.bottomSection.title}
+                        value={article.bottomSection.value}
                     />
                 </div>
             )}
 
-            {/* Bottom Section (Accordion) */}
-            {article?.bottomSection?.value && (
+            {/* Internal Section (Related Links) */}
+            {article?.internalSection?.value && (
                 <div className="mt-4">
-                    <CourseAccordionSection
-                        title={article.bottomSection.title}
-                        value={article.bottomSection.value}
+                    <CourseRelatedLinks
+                        title={article.internalSection.title}
+                        value={article.internalSection.value}
                     />
                 </div>
             )}

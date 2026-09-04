@@ -52,3 +52,14 @@ export function isVideoUrl(url?: string): boolean {
     const path = url.split("?")[0].toLowerCase();
     return VIDEO_EXTENSIONS.some((ext) => path.endsWith(ext));
 }
+
+/**
+ * Icon fields hold either a lucide icon name ("Cloud", "Cloud,#5C3FFA") or an
+ * uploaded asset URL. Only the latter can be fed to `next/image` — a bare name
+ * throws `Failed to construct 'URL'` at render time.
+ */
+export function isImageSrc(value?: string): boolean {
+    if (!value) return false;
+    const src = value.trim();
+    return /^(https?:\/\/|\/|data:image\/)/i.test(src);
+}

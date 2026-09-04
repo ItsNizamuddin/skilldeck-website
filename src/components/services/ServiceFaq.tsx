@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Plus, Minus, MessageCircleQuestion } from "lucide-react";
+import { ArrowUpRight, MessageCircleQuestion, Minus, Plus } from "lucide-react";
 import { ServiceFAQs } from "./types";
 import ServiceSectionIntro from "./ServiceSectionIntro";
 import { normalizeRichText } from "./richText";
@@ -25,7 +25,7 @@ export default function ServiceFaq({ faqs, serviceName }: ServiceFaqProps) {
         <section id="faq" className="scroll-mt-24 section-y">
             <div className="container mx-auto px-2 lg:px-0">
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16">
-                    <div className="lg:col-span-4 space-y-6">
+                    <div className="lg:col-span-4 space-y-6 lg:sticky lg:top-28 self-start">
                         <ServiceSectionIntro
                             numeral="08"
                             kicker={faqs?.tagline || "Got Questions?"}
@@ -33,25 +33,42 @@ export default function ServiceFaq({ faqs, serviceName }: ServiceFaqProps) {
                             description={faqs?.description}
                         />
 
-                        <div className="rounded-2xl bg-slate-50 border border-slate-100 p-5 space-y-3">
-                            <div className="w-10 h-10 rounded-xl bg-brand-primary/10 flex items-center justify-center">
-                                <MessageCircleQuestion className="w-5 h-5 text-brand-primary" />
+                        {/* The flat grey box read as a disabled panel; the dark card gives the
+                            ask-us prompt the weight of an actual offer. */}
+                        <div className="relative overflow-hidden rounded-2xl bg-brand-dark p-6 space-y-4">
+                            <div
+                                aria-hidden="true"
+                                className="absolute -top-20 -right-16 w-56 h-56 rounded-full blur-3xl opacity-30 pointer-events-none"
+                                style={{ background: "var(--gradient-brand)" }}
+                            />
+                            <span
+                                aria-hidden="true"
+                                className="absolute inset-x-0 top-0 h-1"
+                                style={{ background: "var(--gradient-brand)" }}
+                            />
+
+                            <div className="relative space-y-3">
+                                <div className="w-11 h-11 rounded-xl bg-white/10 flex items-center justify-center">
+                                    <MessageCircleQuestion className="w-5 h-5 text-white" />
+                                </div>
+                                <div className="space-y-1.5">
+                                    <p className="text-base font-extrabold text-white">Still not sure?</p>
+                                    <p className="text-sm text-white/60 leading-relaxed">
+                                        Talk to our team for a straight answer, not a sales pitch.
+                                    </p>
+                                </div>
+                                <Button
+                                    onClick={() => openModal({
+                                        source: "service-faq",
+                                        formTitle: serviceName ? `Ask Our Team about ${serviceName}` : "Ask Our Team",
+                                    })}
+                                    variant="primary"
+                                    className="w-full rounded-xl font-bold gap-2"
+                                >
+                                    Ask a question
+                                    <ArrowUpRight className="w-4 h-4" aria-hidden="true" />
+                                </Button>
                             </div>
-                            <p className="text-sm font-bold text-brand-dark">Still not sure?</p>
-                            <p className="text-xs text-brand-muted leading-relaxed">
-                                Talk to our team for a straight answer, not a sales pitch.
-                            </p>
-                            <Button
-                                onClick={() => openModal({
-                                    source: "service-faq",
-                                    formTitle: serviceName ? `Ask Our Team about ${serviceName}` : "Ask Our Team",
-                                })}
-                                variant="outline-primary"
-                                size="sm"
-                                className="font-bold"
-                            >
-                                Ask a question
-                            </Button>
                         </div>
                     </div>
 

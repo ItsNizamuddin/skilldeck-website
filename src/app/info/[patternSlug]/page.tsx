@@ -155,19 +155,19 @@ export default async function PatternPage({ params }: { params: Promise<{ patter
                                 </article>
                             )}
 
-                            {/* Internal Links & Bottom Sections */}
+                            {/* Bottom & Internal Link Sections */}
                             {(internalSection?.value || bottomSection?.value) && (
                                 <div className="space-y-6">
-                                    {internalSection?.value && (
-                                        <CourseRelatedLinks
-                                            title={internalSection.title}
-                                            value={injectNofollow(DOMPurify.sanitize(internalSection.value))}
-                                        />
-                                    )}
                                     {bottomSection?.value && (
                                         <CourseAccordionSection
                                             title={bottomSection.title}
                                             value={injectNofollow(DOMPurify.sanitize(bottomSection.value))}
+                                        />
+                                    )}
+                                    {internalSection?.value && (
+                                        <CourseRelatedLinks
+                                            title={internalSection.title}
+                                            value={injectNofollow(DOMPurify.sanitize(internalSection.value))}
                                         />
                                     )}
                                 </div>
