@@ -299,7 +299,7 @@ function NoPickFallback() {
                         width={352}
                         height={188}
                         className="w-full h-auto object-cover max-h-[188px] rounded-lg"
-                        loading="eager"
+                        priority
                     />
                 </div>
 
@@ -355,7 +355,7 @@ function NoPickFallback() {
                     </div>
                     <div className="flex items-center gap-2">
                         <div className="w-5 h-5 bg-emerald-500 rounded flex items-center justify-center flex-shrink-0">
-                            <svg className="w-6 h-6 text-white fill-white" viewBox="0 0 12 12"><path d="M6 1l1.5 3h3l-2.5 1.8 1 3L6 7.2 3 8.8l1-3L1.5 4h3z" /></svg>
+                            <svg className="w-3.5 h-3.5 text-white fill-white" viewBox="0 0 12 12"><path d="M6 1l1.5 3h3l-2.5 1.8 1 3L6 7.2 3 8.8l1-3L1.5 4h3z" /></svg>
                         </div>
                         <div>
                             <div className="flex items-center gap-1">

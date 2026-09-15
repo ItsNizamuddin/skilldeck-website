@@ -2,7 +2,7 @@ import CourseHero from "@/components/category/courses/CourseHero";
 import CourseAccordionSection from "@/components/category/courses/overview/CourseAccordionSection";
 import CourseOverview from "@/components/category/courses/overview/CourseOverview";
 import CourseRelatedLinks from "@/components/category/courses/overview/CourseRelatedLinks";
-import TopPartnersSection from "@/components/category/courses/overview/TopPartnersSection";
+import TopPartnersSection from "@/components/category/courses/overview/TopPartnersClientWrapper";
 import Footer from "@/components/shared/Footer";
 import MainNav from "@/components/shared/Navbar";
 import { SchedulesProvider } from "@/context/SchedulesContext";

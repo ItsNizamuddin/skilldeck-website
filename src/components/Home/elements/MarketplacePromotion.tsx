@@ -2,7 +2,7 @@
 
 import { GraduationCap, Target, TrendingUp } from "lucide-react";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import MarketPlaceCta from "./MarketPlaceCta";
 
 // Bidding Visual Component without framer-motion dependency
@@ -12,8 +12,28 @@ const MarketplaceBiddingVisual = () => {
         { id: 2, title: "Python Mastery 2024", institute: "Code Masters", bid: "$18.00" },
         { id: 3, title: "AI & Machine Learning", institute: "Future Edu", bid: "$12.00" },
     ]);
+    const containerRef = useRef<HTMLDivElement>(null);
+    const [isVisible, setIsVisible] = useState(false);
 
     useEffect(() => {
+        const el = containerRef.current;
+        if (!el) return;
+        if (typeof IntersectionObserver === "undefined") {
+            setIsVisible(true);
+            return;
+        }
+        const observer = new IntersectionObserver(
+            ([entry]) => {
+                setIsVisible(entry.isIntersecting);
+            },
+            { rootMargin: "200px 0px" }
+        );
+        observer.observe(el);
+        return () => observer.disconnect();
+    }, []);
+
+    useEffect(() => {
+        if (!isVisible) return;
         const timer = setInterval(() => {
             setItems(currentItems => {
                 const newItems = [...currentItems];
@@ -27,10 +47,10 @@ const MarketplaceBiddingVisual = () => {
             });
         }, 2000);
         return () => clearInterval(timer);
-    }, []);
+    }, [isVisible]);
 
     return (
-        <div className="w-full space-y-3 py-2">
+        <div ref={containerRef} className="w-full space-y-3 py-2">
             <div className="flex flex-col gap-3 relative">
                 {items.map((item, index) => {
                     const isTop = index === 0;

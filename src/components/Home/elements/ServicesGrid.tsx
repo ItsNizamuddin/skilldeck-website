@@ -48,6 +48,7 @@ function ServiceCard({
             {/* The whole card is the link, so every part of it is clickable. */}
             <Link
                 href={href}
+                prefetch={false}
                 aria-label={`${name} — view service details`}
                 className="flex h-full flex-col outline-none"
             >

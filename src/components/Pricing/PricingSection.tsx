@@ -2,13 +2,20 @@
 
 import { Grid, List } from 'lucide-react';
 import { useEffect, useMemo, useRef, useState } from 'react';
+import dynamic from 'next/dynamic';
 import PlansComparison from './elements/PlansComparison';
-import PlansComparisonTable from './elements/PlansComparisonTable';
 import MarketPlaceCta from '@/components/Home/elements/MarketPlaceCta';
 import { useIpLocation } from '@/hooks/useIpLocation';
 import { PricingPlan } from '@/lib/plans';
 import { BillingInterval } from './elements/utils';
-import LifetimeModal from './elements/LifetimeModal';
+
+const PlansComparisonTable = dynamic(() => import('./elements/PlansComparisonTable'), {
+    loading: () => <div className="h-96 w-full rounded-2xl bg-slate-50 animate-pulse" />,
+    ssr: false,
+});
+const LifetimeModal = dynamic(() => import('./elements/LifetimeModal'), {
+    ssr: false,
+});
 
 interface Props {
     onToggleNavbar?: (hidden: boolean) => void;
@@ -22,16 +29,37 @@ export default function PricingSection({ onToggleNavbar, plans: initialPlans, sh
     const [viewMode, setViewMode] = useState<'cards' | 'table'>('cards');
     const [plans, setPlans] = useState<PricingPlan[]>(initialPlans);
     const [isLifetimeModalOpen, setIsLifetimeModalOpen] = useState(false);
+    const [isNearViewport, setIsNearViewport] = useState(false);
+    const sectionRef = useRef<HTMLDivElement>(null);
     const tableContainerRef = useRef<HTMLDivElement>(null);
     const { data: locationData, loading: ipLoading } = useIpLocation();
 
-
+    // Defer localization until pricing section is approached
+    useEffect(() => {
+        const el = sectionRef.current;
+        if (!el || isNearViewport) return;
+        if (typeof IntersectionObserver === "undefined") {
+            setIsNearViewport(true);
+            return;
+        }
+        const observer = new IntersectionObserver(
+            (entries) => {
+                if (entries.some((e) => e.isIntersecting)) {
+                    setIsNearViewport(true);
+                    observer.disconnect();
+                }
+            },
+            { rootMargin: "400px 0px" }
+        );
+        observer.observe(el);
+        return () => observer.disconnect();
+    }, [isNearViewport]);
 
     // Client-side pricing localization
     useEffect(() => {
-        const localizePlans = async () => {
-            if (ipLoading) return;
+        if (!isNearViewport || ipLoading) return;
 
+        const localizePlans = async () => {
             try {
                 const detectedCurrency = locationData?.currency;
 
@@ -52,7 +80,7 @@ export default function PricingSection({ onToggleNavbar, plans: initialPlans, sh
         };
 
         localizePlans();
-    }, [locationData, ipLoading, initialPlans]);
+    }, [isNearViewport, locationData, ipLoading, initialPlans]);
 
     // Calculate max savings percentage across all plans
     const maxSavingsPercentage = useMemo(() => {
@@ -106,7 +134,7 @@ export default function PricingSection({ onToggleNavbar, plans: initialPlans, sh
     };
 
     return (
-        <section className="section-y bg-white" id="plans">
+        <section ref={sectionRef} className="section-y bg-white" id="plans">
             <div className="container mx-auto px-4 lg:px-0">
                 {showHeading && (
                     <>

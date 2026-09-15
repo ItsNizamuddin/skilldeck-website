@@ -1,4 +1,3 @@
-import { notFound } from 'next/navigation';
 import { redirectOrNotFound } from '@/lib/redirects';
 import { buildCanonical } from '@/lib/canonical';
 import { env } from '@/lib/env';
@@ -13,7 +12,7 @@ import CourseOverview from '@/components/category/courses/overview/CourseOvervie
 import CourseFAQ from '@/components/category/courses/overview/CourseFAQ';
 import CourseRelatedLinks from '@/components/category/courses/overview/CourseRelatedLinks';
 import CourseAccordionSection from '@/components/category/courses/overview/CourseAccordionSection';
-import TopPartnersSection from "@/components/category/courses/overview/TopPartnersSection";
+import TopPartnersSection from "@/components/category/courses/overview/TopPartnersClientWrapper";
 import Footer from '@/components/shared/Footer';
 import MainNav from '@/components/shared/Navbar';
 import { SchedulesProvider } from "@/context/SchedulesContext";
@@ -282,8 +281,6 @@ export default async function PatternPage({ params }: { params: Promise<{ patter
                                     <PatternContent content={pattern.content} />
                                 </article>
                             )}
-
-
                         </div>
                     </div>
                 </div>

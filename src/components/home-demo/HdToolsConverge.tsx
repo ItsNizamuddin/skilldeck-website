@@ -160,6 +160,7 @@ export default function HdToolsConverge() {
                         alt="Skilldeck"
                         width={120}
                         height={28}
+                        priority
                         className="h-7 w-auto shrink-0"
                         style={{ width: "auto", height: "1.75rem" }}
                     />

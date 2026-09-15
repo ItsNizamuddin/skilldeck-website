@@ -2,7 +2,7 @@
 
 import SectionTag from "@/components/ui/SectionTag";
 import { CheckCircle, Star, ThumbsUp } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 interface Testimonial {
     _id: string;
@@ -70,7 +70,31 @@ export default function CourseTestimonials({ courseSlug }: CourseTestimonialsPro
         setLoading(false);
     };
 
+    const containerRef = useRef<HTMLDivElement>(null);
+    const [isVisible, setIsVisible] = useState(false);
+
     useEffect(() => {
+        const el = containerRef.current;
+        if (!el || isVisible) return;
+        if (typeof IntersectionObserver === "undefined") {
+            setIsVisible(true);
+            return;
+        }
+        const observer = new IntersectionObserver(
+            (entries) => {
+                if (entries.some((e) => e.isIntersecting)) {
+                    setIsVisible(true);
+                    observer.disconnect();
+                }
+            },
+            { rootMargin: "400px 0px" }
+        );
+        observer.observe(el);
+        return () => observer.disconnect();
+    }, [isVisible]);
+
+    useEffect(() => {
+        if (!isVisible) return;
         const loadTestimonialsAndStats = async () => {
             try {
                 const [reviewsRes, statsRes] = await Promise.all([
@@ -101,12 +125,12 @@ export default function CourseTestimonials({ courseSlug }: CourseTestimonialsPro
             }
         };
         loadTestimonialsAndStats();
-    }, [courseSlug]);
+    }, [courseSlug, isVisible]);
 
-    if (!loading && testimonials.length === 0) return null;
+    if (isVisible && !loading && testimonials.length === 0) return null;
 
     return (
-        <div className="space-y-6 md:pt-6">
+        <div ref={containerRef} className="space-y-6 md:pt-6">
             {/* Header */}
             <div className="space-y-2">
                 <SectionTag text="Learner Reviews" />
