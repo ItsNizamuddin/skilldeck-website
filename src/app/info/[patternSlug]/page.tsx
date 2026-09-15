@@ -1,5 +1,6 @@
 import { notFound } from 'next/navigation';
 import { redirectOrNotFound } from '@/lib/redirects';
+import { buildCanonical } from '@/lib/canonical';
 import { env } from '@/lib/env';
 import { Metadata } from 'next';
 import { Suspense } from 'react';
@@ -21,6 +22,7 @@ import DOMPurify from "@/lib/dompurify";
 import { fetchFromBackend } from "@/lib/apiProxy";
 import { fetchPlans } from "@/lib/plans";
 import { getAllServices } from "@/lib/services";
+import { getAllPatterns } from "@/lib/patterns";
 
 // Service detail sections, reused below the pattern content the same way the
 // course sections are — a service pattern is a page about a service.
@@ -44,6 +46,13 @@ function injectNofollow(html: string): string {
         return `<a${attrs} rel="nofollow noreferrer">`;
     });
 }
+
+export async function generateStaticParams() {
+    const patterns = await getAllPatterns();
+    return patterns.map((pattern) => ({ patternSlug: pattern.slug }));
+}
+
+export const revalidate = false; // Pure On-Demand ISR: held on the CDN until a webhook purge
 
 async function getPatternData(patternSlug: string) {
     try {
@@ -117,12 +126,20 @@ export async function generateMetadata({ params }: { params: Promise<{ patternSl
     const { pattern, seo } = data;
     const title = seo?.metaTitle || pattern.title || 'SkillDeck Training Pattern';
     const description = seo?.metaDescription || pattern.smallDescription || pattern.description || '';
-    const baseUrl = env.NEXT_PUBLIC_SITE_URL || 'https://skilldeck.net';
+    // The CMS seeds this field automatically and nothing in the admin can edit
+    // it, so every stored value points outside this section — either at a
+    // deleted /services/* URL or at a bare slug that resolves to a 404. Only a
+    // canonical already inside /info/ is honoured (one pattern declared a
+    // duplicate of another); anything else is discarded and the page declares
+    // its own address, which is correct for all 58 records as they stand.
+    const storedCanonical = seo?.canonicalUrl?.startsWith("/info/")
+        ? seo.canonicalUrl
+        : undefined;
 
-    const patternBase = seo?.canonicalUrl
-        ? (seo.canonicalUrl.startsWith('/') ? seo.canonicalUrl.slice(1) : seo.canonicalUrl)
-        : `info/${patternSlug}`;
-    const canonical = `${baseUrl.endsWith('/') ? baseUrl : baseUrl + '/'}${patternBase}`;
+    const canonical = buildCanonical({
+        stored: storedCanonical,
+        fallbackPath: `/info/${patternSlug}`,
+    });
 
     return {
         title,
@@ -180,8 +197,65 @@ export default async function PatternPage({ params }: { params: Promise<{ patter
     // FAQ items combining pattern and course FAQs
     const faqItems = pattern.faqs || course?.faqs || [];
 
+    // These pages carry the FAQs and sit three or four levels deep, but shipped
+    // no structured data at all — the course and service pages both mark up the
+    // equivalent content.
+    const siteUrl = (env.NEXT_PUBLIC_SITE_URL || "https://skilldeck.net").replace(/\/$/, "");
+
+    const faqSchema = faqItems.length > 0
+        ? {
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            "name": `FAQ for ${pattern.title}`,
+            "mainEntity": faqItems.map((faq: any) => ({
+                "@type": "Question",
+                "name": faq.title,
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": (faq.value || faq.answer)?.replace(/<[^>]*>?/gm, '')
+                }
+            }))
+        }
+        : null;
+
+    // A pattern hangs off a service or a course, so the trail differs by parent.
+    const crumbs: { name: string; item: string }[] = [{ name: "Home", item: siteUrl }];
+    if (service?.slug) {
+        crumbs.push({ name: service.name || "Services", item: `${siteUrl}/services/${service.slug}` });
+    } else if (course?.category?.slug) {
+        crumbs.push({ name: course.category.name || "Courses", item: `${siteUrl}/${course.category.slug}` });
+        if (course.slug) {
+            crumbs.push({
+                name: course.course_title || course.slug,
+                item: `${siteUrl}/${course.category.slug}/${course.slug}`,
+            });
+        }
+    }
+    crumbs.push({ name: pattern.title || patternSlug, item: `${siteUrl}/info/${patternSlug}` });
+
+    const breadcrumbSchema = {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": crumbs.map((crumb, index) => ({
+            "@type": "ListItem",
+            "position": index + 1,
+            "name": crumb.name,
+            "item": crumb.item
+        }))
+    };
+
     return (
         <div className="bg-slate-50 min-h-screen flex flex-col">
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+            />
+            {faqSchema && (
+                <script
+                    type="application/ld+json"
+                    dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+                />
+            )}
             <MainNav />
 
             <main className="flex-grow">

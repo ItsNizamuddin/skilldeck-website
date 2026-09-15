@@ -19,12 +19,15 @@ export const metadata: Metadata = {
   icons: {
     icon: [
       { url: "/favicon.ico", sizes: "any" },
+      { url: "/favicon-32x32.png", type: "image/png", sizes: "32x32" },
+      { url: "/favicon-16x16.png", type: "image/png", sizes: "16x16" },
       { url: "/logos/mainlogo.svg", type: "image/svg+xml" },
     ],
     apple: [
-      { url: "/favicon.ico" },
+      { url: "/apple-touch-icon.png", sizes: "180x180" },
     ],
   },
+  manifest: "/site.webmanifest",
 };
 
 import { FormProvider } from "@/components/Forms/FormContext";
@@ -55,18 +58,45 @@ export default function RootLayout({
     }
   };
   
+  // The previous site published contact and location details here; the rebuild
+  // dropped them down to a name, a logo and one profile link, which is the
+  // thinnest an Organization entity can be. Restored so the knowledge-panel
+  // fields (address, phone, support channels) have something to read again.
   const orgSchema = {
     "@context": "https://schema.org",
     "@type": "Organization",
     "@id": "https://skilldeck.net/#organization",
     "name": "SkillDeck",
     "url": "https://skilldeck.net",
+    "description":
+      "World's 1st Fully Automated Plug & Play Platform For Training Institutes. Automate marketing, sales, operations, LMS, CRM and websites from a single platform.",
     "logo": {
       "@type": "ImageObject",
       "url": "https://skilldeck.net/logos/mainlogo.svg"
     },
+    "image": "https://skilldeck.net/logos/mainlogo.svg",
+    "email": "hello@skilldeck.net",
+    "telephone": "+91-8296494941",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "HSR Layout",
+      "addressLocality": "Bengaluru",
+      "addressRegion": "Karnataka",
+      "postalCode": "560102",
+      "addressCountry": "IN"
+    },
+    "contactPoint": {
+      "@type": "ContactPoint",
+      "contactType": "customer service",
+      "telephone": "+91-8296494941",
+      "email": "hello@skilldeck.net",
+      "areaServed": "Global",
+      "availableLanguage": ["English", "Hindi", "Kannada", "Telugu"]
+    },
     "sameAs": [
       "https://www.linkedin.com/company/skilldeck-software/",
+      "https://www.facebook.com/skilldeck",
+      "https://twitter.com/skilldeck"
     ]
   };
 
@@ -77,8 +107,6 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <head>
-        <link rel="icon" href="/favicon.ico" sizes="any" />
-        <link rel="icon" href="/logos/mainlogo.svg" type="image/svg+xml" />
         <link rel="dns-prefetch" href="https://api.skilldeck.net" />
         <link rel="dns-prefetch" href="https://api64.ipify.org" />
         <script

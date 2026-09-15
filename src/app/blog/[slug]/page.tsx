@@ -7,6 +7,7 @@ import { env } from "@/lib/env";
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { redirectOrNotFound } from '@/lib/redirects';
+import { buildCanonical } from '@/lib/canonical';
 import { Suspense } from 'react';
 
 export const revalidate = false; // Pure On-Demand ISR: cached permanently on Edge CDN until webhook purge
@@ -41,10 +42,10 @@ export async function generateMetadata(
         };
     }
 
-    const blogBase = singleArticle.canonicalUrl
-        ? (singleArticle.canonicalUrl.startsWith('/') ? singleArticle.canonicalUrl.slice(1) : singleArticle.canonicalUrl)
-        : `blog/${slug}`;
-    const canonicalPath = blogBase;
+    const canonical = buildCanonical({
+        stored: singleArticle.canonicalUrl,
+        fallbackPath: `/blog/${slug}`,
+    });
 
     return {
         title: `${singleArticle.title} | SkillDeck Blog`,
@@ -54,7 +55,7 @@ export async function generateMetadata(
             follow: true,
         },
         alternates: {
-            canonical: `${baseUrl.endsWith('/') ? baseUrl : baseUrl + '/'}${canonicalPath}`,
+            canonical,
         },
     };
 }

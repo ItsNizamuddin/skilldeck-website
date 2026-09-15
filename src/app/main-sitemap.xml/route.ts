@@ -1,3 +1,4 @@
+import { getAllPatterns } from "@/lib/patterns";
 import { getAllServices } from "@/lib/services";
 
 export const dynamic = "force-dynamic";
@@ -35,7 +36,18 @@ export async function GET(): Promise<Response> {
     console.error("Error fetching services for main sitemap", error);
   }
 
-  const allRoutes = [...routes, ...serviceRoutes];
+  // Pattern pages (/info/<slug>) are the landing pages the redirect table
+  // points the retired /services/* and *-software URLs at. They were in no
+  // sitemap, so nothing told Google the destinations still existed.
+  let patternRoutes: string[] = [];
+  try {
+    const patterns = await getAllPatterns();
+    patternRoutes = patterns.map((pattern) => "/info/" + pattern.slug);
+  } catch (error) {
+    console.error("Error fetching patterns for main sitemap", error);
+  }
+
+  const allRoutes = [...routes, ...serviceRoutes, ...patternRoutes];
 
   const body = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">

@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useIpLocation } from '@/hooks/useIpLocation';
+import { useIpLocation, type IpLocationData } from '@/hooks/useIpLocation';
 import { allCountries } from '@/lib/countryData';
 import { ArrowRight, Briefcase, Building2, Check, ChevronDown, Globe, Mail, MailIcon, MapPin, MessageSquare, PhoneCall, Sparkles, User, X } from 'lucide-react';
 import { usePathname } from 'next/navigation';
@@ -388,11 +388,28 @@ const GenericForm: React.FC<GenericFormProps> = ({
         setIsSubmitting(true);
         try {
             const attribution = getAttributionData();
+            // useIpLocation caches the visitor's own geo lookup here. Without it the
+            // backend resolves the Cloudflare edge and files every lead in Ashburn, VA.
+            const geo = (() => {
+                if (typeof window === 'undefined') return {} as Partial<IpLocationData>;
+                try {
+                    return JSON.parse(
+                        sessionStorage.getItem('geoLocation')
+                        || localStorage.getItem('geoLocation')
+                        || '{}'
+                    ) as Partial<IpLocationData>;
+                } catch {
+                    return {} as Partial<IpLocationData>;
+                }
+            })();
+            const userIp = locationData?.query || geo.query;
             const submissionData = {
                 email: formData.email,
                 fullName: formData.firstname,
                 phone: fullPhone,
-                country: formData.country,
+                country: formData.country || locationData?.country || geo.country,
+                city: locationData?.city || geo.city || undefined,
+                ip: userIp || undefined,
                 courseSlug: formData.courseSlug || undefined,
                 selectedCourse: formData.selectedCourse || undefined,
                 serviceSlug: formData.serviceSlug || undefined,
@@ -431,11 +448,12 @@ const GenericForm: React.FC<GenericFormProps> = ({
                 turnstileToken
             };
 
+            const headers: Record<string, string> = { 'Content-Type': 'application/json' };
+            if (userIp) headers['x-user-ip'] = userIp;
+
             const response = await fetch('/api/leads', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
+                headers,
                 body: JSON.stringify(submissionData),
             });
 

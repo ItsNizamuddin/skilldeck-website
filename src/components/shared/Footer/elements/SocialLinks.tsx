@@ -6,15 +6,16 @@ interface SocialLinksProps {
     items?: SocialLinkItem[];
 }
 
-const getSocialIcon = (name: string) => {
+/** Each network keeps its own tint so the row reads as brands, not as grey chips. */
+const getSocial = (name: string) => {
     const lower = name.toLowerCase();
-    if (lower.includes("linkedin")) return <Linkedin className="w-4 h-4" />;
-    if (lower.includes("twitter") || lower.includes("x")) return <Twitter className="w-4 h-4" />;
-    if (lower.includes("instagram")) return <Instagram className="w-4 h-4" />;
-    if (lower.includes("youtube")) return <Youtube className="w-4 h-4" />;
-    if (lower.includes("facebook")) return <Facebook className="w-4 h-4" />;
-    if (lower.includes("whatsapp")) return <MessageCircle className="w-4 h-4" />;
-    return <Globe className="w-4 h-4" />;
+    if (lower.includes("linkedin")) return { icon: <Linkedin className="w-4 h-4" />, tone: "bg-[#0a66c2]/10 text-[#0a66c2] hover:bg-[#0a66c2] hover:text-white" };
+    if (lower.includes("twitter") || lower.includes("x")) return { icon: <Twitter className="w-4 h-4" />, tone: "bg-sky-500/10 text-sky-500 hover:bg-sky-500 hover:text-white" };
+    if (lower.includes("instagram")) return { icon: <Instagram className="w-4 h-4" />, tone: "bg-pink-500/10 text-pink-500 hover:bg-pink-500 hover:text-white" };
+    if (lower.includes("youtube")) return { icon: <Youtube className="w-4 h-4" />, tone: "bg-red-500/10 text-red-500 hover:bg-red-500 hover:text-white" };
+    if (lower.includes("facebook")) return { icon: <Facebook className="w-4 h-4" />, tone: "bg-[#1877f2]/10 text-[#1877f2] hover:bg-[#1877f2] hover:text-white" };
+    if (lower.includes("whatsapp")) return { icon: <MessageCircle className="w-4 h-4" />, tone: "bg-emerald-500/10 text-emerald-600 hover:bg-emerald-500 hover:text-white" };
+    return { icon: <Globe className="w-4 h-4" />, tone: "bg-slate-100 text-brand-muted hover:bg-brand-primary hover:text-white" };
 };
 
 const SocialLinks = ({ items }: SocialLinksProps) => {
@@ -24,6 +25,7 @@ const SocialLinks = ({ items }: SocialLinksProps) => {
         <div className="flex items-center gap-3 flex-wrap">
             {items.map((item, index) => {
                 if (!item?.link) return null;
+                const { icon, tone } = getSocial(item.name || "");
                 return (
                     <Link
                         key={`${item.name || "social"}-${index}`}
@@ -31,9 +33,9 @@ const SocialLinks = ({ items }: SocialLinksProps) => {
                         target="_blank"
                         rel="noopener noreferrer nofollow"
                         aria-label={item.name || "Social link"}
-                        className="w-9 h-9 rounded-lg bg-slate-800 border border-slate-700 flex items-center justify-center text-slate-400 hover:text-white hover:border-blue-500 transition-all hover:scale-105"
+                        className={`w-10 h-10 rounded-full flex items-center justify-center transition-all duration-200 hover:-translate-y-0.5 ${tone}`}
                     >
-                        {getSocialIcon(item.name || "")}
+                        {icon}
                     </Link>
                 );
             })}

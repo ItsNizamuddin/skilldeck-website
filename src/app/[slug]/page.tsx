@@ -1,12 +1,12 @@
 import { notFound } from "next/navigation";
 import { redirectOrNotFound } from "@/lib/redirects";
+import { buildCanonical } from "@/lib/canonical";
 import { Metadata } from "next";
 import { cache } from "react";
 import MainNav from "@/components/shared/Navbar";
 import Footer from "@/components/shared/Footer";
 import { getCategoryPageCourses } from "@/lib/categories";
 import { fetchFromBackend } from "@/lib/apiProxy";
-import { env } from "@/lib/env";
 import CategoryHero from "@/components/category/CategoryHero";
 import CategoryHighlights from "@/components/category/CategoryHighlights";
 import CategoryCourses from "@/components/category/CategoryCourses";
@@ -83,11 +83,10 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
         return {};
     }
 
-    const baseUrl = env.NEXT_PUBLIC_SITE_URL || 'https://skilldeck.net';
-    const categoryBase = category.canonicalUrl
-        ? (category.canonicalUrl.startsWith('/') ? category.canonicalUrl.slice(1) : category.canonicalUrl)
-        : `${slug}`;
-    const canonicalPath = categoryBase;
+    const canonical = buildCanonical({
+        stored: category.canonicalUrl,
+        fallbackPath: `/${slug}`,
+    });
 
     return {
         title: category.metaTitle || category.name,
@@ -95,7 +94,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
         keywords: category.keywords,
         robots: category.metaRobots,
         alternates: {
-            canonical: `${baseUrl.endsWith('/') ? baseUrl : baseUrl + '/'}${canonicalPath}`,
+            canonical,
         },
         openGraph: {
             title: category.ogTitle || category.metaTitle || category.name,
