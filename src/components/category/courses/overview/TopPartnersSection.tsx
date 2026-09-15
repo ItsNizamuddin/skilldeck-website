@@ -3,7 +3,6 @@
 import { useSchedules } from "@/context/SchedulesContext";
 import { getCurrencySymbol } from "@/lib/courseCardHelpers";
 import { mapToInstitute } from "@/lib/scheduleMapper";
-import { ArrowRight } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import PartnerCompanyCard from "./PartnerCompanyCard";
 import dynamic from "next/dynamic";
@@ -14,7 +13,11 @@ const PartnerComparisonTable = dynamic(() => import("./PartnerComparisonTable"),
     ssr: false,
     loading: () => <div className="h-64 rounded-2xl border border-slate-100 bg-slate-50/60 animate-pulse" />,
 });
-import PartnerSchedulesList from "./PartnerSchedulesList";
+// Client-only and code-split: schedules list contains heavy booking modals, forms, and date pickers.
+const PartnerSchedulesList = dynamic(() => import("./PartnerSchedulesList"), {
+    ssr: false,
+    loading: () => <SchedulesSkeleton />,
+});
 import {
     ComparisonTableSkeleton,
     PartnerCardsSkeleton,
@@ -27,55 +30,43 @@ interface TopPartnersSectionProps {
     courseTitle?: string;
 }
 
-let cachedTenantsList: any[] | null = null;
-
 export default function TopPartnersSection({ courseSlug, courseTitle }: TopPartnersSectionProps) {
     const { schedules, loading, locationData, tenants } = useSchedules(courseSlug);
     const [compareList, setCompareList] = useState<string[]>([]);
-    const [allTenants, setAllTenants] = useState<any[]>(() => cachedTenantsList || []);
     const [mobileIndex, setMobileIndex] = useState(0);
     const [comparisonVisible, setComparisonVisible] = useState(false);
+    const [isNearViewport, setIsNearViewport] = useState(false);
+    const sectionRef = useRef<HTMLDivElement>(null);
     const comparisonAnchor = useRef<HTMLDivElement>(null);
 
     const activeCurrency = locationData?.currency || "USD";
 
+    // Defer heavy computations and subcomponents until the section is near the viewport
     useEffect(() => {
-        if (cachedTenantsList && cachedTenantsList.length > 0) {
-            setAllTenants(cachedTenantsList);
+        const el = sectionRef.current;
+        if (!el || isNearViewport) return;
+        if (typeof IntersectionObserver === "undefined") {
+            setIsNearViewport(true);
             return;
         }
+        const observer = new IntersectionObserver(
+            (entries) => {
+                if (entries.some((e) => e.isIntersecting)) {
+                    setIsNearViewport(true);
+                    observer.disconnect();
+                }
+            },
+            { rootMargin: "350px 0px" }
+        );
+        observer.observe(el);
+        return () => observer.disconnect();
+    }, [isNearViewport]);
 
-        if (tenants && tenants.length > 0) {
-            cachedTenantsList = tenants;
-            setAllTenants(tenants);
-            return;
-        }
-
-        const doFetch = () => {
-            fetch("/api/tenants?limit=50")
-                .then((res) => res.json())
-                .then((data) => {
-                    if (data && data.data) {
-                        cachedTenantsList = data.data;
-                        setAllTenants(data.data);
-                    }
-                })
-                .catch((err) => console.error("Error fetching all tenants:", err));
-        };
-
-        // Defer until the browser is idle to avoid blocking the main thread on mount
-        if (typeof window !== "undefined" && "requestIdleCallback" in window) {
-            (window as any).requestIdleCallback(doFetch, { timeout: 2000 });
-        } else {
-            setTimeout(doFetch, 0);
-        }
-    }, [tenants]);
-
-    // Map raw tenants to cleaner institute profiles
+    // Map raw tenants to cleaner institute profiles directly from useSchedules
     const institutesList = useMemo(() => {
-        if (!allTenants || allTenants.length === 0) return [];
-        return allTenants.map((t: any, index: number) => mapToInstitute(t, index));
-    }, [allTenants]);
+        if (!tenants || tenants.length === 0) return [];
+        return tenants.map((t: any, index: number) => mapToInstitute(t, index));
+    }, [tenants]);
 
     // Map each institute to its lowest price schedule for display in the grid
     const partnersData = useMemo(() => {
@@ -268,7 +259,7 @@ export default function TopPartnersSection({ courseSlug, courseTitle }: TopPartn
     };
 
     return (
-        <div className="w-full space-y-8 py-6" id="training-partners">
+        <div ref={sectionRef} className="w-full space-y-8 py-6" id="training-partners">
             {/* Header section — always rendered statically to prevent CLS layout shift */}
             <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
                 <div className="space-y-2">
@@ -284,7 +275,7 @@ export default function TopPartnersSection({ courseSlug, courseTitle }: TopPartn
                 </div>
             </div>
 
-            {loading && partnersData.length === 0 ? (
+            {(!isNearViewport || (loading && partnersData.length === 0)) ? (
                 <>
                     <PartnerCardsSkeleton />
                     <PartnerCardsSkeletonMobile />

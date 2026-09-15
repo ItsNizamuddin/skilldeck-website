@@ -108,6 +108,7 @@ export default function NavCategoriesDropdown({
 
                                 <Link
                                     href={`/${activeCategory.slug}`}
+                                    prefetch={false}
                                     onClick={() => setLoadingTarget(`explore-${activeCategory.slug}`)}
                                     className="flex items-center gap-2.5 px-3.5 py-2 rounded-lg bg-[linear-gradient(125deg,rgba(92,63,250,1)_0%,rgba(203,59,149,1)_48%,rgba(254,106,27,1)_100%)] text-white text-[11px] font-bold shadow-lg shadow-blue-500/20 hover:shadow-blue-500/30 transition-all group shrink-0"
                                 >
@@ -134,6 +135,7 @@ export default function NavCategoriesDropdown({
                                                     <Link
                                                         key={course.slug || idx}
                                                         href={`/${activeCategory.slug}/${course.slug}`}
+                                                        prefetch={false}
                                                         onClick={() => {
                                                             const targetPath = `/${activeCategory.slug}/${course.slug}`;
                                                             if (typeof window !== 'undefined' && window.location.pathname !== targetPath) {

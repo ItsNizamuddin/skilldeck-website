@@ -96,10 +96,11 @@ export const ProductItem = ({
     );
 };
 
-export const HoveredLink = ({ children, href, ...rest }: { children: React.ReactNode; href: string;[key: string]: any }) => {
+export const HoveredLink = ({ children, href, prefetch = false, ...rest }: { children: React.ReactNode; href: string; [key: string]: any }) => {
     return (
         <Link
             href={href}
+            prefetch={prefetch}
             {...rest}
             className="text-slate-600 hover:text-blue-600 font-normal transition-colors text-sm"
         >

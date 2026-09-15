@@ -74,7 +74,7 @@ export function SchedulesProvider({ slug: defaultSlug, children }: { slug?: stri
                 slug,
                 timezone,
                 currency,
-                limit: 100
+                limit: 30
             }, pageUrl);
 
             setResults(prev => ({
@@ -109,14 +109,27 @@ export function SchedulesProvider({ slug: defaultSlug, children }: { slug?: stri
 
     useEffect(() => {
         if (!defaultSlug) return;
+
+        // If location is currently being detected and not yet cached in sessionStorage,
+        // wait for locationLoading to resolve (with a 400ms fallback timeout) so we only fetch ONCE.
+        const hasCachedSession = typeof window !== "undefined" &&
+            Boolean(sessionStorage.getItem("timezone") && sessionStorage.getItem("currency"));
+
+        if (locationLoading && !hasCachedSession) {
+            const timeout = setTimeout(() => {
+                fetchForSlug(defaultSlug);
+            }, 400);
+            return () => clearTimeout(timeout);
+        }
+
         // Defer the initial fetch until the browser is idle to reduce TBT
         const run = () => fetchForSlug(defaultSlug);
         if (typeof window !== "undefined" && "requestIdleCallback" in window) {
-            (window as any).requestIdleCallback(run, { timeout: 2000 });
+            (window as any).requestIdleCallback(run, { timeout: 1500 });
         } else {
             setTimeout(run, 0);
         }
-    }, [defaultSlug, fetchForSlug]);
+    }, [defaultSlug, locationLoading, fetchForSlug]);
 
     return (
         <SchedulesContext.Provider value={{

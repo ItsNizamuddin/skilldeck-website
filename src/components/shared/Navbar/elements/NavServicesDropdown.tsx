@@ -104,6 +104,7 @@ export default function NavServicesDropdown({
                                     <Link
                                         key={service.slug || idx}
                                         href={`/services/${service.slug}`}
+                                        prefetch={false}
                                         onClick={() => {
                                             const targetPath = `/services/${service.slug}`;
                                             if (typeof window !== 'undefined' && window.location.pathname !== targetPath) {
@@ -156,6 +157,7 @@ export default function NavServicesDropdown({
                         <p className="text-[11px] text-slate-500">Not sure which one fits? We&apos;ll help you scope it.</p>
                         <Link
                             href="/contact-us"
+                            prefetch={false}
                             className="inline-flex items-center gap-1.5 text-xs font-bold text-indigo-600 hover:text-indigo-700 shrink-0 group"
                         >
                             Talk to our team

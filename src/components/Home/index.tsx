@@ -1,6 +1,5 @@
 import dynamic from "next/dynamic";
 import { PricingPlan } from "@/lib/plans";
-import FAQ from "../shared/FAQ";
 import type { ServiceItem } from "@/lib/services";
 import PartnerLogos from "../shared/PartnerLogos";
 
@@ -9,12 +8,19 @@ import HdProblem from "../home-demo/HdProblem";
 import HdPayingFor from "../home-demo/HdPayingFor";
 import HdComparison from "../home-demo/HdComparison";
 import HdBentoFeatures from "../home-demo/HdBentoFeatures";
-
-import AllFeaturesMarquee from "./elements/AllFeaturesMarquee";
-import MarketplacePromotion from "./elements/MarketplacePromotion";
 import ServicesGrid from "./elements/ServicesGrid";
 
-// Lazy-load heavy components below the fold for mobile performance (maintains SSR for SEO)
+// Lazy-load heavy components below the fold (maintains full SSR so search engine bots can read all content)
+const AllFeaturesMarquee = dynamic(() => import("./elements/AllFeaturesMarquee"), {
+    loading: () => <div className="h-96 w-full animate-pulse bg-slate-50" />,
+    ssr: true,
+});
+
+const HdPricing = dynamic(() => import("../home-demo/HdPricing"), {
+    loading: () => <div className="h-96 w-full animate-pulse bg-white" />,
+    ssr: true,
+});
+
 const HdDemo = dynamic(() => import("../home-demo/HdDemo"), {
     loading: () => <div className="h-96 w-full animate-pulse bg-slate-50" />,
     ssr: true,
@@ -30,13 +36,18 @@ const HdAudiences = dynamic(() => import("../home-demo/HdAudiences"), {
     ssr: true,
 });
 
-const HdPricing = dynamic(() => import("../home-demo/HdPricing"), {
+const MarketplacePromotion = dynamic(() => import("./elements/MarketplacePromotion"), {
     loading: () => <div className="h-96 w-full animate-pulse bg-white" />,
     ssr: true,
 });
 
 const HdCta = dynamic(() => import("../home-demo/HdCta"), {
     loading: () => <div className="h-96 w-full animate-pulse bg-white" />,
+    ssr: true,
+});
+
+const FAQ = dynamic(() => import("../shared/FAQ"), {
+    loading: () => <div className="h-96 w-full animate-pulse bg-slate-50" />,
     ssr: true,
 });
 
