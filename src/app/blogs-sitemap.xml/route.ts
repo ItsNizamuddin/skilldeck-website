@@ -25,7 +25,7 @@ export async function GET(): Promise<Response> {
         const data = await res.json();
         const blogs: any[] = Array.isArray(data) ? data : (data.data || []);
         const body = `<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 ${blogs.map((blog: any) => {
     const lastmod = blog.updatedAt || blog.createdAt;
     return `  <url>

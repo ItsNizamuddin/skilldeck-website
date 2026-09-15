@@ -11,6 +11,7 @@ import { env } from "@/lib/env";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { redirectOrNotFound } from "@/lib/redirects";
+import { buildCanonical } from "@/lib/canonical";
 
 const STATIC_ASSET_PATTERNS = [
     /^\/_next\//,
@@ -32,16 +33,53 @@ export function formatLocation(slug: string): string {
         .join(' ');
 }
 
+/**
+ * Course detail pages are prerendered from the published course list.
+ *
+ * This used to read /courses/name-and-ids, which the backend no longer serves —
+ * it 404s, the catch swallowed it, and the build produced zero course pages, so
+ * every course URL paid for an on-demand render on its first visit. The paged
+ * /courses listing is the supported replacement.
+ *
+ * Location variants (/{category}/{course}/{location}) are left to on-demand ISR
+ * on purpose: there is one per course per location, which is far too many to
+ * prerender, and they are reachable because dynamicParams stays on.
+ */
 export async function generateStaticParams() {
-    try {
-        const res = await fetchFromBackend('/courses/name-and-ids');
-        if (!res.ok) return [];
-        const courses = await res.json();
+    const PAGE_SIZE = 100; // the listing endpoint caps out here
 
-        return courses.map((course: any) => ({
-            slug: course.category_slug,
-            course: [course.slug],
-        }));
+    async function fetchPage(page: number) {
+        const queryParams = new URLSearchParams({ page: String(page), limit: String(PAGE_SIZE) });
+        const res = await fetchFromBackend('/courses', { queryParams });
+        if (!res.ok) {
+            console.error(`[generateStaticParams] /courses page ${page} failed: ${res.status}`);
+            return null;
+        }
+        return res.json();
+    }
+
+    try {
+        const first = await fetchPage(1);
+        if (!first) return [];
+
+        const courses: any[] = [...(first.data || [])];
+        const totalPages = first.meta?.pages || 1;
+
+        if (totalPages > 1) {
+            const rest = await Promise.all(
+                Array.from({ length: totalPages - 1 }, (_, i) => fetchPage(i + 2).catch(() => null))
+            );
+            for (const page of rest) {
+                if (page) courses.push(...(page.data || []));
+            }
+        }
+
+        return courses
+            .map((course: any) => ({
+                slug: course.category_slug || course.category?.slug,
+                course: [course.slug],
+            }))
+            .filter((params) => Boolean(params.slug && params.course[0]));
     } catch (error) {
         console.error("Error generating static params for courses:", error);
         return [];
@@ -103,12 +141,11 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
         };
     }
 
-    const courseBase = course.canonicalUrl
-        ? (course.canonicalUrl.startsWith('/') ? course.canonicalUrl.slice(1) : course.canonicalUrl)
-        : `${slug}/${courseSlug}`;
-    const canonicalPath = locationSlug
-        ? `${courseBase}/${locationSlug}`
-        : courseBase;
+    const canonical = buildCanonical({
+        stored: course.canonicalUrl,
+        fallbackPath: `/${slug}/${courseSlug}`,
+        extraSegment: locationSlug,
+    });
 
     return {
         title: course.metaTitle || course.course_title,
@@ -119,7 +156,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
             follow: true,
         },
         alternates: {
-            canonical: `${baseUrl.endsWith('/') ? baseUrl : baseUrl + '/'}${canonicalPath}`,
+            canonical,
         },
         openGraph: {
             title: course.ogTitle || course.metaTitle,

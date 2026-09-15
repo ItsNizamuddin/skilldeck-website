@@ -111,9 +111,12 @@ export async function POST(request: NextRequest) {
             revalidateTag(`pattern-${slug}`, 'max');
             revalidatePath(`/info/${slug}`);
             purgeUrls.push(`${SITE_URL}/info/${slug}`);
-        } else {
-            revalidateTag('patterns', 'max');
         }
+        // The pattern list drives both generateStaticParams and the sitemap, so
+        // it has to drop on every pattern change, not only on a list-wide purge.
+        revalidateTag('patterns', 'max');
+        revalidatePath('/main-sitemap.xml');
+        purgeUrls.push(`${SITE_URL}/main-sitemap.xml`);
     } else if (type === 'plan' || type === 'plans' || type === 'pricing') {
         // SkillDeck SaaS Subscription Plans (/pricing & homepage)
         revalidateTag('plans', 'max');

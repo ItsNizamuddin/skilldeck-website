@@ -284,7 +284,7 @@ const BlogCategory = ({ categories, initialBlogs, initialMeta, initialCategory, 
 
                             <div className={`hidden sm:grid grid-cols-1 sm:grid-cols-2 ${desktopCols === 3 ? 'lg:grid-cols-3' : 'lg:grid-cols-2'} gap-8`}>
                                 {(Array.isArray(currentCourses) ? currentCourses : []).map((blog, idx) => (
-                                    <BlogCard key={blog?._id || `blog-${idx}`} blog={blog} priority={idx < 6} />
+                                    <BlogCard key={blog?._id || `blog-${idx}`} blog={blog} priority={idx < 2} />
                                 ))}
                             </div>
                         </>

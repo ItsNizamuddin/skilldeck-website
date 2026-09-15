@@ -23,7 +23,9 @@ interface SponsoredCarouselProps {
 }
 
 // ── Shared Image Component for Spotlight Cards ──
-const CardImage = ({ company, className = "h-full" }: { company: Company; className?: string }) => {
+// priority is only for the logo that can be the LCP — the first card. Giving
+// every slide one made the browser preload the whole carousel ahead of the page.
+const CardImage = ({ company, className = "h-full", priority = false }: { company: Company; className?: string; priority?: boolean }) => {
     return (
         <div className={`relative w-full overflow-hidden bg-slate-50 flex items-center justify-center ${className}`}>
             {company.logo ? (
@@ -33,7 +35,7 @@ const CardImage = ({ company, className = "h-full" }: { company: Company; classN
                     fill
                     sizes="(max-width: 1024px) 100vw, 50vw"
                     className="object-contain p-4 group-hover:scale-105 transition-transform duration-500"
-                    priority
+                    priority={priority}
                 />
             ) : (
                 <div className="flex flex-col items-center justify-center text-slate-300 gap-2 p-6">
@@ -175,7 +177,7 @@ export default function SponsoredCarousel({ companies }: SponsoredCarouselProps)
 
                 {/* Main Card occupying 100% width */}
                 <div className="bg-white border border-slate-100 rounded-2xl shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden flex flex-col group">
-                    <CardImage company={company} className="h-[140px] lg:h-[160px]" />
+                    <CardImage company={company} className="h-[140px] lg:h-[160px]" priority />
 
                     <div className="p-5 flex flex-col sm:flex-row sm:items-center sm:justify-between border-t border-slate-50 gap-4">
                         <div className="flex items-center gap-3.5">
@@ -267,7 +269,7 @@ export default function SponsoredCarousel({ companies }: SponsoredCarouselProps)
                     {/* Left: Main Spotlight (Comp 1) */}
                     <div className="lg:col-span-8 flex flex-col h-full">
                         <div className="bg-white border border-slate-100 rounded-2xl shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden flex flex-col h-full group">
-                            <CardImage company={comp1} className="min-h-[140px] lg:min-h-[180px] flex-1" />
+                            <CardImage company={comp1} className="min-h-[140px] lg:min-h-[180px] flex-1" priority />
 
                             <div className="p-5 flex flex-col sm:flex-row sm:items-center sm:justify-between border-t border-slate-50 gap-4 flex-shrink-0">
                                 <div className="flex items-center gap-3.5">
@@ -418,7 +420,7 @@ export default function SponsoredCarousel({ companies }: SponsoredCarouselProps)
                 {/* ── LEFT: Main Spotlight Banner ── */}
                 <div className="lg:col-span-8 flex flex-col h-full">
                     <div className="bg-white border border-slate-100 rounded-2xl shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden flex flex-col h-full group">
-                        <CardImage company={mainCompany} className="min-h-[240px] sm:min-h-[280px] lg:min-h-[320px] flex-1" />
+                        <CardImage company={mainCompany} className="min-h-[240px] sm:min-h-[280px] lg:min-h-[320px] flex-1" priority />
 
                         {/* Card Info footer */}
                         <div className="p-5 flex flex-col sm:flex-row sm:items-center sm:justify-between border-t border-slate-50 gap-4">

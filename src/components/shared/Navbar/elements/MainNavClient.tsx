@@ -168,7 +168,7 @@ function MainNav({ isHidden, categories, servicesCategories = [] }: Props) {
                         isScrolled && "shadow-xl"
                     )}>
                         <Link href="/" className="flex items-center gap-2 shrink-0" data-no-loader="true">
-                            <Image src={mainLogo} alt="Logo" width={128} height={32} className="w-28 md:w-32 h-auto" priority style={{ height: 'auto' }} />
+                            <Image src={mainLogo} alt="Logo" width={128} height={32} className="w-28 md:w-44 h-auto" priority style={{ height: 'auto' }} />
                         </Link>
 
                         {/* Desktop Navigation */}
