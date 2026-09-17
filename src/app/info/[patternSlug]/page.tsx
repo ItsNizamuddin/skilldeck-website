@@ -8,7 +8,11 @@ import { Suspense } from 'react';
 import PatternHero from '@/components/patterns/PatternHero';
 import PatternContent from '@/components/patterns/PatternContent';
 import PatternSidebar from '@/components/patterns/PatternSidebar';
-import CourseOverview from '@/components/category/courses/overview/CourseOverview';
+// Course and service patterns both repeat their parent page's body verbatim.
+// Both halves now load client-side, after a user gesture, so each pattern URL
+// carries only its own editorial content. See the components for the reasoning.
+import CourseOverviewGated from '@/components/category/courses/overview/CourseOverviewGated';
+import PatternServiceSections from '@/components/patterns/PatternServiceSections';
 import CourseFAQ from '@/components/category/courses/overview/CourseFAQ';
 import CourseRelatedLinks from '@/components/category/courses/overview/CourseRelatedLinks';
 import CourseAccordionSection from '@/components/category/courses/overview/CourseAccordionSection';
@@ -19,21 +23,7 @@ import { SchedulesProvider } from "@/context/SchedulesContext";
 import DOMPurify from "@/lib/dompurify";
 
 import { fetchFromBackend } from "@/lib/apiProxy";
-import { fetchPlans } from "@/lib/plans";
-import { getAllServices } from "@/lib/services";
 import { getAllPatterns } from "@/lib/patterns";
-
-// Service detail sections, reused below the pattern content the same way the
-// course sections are — a service pattern is a page about a service.
-import { ServiceData } from "@/components/services/types";
-import ServiceBenefits from "@/components/services/ServiceBenefits";
-import ServiceApproach from "@/components/services/ServiceApproach";
-import ServiceStrategyComponent from "@/components/services/ServiceStrategy";
-import ServiceWhyOpt from "@/components/services/ServiceWhyOpt";
-import ServiceBusiness from "@/components/services/ServiceBusiness";
-import ServiceAddons from "@/components/services/ServiceAddons";
-import ServiceMoreServicesCards from "@/components/services/ServiceMoreServicesCards";
-import PricingSection from "@/components/Pricing/PricingSection";
 
 /** Force rel="nofollow noreferrer" on every <a> tag in raw HTML */
 function injectNofollow(html: string): string {
@@ -88,26 +78,6 @@ async function getRelatedPatterns(parentSlug: string, patternFor: 'course' | 'se
     } catch (e) {
         console.error("Failed to fetch related patterns", e);
         return [];
-    }
-}
-
-/**
- * The pattern payload carries only enough of the service to identify it, so the
- * full document is fetched from the service endpoint that already serves the
- * service page — same shape, same cache tags, no second projection to maintain.
- */
-async function getServiceDetail(slug: string): Promise<ServiceData | null> {
-    if (!slug) return null;
-    try {
-        const res = await fetchFromBackend(`/services/${slug}`, {
-            next: { tags: [`service-${slug}`, 'services'] }
-        });
-        if (!res.ok) return null;
-        const json = await res.json();
-        return json.data || json;
-    } catch (error) {
-        console.error("Failed to fetch service detail for pattern", error);
-        return null;
     }
 }
 
@@ -178,23 +148,19 @@ export default async function PatternPage({ params }: { params: Promise<{ patter
             ? await getRelatedPatterns(course.slug, 'course')
             : [];
 
-    // A service pattern shows the full service below its own content, mirroring
-    // the course sections. Each of these degrades to nothing on failure so the
-    // pattern content still renders.
-    const [serviceDetail, plans, allServices] = service?.slug
-        ? await Promise.all([
-            getServiceDetail(service.slug),
-            fetchPlans("USD").catch(() => []),
-            getAllServices().catch(() => []),
-        ])
-        : [null, [], []];
 
-    // Resolve internal sections
-    const internalSection = seo?.internalSection || course?.internalSection;
-    const bottomSection = seo?.bottomSection || course?.bottomSection;
+    // Resolve internal sections.
+    //
+    // The `|| course?.*` fallbacks are deliberately gone: they put the course's
+    // copy on every pattern that hangs off it, which is the duplication this
+    // page is being trimmed for. A pattern shows its own SEO sections or none.
+    const internalSection = seo?.internalSection;
+    const bottomSection = seo?.bottomSection;
 
-    // FAQ items combining pattern and course FAQs
-    const faqItems = pattern.faqs || course?.faqs || [];
+    // An empty array is truthy, so length is what decides whether this pattern
+    // really has FAQs of its own. The course's FAQs are duplicate content and
+    // now load with the rest of the course body, behind the gate.
+    const faqItems = Array.isArray(pattern.faqs) && pattern.faqs.length > 0 ? pattern.faqs : [];
 
     // These pages carry the FAQs and sit three or four levels deep, but shipped
     // no structured data at all — the course and service pages both mark up the
@@ -298,10 +264,9 @@ export default async function PatternPage({ params }: { params: Promise<{ patter
                                     <TopPartnersSection courseSlug={course.slug} courseTitle={course?.course_title || course?.course_name} />
                                 </div>
 
-                                <CourseOverview
-                                    data={course}
+                                <CourseOverviewGated
                                     courseSlug={course.slug}
-                                    courseName={course.course_title}
+                                    courseTitle={course.course_title}
                                 />
                             </SchedulesProvider>
                         </Suspense>
@@ -310,35 +275,16 @@ export default async function PatternPage({ params }: { params: Promise<{ patter
 
                 {/* Reuse the service sections, minus the hero and FAQ the
                     pattern page already provides of its own. */}
-                {serviceDetail && (
+                {service?.slug && (
                     <div className="border-t border-slate-200/60 bg-white">
                         <Suspense fallback={
                             <div className="py-20 flex items-center justify-center">
                                 <div className="w-10 h-10 border-4 border-purple-500/20 border-t-purple-500 rounded-full animate-spin" />
                             </div>
                         }>
-                            <ServiceBenefits benefits={serviceDetail.benefits} />
-
-                            <ServiceApproach
-                                approach={serviceDetail.approach}
-                                strategy={serviceDetail.strategy}
-                                media={serviceDetail.strategy?.video || serviceDetail.strategy?.media}
-                            />
-
-                            <PricingSection plans={plans} />
-
-                            <ServiceStrategyComponent strategy={serviceDetail.strategy} />
-
-                            <ServiceWhyOpt whyopt={serviceDetail.whyopt} />
-
-                            <ServiceBusiness business={serviceDetail.business} />
-
-                            <ServiceAddons addons={serviceDetail.addons} />
-
-                            <ServiceMoreServicesCards
-                                services={allServices}
-                                currentSlug={serviceDetail.slug || service.slug}
-                                currentName={serviceDetail.name}
+                            <PatternServiceSections
+                                serviceSlug={service.slug}
+                                serviceName={service.name}
                             />
                         </Suspense>
                     </div>
