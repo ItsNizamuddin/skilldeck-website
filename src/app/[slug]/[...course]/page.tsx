@@ -1,6 +1,9 @@
 import CourseHero from "@/components/category/courses/CourseHero";
 import CourseAccordionSection from "@/components/category/courses/overview/CourseAccordionSection";
 import CourseOverview from "@/components/category/courses/overview/CourseOverview";
+// City URLs render the shared course body client-side, behind a user gesture,
+// so only what is unique to the location lands in their HTML.
+import CourseOverviewGated from "@/components/category/courses/overview/CourseOverviewGated";
 import CourseRelatedLinks from "@/components/category/courses/overview/CourseRelatedLinks";
 import TopPartnersSection from "@/components/category/courses/overview/TopPartnersClientWrapper";
 import Footer from "@/components/shared/Footer";
@@ -279,24 +282,32 @@ export default async function CoursePage({
     return (
         <SchedulesProvider slug={courseSlug}>
             <div className="flex flex-col min-h-screen">
-                <script
-                    type="application/ld+json"
-                    dangerouslySetInnerHTML={{ __html: JSON.stringify(courseSchema) }}
-                />
-                <script
-                    type="application/ld+json"
-                    dangerouslySetInnerHTML={{ __html: JSON.stringify(productSchema) }}
-                />
+                {/* Course, Product and FAQ are identical on every location URL for
+                    this course and are already published on the canonical course
+                    page, so restating them here is the same duplication we avoid
+                    in the markup. The breadcrumb is genuinely location-specific. */}
+                {!locationSlug && (
+                    <>
+                        <script
+                            type="application/ld+json"
+                            dangerouslySetInnerHTML={{ __html: JSON.stringify(courseSchema) }}
+                        />
+                        <script
+                            type="application/ld+json"
+                            dangerouslySetInnerHTML={{ __html: JSON.stringify(productSchema) }}
+                        />
+                        {faqSchema && (
+                            <script
+                                type="application/ld+json"
+                                dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+                            />
+                        )}
+                    </>
+                )}
                 <script
                     type="application/ld+json"
                     dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
                 />
-                {faqSchema && (
-                    <script
-                        type="application/ld+json"
-                        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
-                    />
-                )}
                 <MainNav />
                 <main className="flex-1 bg-white">
                     <CourseHero
@@ -307,11 +318,18 @@ export default async function CoursePage({
                     <div className="container mx-auto px-4 lg:px-0 md:py-12">
                         <TopPartnersSection courseSlug={courseSlug} courseTitle={course?.course_name || course?.title} />
                     </div>
-                    <CourseOverview
-                        data={course}
-                        courseSlug={courseSlug}
-                        courseName={course.course_name}
-                    />
+                    {locationSlug ? (
+                        <CourseOverviewGated
+                            courseSlug={courseSlug}
+                            courseTitle={course.course_title}
+                        />
+                    ) : (
+                        <CourseOverview
+                            data={course}
+                            courseSlug={courseSlug}
+                            courseName={course.course_name}
+                        />
+                    )}
                     <div className="container mx-auto px-4 lg:px-0 pb-16 space-y-12">
                         {(course.bottomSection?.value || course.internalSection?.value) && (
                             <div className="space-y-6">
