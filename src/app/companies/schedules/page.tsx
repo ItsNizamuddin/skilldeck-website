@@ -6,6 +6,7 @@ import Footer from "@/components/shared/Footer";
 import MainNav from "@/components/shared/Navbar";
 import { env } from "@/lib/env";
 import { mapToSchedule } from "@/lib/scheduleMapper";
+import { buildScheduleEventsSchema } from "@/lib/scheduleSchema";
 import type { Schedule } from "@/types/schedules";
 import { Calendar } from "lucide-react";
 import type { Metadata } from "next";
@@ -125,6 +126,12 @@ export default async function SchedulesPage({ searchParams }: Props) {
         });
     }
 
+    // Event markup for the schedules rendered above. Dateless rows drop out
+    // inside the builder, so this is usually shorter than `schedules`.
+    const eventsSchema = buildScheduleEventsSchema(schedules, {
+        siteUrl: env.NEXT_PUBLIC_SITE_URL || "https://skilldeck.net",
+    });
+
     const total: number = data.total ?? data.meta?.total ?? 0;
     const totalPages = Math.max(1, Math.ceil(total / LIMIT));
     const filteredCompanyName = sp.tenantId
@@ -137,6 +144,12 @@ export default async function SchedulesPage({ searchParams }: Props) {
     return (
         <CompareProvider>
             <div className="min-h-screen flex flex-col bg-slate-50">
+                {eventsSchema.length > 0 && (
+                    <script
+                        type="application/ld+json"
+                        dangerouslySetInnerHTML={{ __html: JSON.stringify(eventsSchema) }}
+                    />
+                )}
                 <MainNav />
 
                 <main className="flex-1">

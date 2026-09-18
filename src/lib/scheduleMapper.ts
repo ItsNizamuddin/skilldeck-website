@@ -71,6 +71,9 @@ export const mapToSchedule = (
         company: companyData,
         startsAt: schedule.startsAt,
         endsAt: schedule.endsAt,
+        // Declared on Schedule but previously dropped here. It is the only date
+        // some rows carry, and the Event markup falls back to it.
+        commencementDate: schedule.commencementDate,
         deliveryType: schedule.deliveryType,
         batchType: schedule.batchType,
         totalSessions: schedule.totalSessions,

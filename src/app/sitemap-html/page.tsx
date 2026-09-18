@@ -3,6 +3,7 @@ import MainNav from "@/components/shared/Navbar";
 import Footer from "@/components/shared/Footer";
 import type { Metadata } from "next";
 import { getAllServices } from "@/lib/services";
+import { getAllPatterns } from "@/lib/patterns";
 
 export const metadata: Metadata = {
     title: "HTML Sitemap | SkillDeck",
@@ -36,24 +37,42 @@ const categories = [
 ];
 
 export default async function SitemapPage() {
-    // Service pages exist only in the CMS, so this page — the one crawlers use to
-    // reach everything — has to read them at request time.
-    let serviceLinks: { name: string; href: string }[] = [];
-    try {
-        const services = await getAllServices();
-        serviceLinks = services
-            .filter((service) => service.slug)
-            .map((service) => ({
-                name: service.service_name || service.slug,
-                href: `/services/${service.slug}`,
-            }));
-    } catch (error) {
-        console.error("Error fetching services for the HTML sitemap", error);
-    }
+    // Service and pattern pages exist only in the CMS, so this page — the one
+    // crawlers use to reach everything — has to read them at request time. They
+    // are fetched together because neither is allowed to take the page down.
+    const [services, patterns] = await Promise.all([
+        getAllServices().catch((error) => {
+            console.error("Error fetching services for the HTML sitemap", error);
+            return [];
+        }),
+        getAllPatterns().catch((error) => {
+            console.error("Error fetching patterns for the HTML sitemap", error);
+            return [];
+        }),
+    ]);
 
-    const sections = serviceLinks.length > 0
-        ? [categories[0], { title: "SERVICES", links: serviceLinks }, ...categories.slice(1)]
-        : categories;
+    const serviceLinks = services
+        .filter((service) => service.slug)
+        .map((service) => ({
+            name: service.service_name || service.slug,
+            href: `/services/${service.slug}`,
+        }));
+
+    // The /info/<slug> pages. They are in the XML sitemap but were linked from
+    // nowhere on the site, which left the whole cluster unreachable by crawl.
+    const patternLinks = patterns
+        .filter((pattern) => pattern.slug)
+        .map((pattern) => ({
+            name: pattern.title || pattern.slug,
+            href: `/info/${pattern.slug}`,
+        }));
+
+    const sections = [
+        categories[0],
+        ...(serviceLinks.length > 0 ? [{ title: "SERVICES", links: serviceLinks }] : []),
+        ...(patternLinks.length > 0 ? [{ title: "GUIDES", links: patternLinks }] : []),
+        ...categories.slice(1),
+    ];
 
     return (
         <div className="min-h-screen bg-gray-50 flex flex-col">

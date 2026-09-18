@@ -286,6 +286,7 @@ export default async function CoursePage({
                     this course and are already published on the canonical course
                     page, so restating them here is the same duplication we avoid
                     in the markup. The breadcrumb is genuinely location-specific. */}
+
                 {!locationSlug && (
                     <>
                         <script
@@ -316,7 +317,7 @@ export default async function CoursePage({
                         locationSlug={locationSlug}
                     />
                     <div className="container mx-auto px-4 lg:px-0 md:py-12">
-                        <TopPartnersSection courseSlug={courseSlug} courseTitle={course?.course_name || course?.title} />
+                        <TopPartnersSection courseSlug={courseSlug} courseTitle={course?.course_name || course?.title} locationSlug={locationSlug} />
                     </div>
                     {locationSlug ? (
                         <CourseOverviewGated

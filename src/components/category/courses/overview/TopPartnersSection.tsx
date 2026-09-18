@@ -2,6 +2,7 @@
 
 import { useSchedules } from "@/context/SchedulesContext";
 import { getCurrencySymbol } from "@/lib/courseCardHelpers";
+import { courseSubject, titleFromSlug } from "@/lib/courseTitle";
 import { mapToInstitute } from "@/lib/scheduleMapper";
 import { useEffect, useMemo, useRef, useState } from "react";
 import PartnerCompanyCard from "./PartnerCompanyCard";
@@ -28,9 +29,11 @@ import {
 interface TopPartnersSectionProps {
     courseSlug: string;
     courseTitle?: string;
+    /** The location segment on a city URL, e.g. "mumbai". Absent on the plain course URL. */
+    locationSlug?: string;
 }
 
-export default function TopPartnersSection({ courseSlug, courseTitle }: TopPartnersSectionProps) {
+export default function TopPartnersSection({ courseSlug, courseTitle, locationSlug }: TopPartnersSectionProps) {
     const { schedules, loading, locationData, tenants } = useSchedules(courseSlug);
     const [compareList, setCompareList] = useState<string[]>([]);
     const [mobileIndex, setMobileIndex] = useState(0);
@@ -40,6 +43,9 @@ export default function TopPartnersSection({ courseSlug, courseTitle }: TopPartn
     const comparisonAnchor = useRef<HTMLDivElement>(null);
 
     const activeCurrency = locationData?.currency || "USD";
+
+    const subject = courseSubject(courseTitle, courseSlug);
+    const city = locationSlug ? titleFromSlug(locationSlug) : "";
 
     // Defer heavy computations and subcomponents until the section is near the viewport
     useEffect(() => {
@@ -267,7 +273,10 @@ export default function TopPartnersSection({ courseSlug, courseTitle }: TopPartn
                         Training Partners
                     </span>
                     <h2 className="text-xl md:text-2xl font-extrabold text-slate-800 tracking-tight">
-                        Top Training Institutes <span className="bg-[linear-gradient(125deg,rgba(92,63,250,1)_0%,rgba(203,59,149,1)_48%,rgba(254,106,27,1)_100%)] bg-clip-text text-transparent">Worldwide</span>
+                        Top {subject ? `${subject} ` : ""}Training Institutes{" "}
+                        <span className="bg-[linear-gradient(125deg,rgba(92,63,250,1)_0%,rgba(203,59,149,1)_48%,rgba(254,106,27,1)_100%)] bg-clip-text text-transparent">
+                            {city ? `in ${city}` : "Worldwide"}
+                        </span>
                     </h2>
                     <p className="text-sm text-slate-500 max-w-2xl font-medium">
                         Compare top training providers and choose the best one for your learning journey.
@@ -377,6 +386,7 @@ export default function TopPartnersSection({ courseSlug, courseTitle }: TopPartn
                             compact
                             courseSlug={courseSlug}
                             courseTitle={courseTitle}
+                            locationSlug={locationSlug}
                             compareList={effectiveCompare}
                             onAdd={handleCompareAdd}
                             onRemove={handleCompareRemove}
@@ -395,6 +405,8 @@ export default function TopPartnersSection({ courseSlug, courseTitle }: TopPartn
                     partnersData={partnersData}
                     activeCurrency={activeCurrency}
                     courseSlug={courseSlug}
+                    courseTitle={courseTitle}
+                    locationSlug={locationSlug}
                 />
             )}
         </div>

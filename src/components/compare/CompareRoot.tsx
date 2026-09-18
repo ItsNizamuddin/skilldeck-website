@@ -14,6 +14,7 @@ import { buildColumn, buildCompanyColumn, CompareColumn, CompareSchedule, Compar
 import { COMPARE_GROUPS, CompareRow, rowDiffers, rowHasData, winnerIndex } from "./compareRows";
 import ComparePickerModal, { PickerItem } from "./ComparePickerModal";
 import CompareSkeleton from "./CompareSkeleton";
+import { titleFromSlug } from "@/lib/courseTitle";
 
 export const COMPARE_STORAGE_KEY = "skilldeck:compare";
 const MAX_COMPARE = 4;
@@ -72,6 +73,9 @@ export default function CompareRoot() {
         typeParam === "companies" ? "company" : typeParam === "schedules" ? "schedule" : "both";
     const courseSlug = params.get("course") || undefined;
     const titleParam = params.get("title") || params.get("courseTitle");
+    // Set when the visitor arrived from a city URL (/{category}/{course}/{city}),
+    // so the comparison keeps naming the place they were looking at.
+    const cityParam = params.get("city") || undefined;
     const urlIds = useMemo(
         () => (params.get("ids") || "").split(",").map((v) => v.trim()).filter(Boolean),
         [params]
@@ -93,6 +97,8 @@ export default function CompareRoot() {
         }
         return undefined;
     }, [rawCourseTitle, courseSlug]);
+
+    const displayCity = useMemo(() => (cityParam ? titleFromSlug(cityParam) : undefined), [cityParam]);
     const [tenants, setTenants] = useState<CompareTenant[]>([]);
     const [directory, setDirectory] = useState<CompareTenant[]>([]);
     const [selectedKeys, setSelectedKeys] = useState<string[]>([]);
@@ -411,6 +417,10 @@ export default function CompareRoot() {
             if (next === "company") qs.set("type", "companies");
             if (next === "schedule") qs.set("type", "schedules");
             if (courseSlug) qs.set("course", courseSlug);
+            // Both were lost on every view switch, which reset the heading to the
+            // generic wording even though the course and city were still in play.
+            if (titleParam) qs.set("title", titleParam);
+            if (cityParam) qs.set("city", cityParam);
 
             // Carry the current selection across, translated into the target unit —
             // otherwise the view re-seeds from the course pool and drops providers
@@ -432,7 +442,7 @@ export default function CompareRoot() {
 
             router.replace(qs.toString() ? `${pathname}?${qs.toString()}` : pathname, { scroll: false });
         },
-        [view, courseSlug, pathname, router, selectedKeys, schedules, tenantIdOfKey]
+        [view, courseSlug, titleParam, cityParam, pathname, router, selectedKeys, schedules, tenantIdOfKey]
     );
 
     const awards = useMemo(() => {
@@ -511,19 +521,19 @@ export default function CompareRoot() {
                                     <span className="bg-[linear-gradient(125deg,rgba(92,63,250,1)_0%,rgba(203,59,149,1)_48%,rgba(254,106,27,1)_100%)] bg-clip-text text-transparent">
                                         {displayCourseTitle}
                                     </span>{" "}
-                                    Training & certification Providers.
+                                    Training & certification Providers{displayCity ? ` in ${displayCity}` : ""}.
                                 </>
                             ) : (
                                 <>
                                     {view === "company" ? "institutes" : view === "schedule" ? "schedules" : "your options"}{" "}
                                     <span className="bg-[linear-gradient(125deg,rgba(92,63,250,1)_0%,rgba(203,59,149,1)_48%,rgba(254,106,27,1)_100%)] bg-clip-text text-transparent">
-                                        Training & certification Providers.
+                                        Training & certification Providers{displayCity ? ` in ${displayCity}` : ""}.
                                     </span>
                                 </>
                             )}
                         </h1>
                         <p className="body-medium max-w-2xl">
-                            Compare before you make the decision! Not all the institutes offer same value, cirriculum, price, pre and post training benefits. Compare all the offerings from the providers and place a quote here. We assure you of the best price and suggest the best rated training/certification providers for the {displayCourseTitle ? `${displayCourseTitle} ` : ""}course you are looking at.
+                            Compare before you make the decision! Not all the institutes offer same value, cirriculum, price, pre and post training benefits. Compare all the offerings from the providers and place a quote here. We assure you of the best price and suggest the best rated training/certification providers{displayCity ? ` in ${displayCity}` : ""} for the {displayCourseTitle ? `${displayCourseTitle} ` : ""}course you are looking at.
                         </p>
                     </div>
 
@@ -639,25 +649,43 @@ export default function CompareRoot() {
                                         >
                                             <X className="w-3.5 h-3.5" />
                                         </button>
-                                        <div className="flex items-center gap-2 mb-2 pr-5">
-                                            <span className="relative w-6 h-6 shrink-0">
+                                        <div className="flex items-center gap-2.5 mb-3 pr-5">
+                                            {/* A padded tile rather than a bare image: provider logos arrive
+                                                at wildly different aspect ratios, and a fixed box keeps the
+                                                row of cards aligned whatever shape lands in it. */}
+                                            <span className="relative w-20 h-11 shrink-0 rounded-xl border border-slate-200 bg-white p-1.5">
                                                 {c.companyLogo ? (
-                                                    <Image src={c.companyLogo} alt={c.companyName} fill sizes="24px" className="object-contain" />
+                                                    <Image src={c.companyLogo} alt={c.companyName} fill sizes="44px" className="object-contain p-1.5" />
                                                 ) : (
-                                                    <span className="w-6 h-6 rounded bg-purple-50 flex items-center justify-center text-[10px] font-black text-purple-600">
+                                                    <span className="w-full h-full rounded-lg bg-purple-50 flex items-center justify-center text-sm font-black text-purple-600">
                                                         {c.companyName.charAt(0)}
                                                     </span>
                                                 )}
                                             </span>
-                                            <div className="min-w-0">
-                                                <p className="text-[11px] font-semibold text-slate-500 truncate">{c.companyName}</p>
-                                                <p className="text-[9px] font-black uppercase tracking-widest text-slate-400">
-                                                    {c.kind === "company" ? "Institute" : "Batch"} · Option {i + 1}
-                                                </p>
-                                            </div>
+                                            <span className="text-[9px] font-black uppercase tracking-widest text-slate-400 leading-tight">
+                                                {c.kind === "company" ? "Institute" : "Batch"}
+                                                <br />
+                                                Option {i + 1}
+                                            </span>
                                         </div>
-                                        <p className="text-sm font-bold text-brand-dark line-clamp-2 mb-2">{c.programme}</p>
-                                        {c.fee > 0 && <span className="text-sm font-black text-brand-dark">{money(c.fee, c.symbol)}</span>}
+                                        <p className="text-sm font-bold text-brand-dark line-clamp-2" title={c.companyName}>
+                                            {c.companyName}
+                                        </p>
+                                        {/* On an institute column the programme is the provider name over
+                                            again, so it only earns a line when it says something else. */}
+                                        {c.programme && c.programme !== c.companyName && (
+                                            <p className="text-[11px] font-medium text-slate-500 line-clamp-2 mt-1" title={c.programme}>
+                                                {c.programme}
+                                            </p>
+                                        )}
+                                        {c.fee > 0 && (
+                                            <div className="mt-3 pt-3 border-t border-slate-100">
+                                                <span className="block text-[9px] font-black uppercase tracking-widest text-slate-400">
+                                                    Fee
+                                                </span>
+                                                <span className="text-base font-black text-brand-dark">{money(c.fee, c.symbol)}</span>
+                                            </div>
+                                        )}
                                         {busyKey === key && <span className="block text-[10px] text-slate-400 mt-1">Loading batches…</span>}
                                     </div>
                                 );

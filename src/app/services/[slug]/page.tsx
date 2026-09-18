@@ -8,6 +8,7 @@ import CourseRelatedLinks from "@/components/category/courses/overview/CourseRel
 import CourseAccordionSection from "@/components/category/courses/overview/CourseAccordionSection";
 import { fetchPlans } from "@/lib/plans";
 import { getAllServices, getServicesCategories } from "@/lib/services";
+import { getPatternsForService } from "@/lib/patterns";
 
 // Import modular components
 import { ServiceData } from "@/components/services/types";
@@ -24,6 +25,7 @@ import { ServiceIdentityProvider } from "@/components/services/ServiceIdentityCo
 import ServicesGrid from "@/components/Home/elements/ServicesGrid";
 import ServiceChapterDots, { ServiceChapterItem } from "@/components/services/ServiceChapterDots";
 import PricingSection from "@/components/Pricing/PricingSection";
+import ServicePatternLinks from "@/components/services/ServicePatternLinks";
 
 export const revalidate = false; // Pure On-Demand ISR: cached permanently on Edge CDN until webhook purge
 
@@ -130,12 +132,15 @@ export default async function ServicePage({ params }: { params: Promise<ServiceP
     const siteUrl = env.NEXT_PUBLIC_SITE_URL || 'https://skilldeck.net';
     const pageUrl = `${siteUrl.replace(/\/$/, '')}/services/${slug}`;
 
-    const [service, plans, allServices] = await Promise.all([
+    const [service, plans, allServices, servicePatterns] = await Promise.all([
         getServiceData(slug, pageUrl),
         fetchPlans("USD"),
         // Cross-sell list. A failure here must not take the page down, so it
         // degrades to an empty catalogue and the band simply does not render.
-        getAllServices().catch(() => [])
+        getAllServices().catch(() => []),
+        // The /info/<slug> pages built from this service. Same rule: a failure
+        // drops the band rather than the page.
+        getPatternsForService(slug).catch(() => [])
     ]);
 
     if (!service) {
@@ -224,6 +229,7 @@ export default async function ServicePage({ params }: { params: Promise<ServiceP
         ...(hasBusiness ? [{ id: "expertise", label: "Our Expertise" }] : []),
         ...(hasAddons ? [{ id: "addons", label: "Add-Ons" }] : []),
         ...(otherServices.length > 0 ? [{ id: "other-services", label: "Other Services" }] : []),
+        ...(servicePatterns.length > 0 ? [{ id: "guides", label: "Related Guides" }] : []),
         ...(hasFaq ? [{ id: "faq", label: "FAQ" }] : []),
     ];
 
@@ -302,6 +308,9 @@ export default async function ServicePage({ params }: { params: Promise<ServiceP
                     services={otherServices.length > 0 ? otherServices : allServices}
                     id="other-services"
                 />
+
+                {/* 10 — Related /info/ guides built from this service */}
+                <ServicePatternLinks patterns={servicePatterns} serviceName={service.name} />
 
                 {/* 08 — FAQ Accordion Section */}
                 <ServiceFaq faqs={service.faqs} serviceName={service.name} />

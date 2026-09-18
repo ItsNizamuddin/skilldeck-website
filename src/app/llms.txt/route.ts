@@ -1,6 +1,7 @@
 import { NextRequest } from "next/server";
 import { fetchFromBackend } from "@/lib/apiProxy";
 import { env } from "@/lib/env";
+import { getCourseCategoryMap } from "@/lib/courses";
 
 export const dynamic = "force-dynamic";
 
@@ -25,8 +26,32 @@ const getBaseUrl = (request: NextRequest) => {
     return `${protocol}://${host}`;
 };
 
+/**
+ * Where each section's slugs actually live.
+ *
+ * The backend hands every section a bare { title, slug } and says nothing about
+ * routing, so the slug used to be pasted straight onto the origin. Only
+ * categories sit at the root; everything else is nested, and every other
+ * section pointed at URLs that do not exist.
+ *
+ * A section missing from this map is dropped rather than guessed at — "trainers"
+ * has no page on the site at all, so every link it produced was a 404.
+ */
+const SECTION_PREFIX: Record<string, string> = {
+    categories: "",
+    blog: "/blog",
+    coursePatterns: "/info",
+    services: "/services",
+    // "courses" is deliberately absent: a course is served at /{category}/{slug},
+    // and the category has to be resolved per course — see below.
+};
+
 /** Render a structured llms.txt markdown string from backend data */
-function renderLlmsTxtMarkdown(data: any, baseUrl: string): string {
+function renderLlmsTxtMarkdown(
+    data: any,
+    baseUrl: string,
+    courseCategories: Map<string, string>
+): string {
     const lines: string[] = [];
 
     lines.push(`# ${data.title || "Skilldeck"}`);
@@ -36,10 +61,35 @@ function renderLlmsTxtMarkdown(data: any, baseUrl: string): string {
     const content = data.content || {};
     for (const [section, items] of Object.entries(content)) {
         if (!Array.isArray(items) || items.length === 0) continue;
-        lines.push(`\n## ${section}`);
-        for (const item of items as Array<{ title: string; slug: string }>) {
-            lines.push(`- [${item.title}](${baseUrl}/${item.slug})`);
+
+        const isCourses = section === "courses";
+        if (!isCourses && SECTION_PREFIX[section] === undefined) {
+            console.warn(`[llms.txt] skipping section "${section}" — no known URL shape`);
+            continue;
         }
+
+        const entries: string[] = [];
+        for (const item of items as Array<{ title: string; slug: string }>) {
+            if (!item?.slug) continue;
+
+            let path: string;
+            if (isCourses) {
+                const category = courseCategories.get(item.slug);
+                // No category means no reachable URL, so the course is left out
+                // rather than advertised at a path that 404s.
+                if (!category) continue;
+                path = `/${category}/${item.slug}`;
+            } else {
+                path = `${SECTION_PREFIX[section]}/${item.slug}`;
+            }
+
+            entries.push(`- [${item.title}](${baseUrl}${path})`);
+        }
+
+        // A section that lost every entry gets no heading either.
+        if (entries.length === 0) continue;
+        lines.push(`\n## ${section}`);
+        lines.push(...entries);
     }
 
     const blocks = data.blocks || [];
@@ -79,7 +129,11 @@ export async function GET(request: NextRequest): Promise<Response> {
         }
 
         const baseUrl = getBaseUrl(request);
-        const markdown = renderLlmsTxtMarkdown(data, baseUrl);
+        // Courses arrive as bare slugs; the category is what makes them a URL.
+        const courseCategories = await getCourseCategoryMap().catch(
+            () => new Map<string, string>()
+        );
+        const markdown = renderLlmsTxtMarkdown(data, baseUrl, courseCategories);
 
         return new Response(markdown, {
             status: 200,

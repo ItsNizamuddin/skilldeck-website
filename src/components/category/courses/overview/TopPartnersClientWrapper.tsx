@@ -18,6 +18,7 @@ const TopPartnersSection = dynamic(
 interface TopPartnersClientWrapperProps {
     courseSlug: string;
     courseTitle?: string;
+    locationSlug?: string;
 }
 
 export default function TopPartnersClientWrapper(props: TopPartnersClientWrapperProps) {

@@ -1,19 +1,14 @@
 import type { NextConfig } from "next";
 
-const isVercelProd = Boolean(process.env.VERCEL) && process.env.NODE_ENV === "production";
-
 const nextConfig: NextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
   compress: true,
-  assetPrefix: isVercelProd ? "https://skilldeck.net" : undefined,
   images: {
     remotePatterns: [
       { protocol: "https", hostname: "api.skilldeck.net" },
       { protocol: "https", hostname: "cloud-storage.skilldeck.net" },
-      { protocol: "https", hostname: "local-skilldeck-s3.s3.ap-south-1.amazonaws.com" },
       { protocol: "https", hostname: "skilldeck-s3-storage.s3.ap-south-1.amazonaws.com" },
-      { protocol: "https", hostname: "cloud-local.skilldeck.net" },
       { protocol: "https", hostname: "img.youtube.com" },
       { protocol: "https", hostname: "flagcdn.com" },
       // Stock photography for the /service-demo design concept.
@@ -64,14 +59,6 @@ const nextConfig: NextConfig = {
         headers: [
           { key: 'Access-Control-Allow-Origin', value: '*' },
           { key: 'Cache-Control', value: 'public, max-age=31536000, immutable' },
-        ],
-      },
-      {
-        source: '/(.*)',
-        headers: [
-          { key: 'Access-Control-Allow-Origin', value: '*' },
-          { key: 'X-Content-Type-Options', value: 'nosniff' },
-          { key: 'X-DNS-Prefetch-Control', value: 'on' },
         ],
       },
     ];
