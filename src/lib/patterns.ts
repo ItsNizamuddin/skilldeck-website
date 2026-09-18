@@ -63,3 +63,41 @@ export const getAllPatterns = cache(async (): Promise<PatternSummary[]> => {
         return [];
     }
 });
+
+/**
+ * The patterns hanging off one service, served at /info/<slug>.
+ *
+ * These are the legacy landing pages the redirect table now points at. They sat
+ * in the XML sitemap with no internal link anywhere on the site, so nothing but
+ * the sitemap told Google they mattered; the service page they came from is the
+ * natural parent to link them from.
+ */
+export const getPatternsForService = cache(async (serviceSlug: string): Promise<PatternSummary[]> => {
+    if (!serviceSlug) return [];
+
+    try {
+        const queryParams = new URLSearchParams({
+            select: "title,slug",
+            patternFor: "service",
+            serviceSlug,
+            limit: String(PAGE_SIZE),
+        });
+
+        const res = await fetchFromBackend("/patterns", {
+            queryParams,
+            cache: "force-cache",
+            next: { tags: ["patterns", `patterns-service-${serviceSlug}`] },
+        });
+
+        if (!res.ok) {
+            console.error(`[patterns] service listing for ${serviceSlug} failed: ${res.status}`);
+            return [];
+        }
+
+        const data = await res.json();
+        return (data.data || []).filter((p: PatternSummary) => Boolean(p?.slug));
+    } catch (error) {
+        console.error(`[patterns] failed to list patterns for ${serviceSlug}:`, error);
+        return [];
+    }
+});
