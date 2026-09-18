@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import {
-    ArrowUpRight, Award, BadgeCheck, Check, ChevronDown, Gauge, Layers, Minus, Plus, Trophy, X,
+    AlertCircle, ArrowUpRight, Award, BadgeCheck, Check, ChevronDown, Gauge, Layers, Minus, Plus, Trophy, X,
 } from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import Breadcrumb from "@/components/ui/Breadcrumb";
@@ -324,7 +324,11 @@ export default function CompareRoot() {
                     items.push({
                         key: companyKey(t.id!),
                         title: tenantName(t),
-                        subtitle: withSchedules.has(t.id) ? "Runs batches for this course" : "Other programmes only",
+                        subtitle: withSchedules.has(t.id)
+                            ? "Runs batches for this course"
+                            : courseSlug
+                                ? `No ${displayCourseTitle || "matching"} batches`
+                                : "Other programmes only",
                         logo: t.logo,
                         group: "Institutes",
                     })
@@ -357,7 +361,7 @@ export default function CompareRoot() {
         }
 
         return items;
-    }, [view, selectedKeys, usedTenantIds, tenants, directory, schedules, currency]);
+    }, [view, selectedKeys, usedTenantIds, tenants, directory, schedules, currency, courseSlug, displayCourseTitle]);
 
     const addItem = useCallback(
         async (key: string) => {
@@ -370,9 +374,13 @@ export default function CompareRoot() {
             setSelectedKeys((prev) => (prev.includes(key) ? prev : [...prev, key]));
             setPickerOpen(false);
 
-            // Institutes with no batch for this course still deserve a populated
-            // column, so pull their other schedules on demand.
-            if (isCompanyKey(key) && !hasCourseBatches(rawId(key))) {
+            // With a course in play the comparison is about that course, so an
+            // institute that does not run it stays empty rather than being filled
+            // from its other programmes -- that produced columns where an SFMC
+            // comparison quietly showed someone's Google Analytics batch.
+            // Without a course there is nothing to be off-topic against, so the
+            // provider's own schedules are still worth pulling.
+            if (!courseSlug && isCompanyKey(key) && !hasCourseBatches(rawId(key))) {
                 setBusyKey(key);
                 try {
                     const res = await fetch(scheduleQuery({ tenantId: rawId(key) })).then((r) => (r.ok ? r.json() : null));
@@ -387,7 +395,7 @@ export default function CompareRoot() {
                 }
             }
         },
-        [selectedKeys, usedTenantIds, tenantIdOfKey, hasCourseBatches, scheduleQuery]
+        [selectedKeys, usedTenantIds, tenantIdOfKey, hasCourseBatches, scheduleQuery, courseSlug]
     );
 
     const remove = useCallback(
@@ -684,6 +692,20 @@ export default function CompareRoot() {
                                                     Fee
                                                 </span>
                                                 <span className="text-base font-black text-brand-dark">{money(c.fee, c.symbol)}</span>
+                                            </div>
+                                        )}
+                                        {/* Said plainly on the column itself: the institute is in the
+                                            comparison but runs nothing for this course, so every
+                                            programme row below is empty by fact, not by failure. */}
+                                        {c.kind === "company" && c.scheduleCount === 0 && busyKey !== key && (
+                                            <div className="mt-3 pt-3 border-t border-slate-100">
+                                                <span className="inline-flex items-start gap-1.5 text-[11px] font-semibold text-amber-700">
+                                                    <AlertCircle className="w-3.5 h-3.5 shrink-0 mt-px" />
+                                                    <span>
+                                                        No {displayCourseTitle ? `${displayCourseTitle} ` : ""}batches
+                                                        at this institute
+                                                    </span>
+                                                </span>
                                             </div>
                                         )}
                                         {busyKey === key && <span className="block text-[10px] text-slate-400 mt-1">Loading batches…</span>}

@@ -7,6 +7,7 @@ import MainNav from "@/components/shared/Navbar";
 import { env } from "@/lib/env";
 import { mapToSchedule } from "@/lib/scheduleMapper";
 import { buildScheduleEventsSchema } from "@/lib/scheduleSchema";
+import { getCourseImageMap } from "@/lib/courses";
 import type { Schedule } from "@/types/schedules";
 import { Calendar } from "lucide-react";
 import type { Metadata } from "next";
@@ -83,14 +84,22 @@ export default async function SchedulesPage({ searchParams }: Props) {
         console.error("[SchedulesPage] fetch error:", e);
     }
 
+    // Schedules carry no artwork of their own, so the course's card thumbnail
+    // stands in. A failure here only costs the pictures, never the listing.
+    const courseImages = await getCourseImageMap().catch(() => new Map<string, { url: string; alt?: string }>());
+
     const tenantMap = new Map<string, any>((data.tenants || []).map((t: any) => [t.id, t]));
     const schedules: Schedule[] = (data.data || []).map((s: any) => {
         const t = tenantMap.get(s.tenantId) || {};
-        return mapToSchedule(
+        const mapped = mapToSchedule(
             s,
             { id: t.id || s.tenantId, name: t.legalName || t.name || "Unknown", logo: t.logo, isVerified: t.isVerified, slug: t.slug },
             geoTimezone ? { timezone: geoTimezone } : null
         );
+        if (!mapped.image && mapped.course?.slug) {
+            mapped.image = courseImages.get(mapped.course.slug)?.url;
+        }
+        return mapped;
     });
 
     // Group schedules by company and course

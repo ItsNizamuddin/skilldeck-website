@@ -97,7 +97,17 @@ export default function RootLayout({
       "https://www.linkedin.com/company/skilldeck-software/",
       "https://www.facebook.com/skilldeck",
       "https://twitter.com/skilldeck"
-    ]
+    ],
+    // Carried over from the previous site, which published it here. Google does
+    // not award review stars for a rating a business states about itself, so
+    // this feeds the entity rather than the snippet.
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": "5",
+      "reviewCount": "1250",
+      "bestRating": "5",
+      "worstRating": "1"
+    }
   };
 
   return (
