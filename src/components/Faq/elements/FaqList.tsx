@@ -1,10 +1,5 @@
 import { ChevronDown, HelpCircle } from 'lucide-react';
-
-interface FaqItem {
-    question: string;
-    answer: string;
-    category: string;
-}
+import type { FaqItem } from '@/components/Faq/faqData';
 
 interface FaqListProps {
     faqs: FaqItem[];
@@ -45,11 +40,18 @@ export default function FaqList({ faqs, openIndex, onToggle }: FaqListProps) {
                             }`}
                         />
                     </button>
-                    {openIndex === index && (
-                        <div className="px-6 pb-6">
-                            <p className="body-medium text-slate-600 leading-relaxed">{faq.answer}</p>
+                    {/* Every answer stays in the DOM and is collapsed with CSS —
+                        unmounting the closed ones hides them from crawlers, and the
+                        page emits FAQPage structured data claiming all of them. */}
+                    <div
+                        className={`grid transition-all duration-200 ease-in-out ${
+                            openIndex === index ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'
+                        }`}
+                    >
+                        <div className="overflow-hidden">
+                            <p className="body-medium text-slate-600 leading-relaxed px-6 pb-6">{faq.answer}</p>
                         </div>
-                    )}
+                    </div>
                 </div>
             ))}
         </div>

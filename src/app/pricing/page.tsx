@@ -2,6 +2,7 @@ import { fetchPlans } from "@/lib/plans";
 import PricingWrapper from "@/components/Pricing/PricingWrapper";
 import MainNav from "@/components/shared/Navbar";
 import Footer from "@/components/shared/Footer";
+import { env } from "@/lib/env";
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -44,8 +45,30 @@ export default async function PricingPage() {
     // via the useIpLocation hook, client-side.
     const plans = await fetchPlans('USD');
 
+    const siteUrl = (env.NEXT_PUBLIC_SITE_URL || "https://skilldeck.net").replace(/\/$/, "");
+
+    const faqSchema = {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "@id": `${siteUrl}/pricing#faq`,
+        "url": `${siteUrl}/pricing`,
+        "name": "Pricing FAQ | SkillDeck",
+        "mainEntity": faqs.map(faq => ({
+            "@type": "Question",
+            "name": faq.question,
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": faq.answer
+            }
+        }))
+    };
+
     return (
         <>
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+            />
             <MainNav />
             <PricingWrapper 
                 plans={plans} 
