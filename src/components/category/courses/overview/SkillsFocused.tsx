@@ -51,7 +51,7 @@ export const SkillsFocused = ({ skills }: OutcomesProps) => {
             <SectionTag text=" What you walk away with" />
             <div className="space-y-1">
                 <h3 className="text-xl md:text-2xl font-extrabold heading-Color tracking-tight">
-                    Outcomes, stated plainly
+                    Course Outcomes, stated plainly
                 </h3>
                 <p className="text-sm body-small">
                     If a programme cannot state these clearly, that tells you something.
