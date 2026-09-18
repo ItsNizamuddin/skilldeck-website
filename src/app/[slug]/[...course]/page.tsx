@@ -282,33 +282,31 @@ export default async function CoursePage({
     return (
         <SchedulesProvider slug={courseSlug}>
             <div className="flex flex-col min-h-screen">
-                {/* Course, Product and FAQ are identical on every location URL for
-                    this course and are already published on the canonical course
-                    page, so restating them here is the same duplication we avoid
-                    in the markup. The breadcrumb is genuinely location-specific. */}
-
-                {!locationSlug && (
-                    <>
-                        <script
-                            type="application/ld+json"
-                            dangerouslySetInnerHTML={{ __html: JSON.stringify(courseSchema) }}
-                        />
-                        <script
-                            type="application/ld+json"
-                            dangerouslySetInnerHTML={{ __html: JSON.stringify(productSchema) }}
-                        />
-                        {faqSchema && (
-                            <script
-                                type="application/ld+json"
-                                dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
-                            />
-                        )}
-                    </>
-                )}
+                {/* Emitted on the location URLs too, not just the canonical course
+                    page. Each city URL carries its own self-referencing canonical
+                    and stands alone in the index, so withholding Course, Product
+                    and FAQ here cost those pages their rich results — the Product
+                    node is what carries the rating that renders review stars.
+                    Repeating a description across genuinely distinct location
+                    pages is not a duplicate-content signal. */}
+                <script
+                    type="application/ld+json"
+                    dangerouslySetInnerHTML={{ __html: JSON.stringify(courseSchema) }}
+                />
+                <script
+                    type="application/ld+json"
+                    dangerouslySetInnerHTML={{ __html: JSON.stringify(productSchema) }}
+                />
                 <script
                     type="application/ld+json"
                     dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
                 />
+                {faqSchema && (
+                    <script
+                        type="application/ld+json"
+                        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+                    />
+                )}
                 <MainNav />
                 <main className="flex-1 bg-white">
                     <CourseHero
