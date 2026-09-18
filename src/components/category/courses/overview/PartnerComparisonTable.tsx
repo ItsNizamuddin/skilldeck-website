@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { courseSubject, titleFromSlug } from "@/lib/courseTitle";
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import { ArrowRight, BadgeCheck, Building2, CheckCircle2, ChevronDown, ChevronRight, Monitor, Plus, Star, TrendingDown, X, Zap } from "lucide-react";
@@ -53,6 +54,8 @@ interface PartnerComparisonTableProps {
     courseSlug?: string;
     /** Course title to display in comparison header. */
     courseTitle?: string;
+    /** The location segment on a city URL, e.g. "mumbai". Absent on the plain course URL. */
+    locationSlug?: string;
     /** Ids currently ticked on the cards; empty means "show the default top N". */
     compareList?: string[];
     onAdd?: (id: string) => void;
@@ -141,6 +144,7 @@ export default function PartnerComparisonTable({
     compact = false,
     courseSlug,
     courseTitle,
+    locationSlug,
     compareList = [],
     onAdd,
     onRemove,
@@ -215,6 +219,7 @@ export default function PartnerComparisonTable({
     const fullComparisonHref = courseSlug
         ? `/compare?type=companies&course=${encodeURIComponent(courseSlug)}` +
         (courseTitle ? `&title=${encodeURIComponent(courseTitle)}` : "") +
+        (locationSlug ? `&city=${encodeURIComponent(locationSlug)}` : "") +
         (selected.length > 0 ? `&ids=${selected.map((p) => p.id).join(",")}` : "")
         : undefined;
 
@@ -245,12 +250,15 @@ export default function PartnerComparisonTable({
         </button>
     );
 
+    const subject = courseSubject(courseTitle, courseSlug);
+    const city = locationSlug ? titleFromSlug(locationSlug) : "";
+
     return (
         <div className="space-y-4" id="compare-partners">
             <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3">
                 <div>
                     <h3 className="text-base md:text-lg font-extrabold text-slate-800 tracking-tight">
-                        Compare Training Companies
+                        Compare {subject ? `${subject} ` : ""}Training Centers{city ? ` in ${city}` : ""}
                     </h3>
                     <p className="text-xs text-slate-500 font-medium">
                         {compact && !showAllRows
@@ -259,8 +267,11 @@ export default function PartnerComparisonTable({
                     </p>
                 </div>
                 <div className="flex items-center gap-2 self-start sm:self-auto">
-                    <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-slate-200 bg-white text-[11px] font-bold text-slate-600">
-                        <BadgeCheck className="w-3.5 h-3.5 text-[#5544CC]" />
+                    {/* The capacity badge carries the emphasis: it is what a first-time
+                        visitor needs to understand, while the row toggle is a repeat
+                        control that does not compete for attention. */}
+                    <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-brand-primary text-[11px] font-bold text-white shadow-sm">
+                        <BadgeCheck className="w-3.5 h-3.5 text-white" />
                         Compare up to {maxCompare} Companies
                     </span>
                     {compact && (
@@ -269,7 +280,7 @@ export default function PartnerComparisonTable({
                             onClick={() => setShowAllRows((v) => !v)}
                             aria-expanded={showAllRows}
                             aria-controls="compare-partners-table"
-                            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-[11px] font-bold text-white bg-brand-primary hover:brightness-110 transition-all"
+                            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-slate-200 bg-white text-[11px] font-bold text-slate-600 hover:border-[#5544CC] hover:text-[#5544CC] transition-colors"
                         >
                             {showAllRows ? "Show less" : "Detailed comparison"}
                             <ChevronDown className={`w-3.5 h-3.5 transition-transform ${showAllRows ? "rotate-180" : ""}`} />

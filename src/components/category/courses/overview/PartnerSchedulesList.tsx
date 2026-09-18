@@ -3,6 +3,7 @@
 import CompanyContactButton from "@/components/companies/CompanyContactButton";
 import { Button } from "@/components/ui/Button";
 import { formatDate, formatPrice, getCurrencySymbol } from "@/lib/courseCardHelpers";
+import { courseSubject, titleFromSlug } from "@/lib/courseTitle";
 import { Calendar, ChevronLeft, ChevronRight, Clock, Phone, Trophy } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -11,12 +12,17 @@ interface PartnerSchedulesListProps {
     partnersData: any[];
     activeCurrency: string;
     courseSlug: string;
+    courseTitle?: string;
+    /** The location segment on a city URL, e.g. "mumbai". Absent on the plain course URL. */
+    locationSlug?: string;
 }
 
 export default function PartnerSchedulesList({
     partnersData,
     activeCurrency,
     courseSlug,
+    courseTitle,
+    locationSlug,
 }: PartnerSchedulesListProps) {
     const sortedPartners = useMemo(() => {
         return [...partnersData]
@@ -86,10 +92,13 @@ export default function PartnerSchedulesList({
 
     if (sortedPartners.length === 0) return null;
 
+    const subject = courseSubject(courseTitle, courseSlug);
+    const city = locationSlug ? titleFromSlug(locationSlug) : "";
+
     return (
         <div id="detailed-schedules" className="pt-10 space-y-6">
             <div className="space-y-2 pb-4 border-b border-slate-100/60">
-                <h3 className="text-xl font-extrabold text-slate-800 tracking-tight">Upcoming Batches & Schedules</h3>
+                <h3 className="text-xl font-extrabold text-slate-800 tracking-tight">{subject ? `${subject} ` : ""}Batches &amp; Course Fee{city ? ` in ${city}` : ""}</h3>
                 <p className="text-xs text-slate-500 font-medium">Hover over your preferred training provider on the left to view their batches.</p>
             </div>
 
