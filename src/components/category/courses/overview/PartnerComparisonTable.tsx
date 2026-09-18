@@ -4,7 +4,7 @@ import Image from "next/image";
 import { courseSubject, titleFromSlug } from "@/lib/courseTitle";
 import Link from "next/link";
 import { useMemo, useState } from "react";
-import { ArrowRight, BadgeCheck, Building2, CheckCircle2, ChevronDown, ChevronRight, Monitor, Plus, Star, TrendingDown, X, Zap } from "lucide-react";
+import { ArrowRight, Building2, CheckCircle2, ChevronDown, ChevronRight, Info, Monitor, Plus, Star, TrendingDown, X, Zap } from "lucide-react";
 import { formatPrice, getCurrencySymbol } from "@/lib/courseCardHelpers";
 import ComparePickerModal, { PickerItem } from "@/components/compare/ComparePickerModal";
 
@@ -267,12 +267,11 @@ export default function PartnerComparisonTable({
                     </p>
                 </div>
                 <div className="flex items-center gap-2 self-start sm:self-auto">
-                    {/* The capacity badge carries the emphasis: it is what a first-time
-                        visitor needs to understand, while the row toggle is a repeat
-                        control that does not compete for attention. */}
-                    <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-brand-primary text-[11px] font-bold text-white shadow-sm">
-                        <BadgeCheck className="w-3.5 h-3.5 text-white" />
-                        Compare up to {maxCompare} Companies
+                    {/* States a limit rather than offering an action, so it reads as a
+                        note, not a control -- nothing here is clickable. */}
+                    <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-sky-50 border border-sky-100 text-[11px] font-medium text-sky-900">
+                        <Info className="w-3.5 h-3.5 shrink-0 text-sky-500" />
+                        You Compare up to {maxCompare} Companies
                     </span>
                     {compact && (
                         <button
@@ -280,7 +279,7 @@ export default function PartnerComparisonTable({
                             onClick={() => setShowAllRows((v) => !v)}
                             aria-expanded={showAllRows}
                             aria-controls="compare-partners-table"
-                            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-slate-200 bg-white text-[11px] font-bold text-slate-600 hover:border-[#5544CC] hover:text-[#5544CC] transition-colors"
+                            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-blue-500 bg-white text-[11px] font-bold text-blue-600 hover:bg-blue-50 transition-colors"
                         >
                             {showAllRows ? "Show less" : "Detailed comparison"}
                             <ChevronDown className={`w-3.5 h-3.5 transition-transform ${showAllRows ? "rotate-180" : ""}`} />

@@ -251,8 +251,13 @@ export function buildCompanyColumn(
     return {
         key: tenant.id || tenant.slug || richest?.key || Math.random().toString(36),
         kind: "company",
+        // Zero when the institute runs nothing for the course being compared.
+        // The column still renders, carrying the provider profile rows and an
+        // explicit "no batches" note, rather than borrowing another course's
+        // numbers. `schedule` is only a handle for callers that want the raw
+        // row; there is none to give here.
         scheduleCount: schedules.length,
-        schedule: cheapest?.schedule || schedules[0],
+        schedule: cheapest?.schedule || schedules[0] || ({} as CompareSchedule),
         tenant,
 
         programme: tenant.legalName || tenant.name || "Training partner",
