@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { revalidatePath, revalidateTag } from 'next/cache';
 import { env } from '@/lib/env';
 import { CDNFactory } from '@/lib/cdn';
-import { invalidateRedirectCache } from '@/lib/redirects';
+import { invalidateRedirectCache, listRedirectSources, normalizeRedirectPath } from '@/lib/redirects';
 
 export const dynamic = 'force-dynamic';
 
@@ -106,6 +106,17 @@ export async function POST(request: NextRequest) {
         // cache holding the rule list, then the in-memory map built from it.
         revalidateTag('redirections', 'max');
         invalidateRedirectCache();
+        // A rule now also applies to a source page that still renders fine, so
+        // its cached copy has to drop — otherwise the old article keeps being
+        // served past the rule going live. `source` narrows this to the one
+        // path when the backend sends it; without it, sweep every source.
+        const sources = payload.source
+            ? [normalizeRedirectPath(String(payload.source))]
+            : await listRedirectSources();
+        for (const s of sources) {
+            revalidatePath(s);
+            purgeUrls.push(`${SITE_URL}${s}`);
+        }
     } else if (type === 'pattern' || type === 'patterns') {
         if (slug) {
             revalidateTag(`pattern-${slug}`, 'max');
