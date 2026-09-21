@@ -186,3 +186,25 @@ export async function redirectOrNotFound(pathname: string): Promise<never> {
     }
     notFound();
 }
+
+/**
+ * Apply a configured redirect for a path that renders fine on its own.
+ * Unlike `redirectOrNotFound`, this runs *before* the content is fetched, so a
+ * live page (HTTP 200) still hands over to its replacement once a rule exists.
+ * Returns normally when no rule matches; the caller then renders as usual.
+ */
+export async function enforceRedirect(pathname: string): Promise<void> {
+    const match = await getRedirectFor(pathname);
+    if (!match) return;
+    if (match.permanent) permanentRedirect(match.destination);
+    redirect(match.destination);
+}
+
+/**
+ * Every normalized source path that currently has an enabled rule. Used by the
+ * revalidate webhook to drop cached copies of pages that a new rule now covers.
+ */
+export async function listRedirectSources(): Promise<string[]> {
+    const map = await ensureRedirections();
+    return Array.from(map.keys());
+}

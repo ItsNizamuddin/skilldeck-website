@@ -6,7 +6,7 @@ import { fetchBlogBySlug, fetchBlogs, fetchCategories } from "@/lib/blogs";
 import { env } from "@/lib/env";
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { redirectOrNotFound } from '@/lib/redirects';
+import { enforceRedirect, redirectOrNotFound } from '@/lib/redirects';
 import { buildCanonical } from '@/lib/canonical';
 import { Suspense } from 'react';
 
@@ -107,6 +107,10 @@ export default async function BlogDetailPage({ params }: Props) {
 
     const siteUrl = env.NEXT_PUBLIC_SITE_URL || 'https://skilldeck.net';
     const pageUrl = `${siteUrl.replace(/\/$/, '')}/blog/${slug}`;
+
+    // Checked before the article is fetched: an article that still exists has
+    // to hand over to its replacement too, not only a deleted one.
+    await enforceRedirect(`/blog/${slug}`);
 
     const [categories, blogsResult, singleArticle] = await Promise.all([
         fetchCategories(pageUrl),
