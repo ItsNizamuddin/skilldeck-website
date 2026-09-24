@@ -20,6 +20,7 @@ export async function GET(): Promise<Response> {
     "/privacy-policy",
     "/register",
     "/terms-of-service",
+    "/web-templates",
     "/sitemap-html",
   ];
 

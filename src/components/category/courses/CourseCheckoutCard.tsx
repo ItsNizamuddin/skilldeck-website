@@ -4,10 +4,11 @@ import CompanyContactButton from "@/components/companies/CompanyContactButton";
 import { Button } from "@/components/ui/Button";
 import { mapToInstitute } from "@/lib/scheduleMapper";
 import { Schedule } from "@/types/schedules";
-import { Calendar, Download, GitCompare, Phone, Share2, SlidersHorizontal } from "lucide-react";
+import { Calendar, Phone, SlidersHorizontal } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useMemo, useState } from "react";
 import FeaturedProvidersList from "./FeaturedProvidersList";
+import NoScheduleEnquiry from "./NoScheduleEnquiry";
 import PartnerAdvertiseWidget from "./PartnerAdvertiseWidget";
 import { usePathname } from "next/navigation";
 
@@ -90,6 +91,18 @@ export default function CourseCheckoutCard({
         });
     }, [schedules, tenants]);
 
+    // One entry per provider that actually has a batch on this course, so the
+    // selector can name them instead of only offering price sorts.
+    const providerOptions = useMemo(() => {
+        const seen = new Map<string, string>();
+        for (const sch of mappedSchedules) {
+            const id = sch.company?.id;
+            if (!id || seen.has(id)) continue;
+            seen.set(id, sch.company?.name || "Training provider");
+        }
+        return Array.from(seen, ([id, name]) => ({ id, name }));
+    }, [mappedSchedules]);
+
     // Active schedule calculations based on selected training provider
     const activeScheduleInfo = useMemo(() => {
 
@@ -139,99 +152,92 @@ export default function CourseCheckoutCard({
         let matchedSchedule: any = null;
 
         const activeFilter = selectedCompanyId || "lowest";
-        if (activeFilter) {
-            const targetSchedules = activeFilter === "highest" || activeFilter === "lowest"
-                ? mappedSchedules
-                : mappedSchedules.filter((sch) => sch.company?.id === activeFilter);
+        const targetSchedules = activeFilter === "highest" || activeFilter === "lowest"
+            ? mappedSchedules
+            : mappedSchedules.filter((sch) => sch.company?.id === activeFilter);
 
-            if (activeFilter === "highest") {
-                // Find highest price schedule (highest selling price)
-                let maxPrice = -Infinity;
-                targetSchedules.forEach((sch: any) => {
-                    if (sch.pricing && sch.pricing.length > 0) {
-                        const matchedCurrencyPricing = sch.pricing.filter(
-                            (p: any) => p.currency?.code?.toUpperCase() === sessionCurrency.toUpperCase()
-                        );
-                        const pricingToSearch = matchedCurrencyPricing.length > 0 ? matchedCurrencyPricing : sch.pricing;
-                        pricingToSearch.forEach((p: any) => {
-                            const sell = p.comparedPrice || sch.price || 0;
-                            if (sell > maxPrice) {
-                                maxPrice = sell;
-                                matchedPricing = p;
-                                matchedSchedule = sch;
-                            }
-                        });
-                    }
-                });
+        // Price one schedule in the visitor's currency, falling back to whatever
+        // currencies it carries, then to the flat `price` field.
+        const priceOf = (sch: any): { pricing: any | null; sell: number } => {
+            const list: any[] = sch?.pricing || [];
+            const byCurrency = list.filter(
+                (p: any) => p.currency?.code?.toUpperCase() === sessionCurrency.toUpperCase()
+            );
+            const pool = byCurrency.length > 0 ? byCurrency : list;
+            if (pool.length === 0) return { pricing: null, sell: sch?.price || 0 };
+
+            const sorted = [...pool].sort(
+                (a: any, b: any) => (a.comparedPrice || sch.price || 0) - (b.comparedPrice || sch.price || 0)
+            );
+            const chosen = activeFilter === "highest" ? sorted[sorted.length - 1] : sorted[0];
+            return { pricing: chosen, sell: chosen.comparedPrice || sch.price || 0 };
+        };
+
+        const priced = targetSchedules
+            .map((sch: any) => ({ sch, ...priceOf(sch) }))
+            .filter((entry) => entry.sell > 0)
+            .sort((a, b) => a.sell - b.sell);
+
+        if (priced.length > 0) {
+            const chosen = activeFilter === "highest" ? priced[priced.length - 1] : priced[0];
+            matchedSchedule = chosen.sch;
+            matchedPricing = chosen.pricing;
+        } else {
+            // Nothing in this set carries a price. Still select a real schedule,
+            // otherwise the card renders "$0" against "this company" with no
+            // provider and no start date.
+            matchedSchedule = targetSchedules[0] || mappedSchedules[0] || null;
+            matchedPricing = matchedSchedule?.pricing?.[0] || null;
+        }
+
+        if (matchedPricing) {
+            sellingPrice = matchedPricing.comparedPrice || matchedSchedule?.price || 0;
+            marketPrice = matchedPricing.actualPrice || sellingPrice;
+            currencySymbol = matchedPricing.currency?.symbol || getCurrencySymbol((matchedSchedule as any)?.currency || sessionCurrency);
+        } else if (matchedSchedule) {
+            sellingPrice = matchedSchedule.price || 0;
+            marketPrice = matchedSchedule.price || 0;
+            currencySymbol = getCurrencySymbol((matchedSchedule as any).currency || sessionCurrency);
+        }
+
+        if (marketPrice > sellingPrice && sellingPrice > 0) {
+            hasDiscount = true;
+            discountPercent = Math.round(((marketPrice - sellingPrice) / marketPrice) * 100);
+        } else {
+            hasDiscount = false;
+            discountPercent = 0;
+        }
+
+        // Dates and seats come from the selected schedule, so the card describes
+        // one batch rather than mixing one provider's price with another's date.
+        // Both reset first: the defaults above are seeded from mappedSchedules[0],
+        // and leaving them in place leaked that provider's seats into another
+        // provider's card.
+        if (matchedSchedule) {
+            const sch: any = matchedSchedule;
+
+            startText = "";
+            seatsText = "";
+            progressPercent = 0;
+
+            const formatStart = (value?: string) => {
+                if (!value) return "";
+                const date = new Date(value);
+                if (Number.isNaN(date.getTime())) return "";
+                return "Starts " + date.toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' });
+            };
+
+            if (sch.isFlexibleSchedule) {
+                startText = formatStart(sch.commencementDate) || "Flexible Dates / Students Choice";
             } else {
-                // Find lowest price schedule (lowest selling price)
-                let minPrice = Infinity;
-                targetSchedules.forEach((sch: any) => {
-                    if (sch.pricing && sch.pricing.length > 0) {
-                        const matchedCurrencyPricing = sch.pricing.filter(
-                            (p: any) => p.currency?.code?.toUpperCase() === sessionCurrency.toUpperCase()
-                        );
-                        const pricingToSearch = matchedCurrencyPricing.length > 0 ? matchedCurrencyPricing : sch.pricing;
-                        pricingToSearch.forEach((p: any) => {
-                            const sell = p.comparedPrice || sch.price || 0;
-                            if (sell < minPrice) {
-                                minPrice = sell;
-                                matchedPricing = p;
-                                matchedSchedule = sch;
-                            }
-                        });
-                    }
-                });
+                // A fixed batch can carry only `commencementDate`; reading
+                // `startsAt` blindly rendered "Starts Invalid Date".
+                startText = formatStart(sch.startsAt || sch.commencementDate);
             }
 
-            if (matchedPricing) {
-                sellingPrice = matchedPricing.comparedPrice || 0;
-                marketPrice = matchedPricing.actualPrice || sellingPrice;
-                currencySymbol = matchedPricing.currency?.symbol || "₹";
-            } else if (matchedSchedule && (matchedSchedule as any).currency?.toUpperCase() === sessionCurrency.toUpperCase()) {
-                sellingPrice = matchedSchedule.price || 0;
-                marketPrice = matchedSchedule.price || 0;
-                currencySymbol = getCurrencySymbol((matchedSchedule as any).currency);
-            } else if (matchedSchedule) {
-                const firstP = matchedSchedule.pricing?.[0];
-                sellingPrice = firstP?.comparedPrice || matchedSchedule.price || 0;
-                marketPrice = firstP?.actualPrice || sellingPrice;
-                currencySymbol = firstP?.currency?.symbol || getCurrencySymbol((matchedSchedule as any).currency || sessionCurrency);
-            }
-
-            if (marketPrice > sellingPrice && sellingPrice > 0) {
-                hasDiscount = true;
-                discountPercent = Math.round(((marketPrice - sellingPrice) / marketPrice) * 100);
-            } else {
-                hasDiscount = false;
-                discountPercent = 0;
-            }
-
-            // Find earliest date
-            const validDates = targetSchedules.filter((s: any) => s.startsAt || s.commencementDate);
-            if (validDates.length > 0) {
-                validDates.sort((a: any, b: any) => {
-                    const dateA = new Date(a.startsAt || a.commencementDate).getTime();
-                    const dateB = new Date(b.startsAt || b.commencementDate).getTime();
-                    return dateA - dateB;
-                });
-                const sch = validDates[0];
-                if (sch.isFlexibleSchedule) {
-                    if (sch.commencementDate) {
-                        const earliest = new Date(sch.commencementDate);
-                        startText = "Starts " + earliest.toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' });
-                    } else {
-                        startText = "Flexible Dates / Students Choice";
-                    }
-                } else {
-                    const earliest = new Date(sch.startsAt);
-                    startText = "Starts " + earliest.toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' });
-                }
-
-                if (sch.seatsAvailable !== undefined && sch.totalSeats !== undefined) {
-                    seatsText = `${sch.seatsAvailable} of ${sch.totalSeats} seats left`;
-                    progressPercent = Math.round(((sch.totalSeats - sch.seatsAvailable) / sch.totalSeats) * 100);
-                }
+            if (sch.seatsAvailable !== undefined && sch.totalSeats !== undefined && sch.totalSeats > 0) {
+                seatsText = `${sch.seatsAvailable} of ${sch.totalSeats} seats left`;
+                progressPercent = Math.round(((sch.totalSeats - sch.seatsAvailable) / sch.totalSeats) * 100);
             }
         }
 
@@ -256,7 +262,7 @@ export default function CourseCheckoutCard({
         const tId = activeScheduleInfo.matchedSchedule?.tenantId || activeScheduleInfo.matchedSchedule?.company?.id;
         if (!tId) return "this company";
         const matchedTenant = tenants.find((t: any) => (t.id === tId || t._id === tId));
-        return matchedTenant?.name || matchedTenant?.companyName || activeScheduleInfo.matchedSchedule?.company?.name || "this company";
+        return matchedTenant?.legalName || matchedTenant?.name || matchedTenant?.companyName || activeScheduleInfo.matchedSchedule?.company?.name || "this company";
     }, [activeScheduleInfo.matchedSchedule, tenants]);
 
     if (!isMounted) {
@@ -275,86 +281,13 @@ export default function CourseCheckoutCard({
     if (mappedSchedules.length === 0) {
         return (
             <>
-                <div className="relative w-full max-w-[380px] overflow-hidden rounded-2xl">
-                    {/* ── Dummy card with real layout (non-interactive) ── */}
-                    <div className="bg-white rounded-2xl border border-slate-100 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.06)] p-5 flex flex-col gap-3 pointer-events-none select-none">
-                        {/* Programme fee */}
-                        <div>
-                            <span className="text-[11px] font-semibold text-slate-700 uppercase tracking-wider block mb-1">Programme fee</span>
-                            <div className="flex items-baseline gap-2 flex-wrap">
-                                <span className="text-2xl font-extrabold text-slate-900">$1,999</span>
-                                <span className="text-sm text-slate-500 line-through font-medium">$2,499</span>
-                                <span className="bg-green-50 text-green-600 text-xs font-bold px-2 py-0.5 rounded-md border border-green-100">Save 20%</span>
-                            </div>
-                            <span className="text-[11px] text-slate-500 font-medium block mt-1">or $167/month · 12-month no-cost EMI</span>
-                        </div>
-
-                        {/* Start date block */}
-                        <div className="flex items-center gap-3">
-                            <div className="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center flex-shrink-0">
-                                <Calendar className="w-4 h-4 text-blue-500" />
-                            </div>
-                            <div>
-                                <div className="text-[10px] text-slate-400 font-semibold uppercase tracking-wider">Start date</div>
-                                <div className="text-sm font-bold text-slate-800">15 Sep 2025</div>
-                            </div>
-                        </div>
-
-                        {/* Dummy buttons */}
-                        <div className="flex flex-col gap-3">
-                            <Button
-                                variant="primary"
-                                className="w-full h-10 text-sm font-bold text-white flex items-center justify-center gap-2"
-                            >
-                                <span>Request a callback</span>
-                                <Phone className="w-4 h-4 fill-white/20" />
-                            </Button>
-                            <Button
-                                variant="outline"
-                                className="w-full h-10 text-brand-secondary border-2 border-brand-secondary/30 text-sm font-bold gap-2"
-                            >
-                                <span>Download curriculum</span>
-                                <Download className="w-4 h-4" />
-                            </Button>
-                        </div>
-
-                        {/* Compare / Share */}
-                        <div className="grid grid-cols-2 gap-3">
-                            <div className="border border-slate-200 rounded-xl py-2 px-3 flex items-center justify-center gap-2 text-xs font-bold text-slate-600">
-                                <GitCompare className="w-4 h-4" />
-                                <span>Compare</span>
-                            </div>
-                            <div className="border border-slate-200 rounded-xl py-2 px-3 flex items-center justify-center gap-2 text-xs font-bold text-slate-600">
-                                <Share2 className="w-4 h-4" />
-                                <span>Share</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* ── Glassy blur overlay with CTA ── */}
-                    <div className="absolute inset-0 bg-white/10 backdrop-blur-[1.4px] flex flex-col items-center justify-center gap-4 p-6 text-center rounded-2xl">
-                        <div className="bg-white/70 backdrop-blur-xl border border-white/60 ring-1 ring-purple-100/60 rounded-2xl px-6 py-5 shadow-2xl shadow-purple-200/30 flex flex-col items-center gap-3 max-w-[240px]">
-                            <span className="text-[10px] font-black text-purple-700 uppercase tracking-widest bg-purple-50/80 px-4 py-1.5 rounded-full border border-purple-200/60">
-                                No Upcoming Batches
-                            </span>
-                            <p className="text-xs font-semibold text-slate-700 leading-relaxed">
-                                Currently no schedules are listed. Be the first provider!
-                            </p>
-                            <a
-                                href="/register"
-                                className="inline-flex items-center gap-2 bg-gradient-to-r from-orange-500 to-red-500 hover:brightness-110 text-white font-bold py-2.5 px-5 rounded-full text-xs shadow-lg hover:scale-105 transition-all"
-                            >
-                                List your Institute now!
-                            </a>
-                        </div>
-                    </div>
+                <div className="w-full max-w-[380px]">
+                    <NoScheduleEnquiry courseSlug={courseSlug} />
                 </div>
                 <PartnerAdvertiseWidget showAd={showAd} onClose={handleCloseAd} />
             </>
         );
     }
-
-
 
     return (
         <div className="w-full max-w-[380px] flex flex-col gap-4">
@@ -373,6 +306,15 @@ export default function CourseCheckoutCard({
                     >
                         <option value="lowest">Top lowest price available</option>
                         <option value="highest">Top highest price available</option>
+                        {providerOptions.length > 0 && (
+                            <optgroup label="Training providers">
+                                {providerOptions.map((provider) => (
+                                    <option key={provider.id} value={provider.id}>
+                                        {provider.name}
+                                    </option>
+                                ))}
+                            </optgroup>
+                        )}
                     </select>
                     {/* Chevron - right side */}
                     {/* <div className="absolute inset-y-0 right-0 flex items-center pr-4 pointer-events-none text-slate-400">

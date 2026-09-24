@@ -7,6 +7,7 @@ import { useMemo, useState } from "react";
 import { ArrowRight, Building2, CheckCircle2, ChevronDown, ChevronRight, Info, Monitor, Plus, Star, TrendingDown, X, Zap } from "lucide-react";
 import { formatPrice, getCurrencySymbol } from "@/lib/courseCardHelpers";
 import ComparePickerModal, { PickerItem } from "@/components/compare/ComparePickerModal";
+import CompanyContactButton from "@/components/companies/CompanyContactButton";
 
 /** Only the schedule fields this table compares on. */
 interface PartnerSchedule {
@@ -263,7 +264,7 @@ export default function PartnerComparisonTable({
                     <p className="text-xs text-slate-500 font-medium">
                         {compact && !showAllRows
                             ? "A quick side by side look — expand for every detail"
-                            : "Side by side comparison of top training providers"}
+                            : "Compare course fees, curriculum, duration, learning modes, reviews, and other key details before you enroll."}
                     </p>
                 </div>
                 <div className="flex items-center gap-2 self-start sm:self-auto">
@@ -566,7 +567,7 @@ export default function PartnerComparisonTable({
                         <tr>
                             <td className={`${LABEL_CELL} py-4`} />
                             {selected.map((p) => (
-                                <td key={p.id} className="px-3 md:px-4 py-4 border-l border-slate-100 align-middle">
+                                <td key={p.id} className="px-3 md:px-4 py-4 border-l border-slate-100 align-middle space-y-2">
                                     <Link
                                         href={companyHref(p)}
                                         data-no-loader="true"
@@ -576,6 +577,24 @@ export default function PartnerComparisonTable({
                                         View Full Details
                                         <ArrowRight className="w-3.5 h-3.5" />
                                     </Link>
+
+                                    {/* Company-targeted, so the enquiry lands in this
+                                        institute's CRM rather than the platform inbox. */}
+                                    <CompanyContactButton
+                                        tenantId={p.id || p._id}
+                                        companyName={p.name}
+                                        courseId={courseSlug}
+                                        courseTitle={courseTitle || (courseSlug ? titleFromSlug(courseSlug) : undefined)}
+                                        renderButton={(onClick) => (
+                                            <button
+                                                type="button"
+                                                onClick={onClick}
+                                                className="w-full inline-flex items-center justify-center h-9 rounded-xl text-[11px] md:text-xs font-bold text-white bg-[linear-gradient(125deg,rgba(92,63,250,1)_0%,rgba(203,59,149,1)_48%,rgba(254,106,27,1)_100%)] hover:brightness-110 transition-all"
+                                            >
+                                                Enquire now
+                                            </button>
+                                        )}
+                                    />
                                 </td>
                             ))}
                             {canAdd && (

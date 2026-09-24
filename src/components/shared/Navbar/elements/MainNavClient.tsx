@@ -214,6 +214,7 @@ function MainNav({ isHidden, categories, servicesCategories = [] }: Props) {
 
                                 <MenuItem setActive={setActive} active={active} item="About">
                                     <div className="flex flex-col space-y-3 min-w-45 bg-white p-3 shadow-lg rounded-md border border-slate-100">
+                                        <HoveredLink href="/web-templates">Website Templates</HoveredLink>
                                         <HoveredLink href="/about-us">About Us</HoveredLink>
                                         <HoveredLink href="/contact-us">Contact Us</HoveredLink>
                                         <HoveredLink href="/blog">Blog</HoveredLink>

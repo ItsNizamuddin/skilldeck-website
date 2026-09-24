@@ -6,6 +6,7 @@ export const mobileNavLinks = [
 ];
 
 export const aboutLinks = [
+    { name: "Website Templates", href: "/web-templates" },
     { name: "About Us", href: "/about-us" },
     { name: "Contact Us", href: "/contact-us" },
     { name: "Blog", href: "/blog" },

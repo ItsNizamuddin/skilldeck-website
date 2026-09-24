@@ -24,6 +24,7 @@ const categories = [
             { name: "pricing", href: "/pricing" },
             { name: "about us", href: "/about-us" },
             { name: "register", href: "/register" },
+            { name: "web templates", href: "/web-templates" },
         ]
     },
     {

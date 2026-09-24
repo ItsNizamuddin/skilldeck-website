@@ -48,7 +48,7 @@ const nextConfig: NextConfig = {
         ],
       },
       {
-        source: '/(logos|images|fonts)/:path*',
+        source: '/(logos|images|fonts|templates|figma)/:path*',
         headers: [
           { key: 'Access-Control-Allow-Origin', value: '*' },
           { key: 'Cache-Control', value: 'public, max-age=31536000, immutable' },
