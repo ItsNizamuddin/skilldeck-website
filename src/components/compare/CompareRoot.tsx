@@ -853,7 +853,7 @@ export default function CompareRoot() {
                                             <Link
                                                 href={c.companyHref}
                                                 data-no-loader="true"
-                                                className="w-full inline-flex items-center justify-center gap-1.5 h-9 rounded-xl text-[11px] md:text-xs font-bold text-white bg-[linear-gradient(125deg,rgba(92,63,250,1)_0%,rgba(203,59,149,1)_48%,rgba(254,106,27,1)_100%)]"
+                                                className="w-full inline-flex items-center justify-center gap-1.5 h-9 rounded-xl border border-slate-200 text-[11px] md:text-xs font-bold text-slate-700 hover:border-brand-primary/40 hover:text-brand-primary transition-colors"
                                             >
                                                 View details
                                                 <ArrowUpRight className="w-3.5 h-3.5" />
@@ -867,7 +867,7 @@ export default function CompareRoot() {
                                                         defaultValues: { subject: `Enquiry: ${c.programme} — ${c.companyName}` },
                                                     })
                                                 }
-                                                className="w-full inline-flex items-center justify-center h-9 rounded-xl border border-slate-200 text-[11px] md:text-xs font-bold text-brand-primary hover:border-brand-primary/40 transition-colors"
+                                                className="w-full inline-flex items-center justify-center h-9 rounded-xl text-[11px] md:text-xs font-bold text-white bg-[linear-gradient(125deg,rgba(92,63,250,1)_0%,rgba(203,59,149,1)_48%,rgba(254,106,27,1)_100%)] hover:brightness-110 transition-all"
                                             >
                                                 Enquire
                                             </button>
