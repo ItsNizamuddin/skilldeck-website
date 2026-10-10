@@ -5,6 +5,7 @@ import InteractiveDotBackground from "@/components/ui/InteractiveDotBackground";
 import {
     Briefcase,
     Calendar,
+    Cloud,
     Database,
     Globe,
     GraduationCap,
@@ -77,6 +78,12 @@ const row1Features: FeatureItem[] = [
         title: "Trainer Portal",
         description: "Trainer allocation & schedule tracking",
         gradient: "from-pink-500 to-rose-600",
+    },
+    {
+        icon: Cloud,
+        title: "Cloud Media Storage",
+        description: "Centralized assets, HLS video & CDN",
+        gradient: "from-sky-500 to-blue-600",
     },
 ];
 

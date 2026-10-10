@@ -8,7 +8,7 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
     title: "Training Business Operating System | LMS | CMS | CRM | 100+ Features",
-    description: "Skilldeck is an all-in-one training business platform combining LMS, CRM, CMS, website, marketing, SEO, sales, events, and more. Reduce technology costs and scale faster.",
+    description: "Skilldeck is an all-in-one training business platform combining LMS, CRM, CMS, cloud storage, website, marketing, SEO, sales, events, and more. Reduce technology costs and scale faster.",
     robots: {
         index: true,
         follow: true,
@@ -86,6 +86,10 @@ export default async function Page() {
         {
             title: "Can SkillDeck reduce operational costs for training Institutes?",
             value: "Yes, one of SkillDeck’s biggest advantages is cost optimization. Most training Institutes spend heavily on multiple tools for LMS, CRM, websites, marketing automation, analytics, event management, and operations.<br/><br/>SkillDeck consolidates these systems into one unified platform, significantly reducing software expenses, integration challenges, maintenance costs, and operational complexity. Businesses can operate more efficiently while achieving enterprise-level capabilities at a fraction of the traditional cost."
+        },
+        {
+            title: "How does SkillDeck handle media, videos, and document cloud storage?",
+            value: "SkillDeck includes a built-in enterprise Cloud Media Storage service designed specifically for training businesses. You can store, organize, and manage course lecture videos, marketing photos, PDFs, and training materials in a centralized library with drag-and-drop folders.<br/><br/>The system automatically generates WebP thumbnails, optimizes images, and transcodes videos into high-speed HLS streams for buffering-free playback across devices. Assets are delivered globally via edge CDNs (AWS S3 & Cloudflare R2), protected with 30-day trash recovery and strict multi-tenant security, eliminating the need for expensive third-party storage or video hosting subscriptions like Vimeo, Wistia, or Dropbox."
         }
     ];
 
@@ -103,7 +107,7 @@ export default async function Page() {
         "operatingSystem": "All",
         "url": "https://skilldeck.net/",
         "image": "https://skilldeck.net/logos/mainlogo.svg",
-        "description": "World's 1st Fully Automated Plug & Play Platform For Training Institutes. Automate your marketing, sales, operations, LMS, CRM, websites, and business functional departments.",
+        "description": "World's 1st Fully Automated Plug & Play Platform For Training Institutes. Automate your marketing, sales, operations, LMS, CRM, cloud media storage, websites, and business functional departments.",
         "publisher": {
             "@id": "https://skilldeck.net/#organization"
         },

@@ -21,6 +21,11 @@ const HdPricing = dynamic(() => import("../home-demo/HdPricing"), {
     ssr: true,
 });
 
+const HdMediaStorageComparison = dynamic(() => import("../home-demo/HdMediaStorageComparison"), {
+    loading: () => <div className="h-96 w-full animate-pulse bg-slate-50" />,
+    ssr: true,
+});
+
 const HdDemo = dynamic(() => import("../home-demo/HdDemo"), {
     loading: () => <div className="h-96 w-full animate-pulse bg-slate-50" />,
     ssr: true,
@@ -91,7 +96,10 @@ const Home = ({ plans = [], faqs = [], partnerLogos = [], services = [] }: HomeP
 
             <HdBentoFeatures />
 
-            {/* 9 — See it working */}
+            {/* 9 — Cloud Media Storage & Cost Comparison */}
+            <HdMediaStorageComparison />
+
+            {/* 10 — See it working */}
             <HdDemo />
 
             {/* 10 — Why us, with the track record folded in */}
