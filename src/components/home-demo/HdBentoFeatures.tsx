@@ -8,6 +8,7 @@ import {
     CreditCard,
     Store,
     GraduationCap,
+    HardDrive,
 } from "lucide-react";
 import HdGradientText from "./HdGradientText";
 
@@ -29,6 +30,12 @@ const modules = [
         title: "CRM & Lead Management",
         description: "Automated pipelines, follow-ups, and tracking — no more leads lost in spreadsheets.",
         accent: "from-violet-500 to-purple-600",
+    },
+    {
+        icon: HardDrive,
+        title: "Cloud Media Storage",
+        description: "Organize videos, photos & documents with auto-transcoding, WebP compression & edge CDN.",
+        accent: "from-sky-500 to-indigo-600",
     },
     {
         icon: Megaphone,
@@ -113,8 +120,8 @@ export default function HdBentoFeatures() {
                     </div>
                 </div>
 
-                {/* Even 4-up module grid — equal heights, no orphan cells */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                {/* Symmetrical 3x3 module grid — equal heights, perfectly balanced */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
                     {modules.map((m) => (
                         <div
                             key={m.title}

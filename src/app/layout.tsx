@@ -43,7 +43,7 @@ import Script from "next/script";
 
 const RICH_TEXT_CSS =
   process.env.NEXT_PUBLIC_RICH_TEXT_CSS ||
-  "https://cloud-storage.skilldeck.net/static/editor/skilldeck-rich-text.1.0.0.min.css";
+  "https://cloud-storage.skilldeck.net/static/editor/skilldeck-rich-text.min.css";
 
 const RICH_TEXT_CDN_ORIGIN = (() => {
   try {
@@ -69,7 +69,7 @@ export default function RootLayout({
       "@id": "https://skilldeck.net/#organization"
     }
   };
-  
+
   // The previous site published contact and location details here; the rebuild
   // dropped them down to a name, a logo and one profile link, which is the
   // thinnest an Organization entity can be. Restored so the knowledge-panel
@@ -109,17 +109,11 @@ export default function RootLayout({
       "https://www.linkedin.com/company/skilldeck-software/",
       "https://www.facebook.com/skilldeck",
       "https://twitter.com/skilldeck"
-    ],
-    // Carried over from the previous site, which published it here. Google does
-    // not award review stars for a rating a business states about itself, so
-    // this feeds the entity rather than the snippet.
-    "aggregateRating": {
-      "@type": "AggregateRating",
-      "ratingValue": "5",
-      "reviewCount": "1250",
-      "bestRating": "5",
-      "worstRating": "1"
-    }
+    ]
+    // No aggregateRating: a rating a business states about itself is never
+    // eligible for stars, and because this node is also referenced by @id from
+    // the home page's Review, Google merged it into an Organization with two
+    // aggregate ratings — a critical Rich Results error that invalidated it.
   };
 
   return (
@@ -131,7 +125,6 @@ export default function RootLayout({
       <head>
         <link rel="dns-prefetch" href="https://api.skilldeck.net" />
         <link rel="dns-prefetch" href="https://api64.ipify.org" />
-        {/*editor  */}
         <link rel="preconnect" href={RICH_TEXT_CDN_ORIGIN} crossOrigin="" />
         <link rel="stylesheet" href={RICH_TEXT_CSS} />
         <script
